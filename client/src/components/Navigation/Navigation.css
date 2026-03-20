@@ -1,0 +1,136 @@
+/* ── Top bar ── */
+.nav {
+  background: #1a1a2e;
+  color: #fff;
+  height: 56px;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-brand {
+  font-size: 1.15rem;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  color: #e2e2f0;
+  padding-right: 2rem;
+  flex-shrink: 0;
+}
+
+/* ── Category list ── */
+.nav-tabs {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+
+/* ── Each category button ── */
+.nav-tab-group {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.nav-tab-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 100%;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #c0c0d8;
+  cursor: default;
+  white-space: nowrap;
+  user-select: none;
+  transition: color 0.15s, background 0.15s;
+  border-bottom: 3px solid transparent;
+}
+
+.nav-tab-label::after {
+  content: "▾";
+  font-size: 0.7rem;
+  opacity: 0.6;
+  transition: transform 0.2s;
+}
+
+.nav-tab-group:hover .nav-tab-label {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom-color: #e94560;
+}
+
+.nav-tab-group:hover .nav-tab-label::after {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown panel ── */
+.nav-subtabs {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  background: #16213e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 2px solid #e94560;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  padding: 0.4rem 0;
+  flex-direction: column;
+  z-index: 2000;
+}
+
+.nav-tab-group:hover .nav-subtabs {
+  display: flex;
+}
+
+/* ── Individual algorithm links ── */
+.nav-subtab {
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: #b0b0cc;
+  font-size: 0.85rem;
+  transition: background 0.12s, color 0.12s, padding-left 0.12s;
+  border-left: 3px solid transparent;
+  white-space: nowrap;
+}
+
+.nav-subtab:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  padding-left: 1.25rem;
+  border-left-color: #e94560;
+}
+
+.nav-subtab.active {
+  background: rgba(233, 69, 96, 0.15);
+  color: #e94560;
+  font-weight: 600;
+  border-left-color: #e94560;
+}
+
+.nav-subtab.learned {
+  background: #fff;
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.nav-subtab.learned:hover {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-left-color: #22c55e;
+}
+
+.nav-subtab.learned.active {
+  background: #dcfce7;
+  color: #15803d;
+  border-left-color: #22c55e;
+}

@@ -1,0 +1,107 @@
+.algorithm-page {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.algo-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.algorithm-page h2 {
+  margin: 0;
+  color: #1a1a2e;
+  text-align: left;
+  flex: 1;
+}
+
+.learned-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+  padding-top: 0.35rem;
+  flex-shrink: 0;
+  position: fixed;
+  top: 72px;
+  right: 20px;
+  z-index: 1100;
+  background: #fff;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.learned-toggle input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  accent-color: #22c55e;
+}
+
+@media (max-width: 700px) {
+  .learned-toggle {
+    right: 12px;
+    top: 64px;
+    font-size: 0.8rem;
+  }
+}
+
+.algo-description {
+  color: #666;
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+
+.algo-controls {
+  display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.input-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.input-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.input-row input[type='text'] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 260px;
+}
+
+.input-row input[type='number'] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100px;
+}
+
+
+.error {
+  color: #c00;
+  margin: 0.5rem 0;
+}

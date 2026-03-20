@@ -1,0 +1,29 @@
+# App settings
+appsettings.json
+appsettings.*.json
+!appsettings.example.json
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Dotnet build
+obj/
+bin/
+**/bin/
+**/obj/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Dependencies
+packages/
+.nuget/
+
+# Logs
+logs/
+*.log

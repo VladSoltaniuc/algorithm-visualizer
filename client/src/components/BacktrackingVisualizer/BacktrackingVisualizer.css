@@ -1,0 +1,81 @@
+.bt-vis {
+  padding: 1.5rem 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+/* ── N-Queens / Grid board ── */
+.bt-board {
+  display: grid;
+  gap: 0;
+  max-width: 420px;
+  width: 100%;
+}
+
+.bt-square {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: #f0d9b5;
+  transition: background 0.2s;
+}
+.bt-square.dark { background: #b58863; }
+.bt-square.queen { color: #333; }
+.bt-square.active { background: #e94560; color: #fff; }
+.bt-square.done { background: #06d6a0; color: #fff; }
+
+/* ── Sudoku / Generic grid ── */
+.bt-grid-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+  transition: background 0.2s, color 0.2s;
+}
+.bt-grid-cell.filled { background: #e9ecef; }
+.bt-grid-cell.active { background: #e94560; color: #fff; }
+.bt-grid-cell.done { background: #06d6a0; color: #fff; }
+.bt-grid-cell.box-left { border-left: 2px solid #333; }
+.bt-grid-cell.box-top { border-top: 2px solid #333; }
+
+/* ── Linear (permutations, subsets, combos) ── */
+.bt-linear {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.bt-cell {
+  min-width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9ecef;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #333;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.bt-cell.active {
+  background: #e94560;
+  color: #fff;
+  transform: translateY(-4px);
+  box-shadow: 0 3px 10px rgba(233, 69, 96, 0.35);
+}
+.bt-cell.done {
+  background: #06d6a0;
+  color: #fff;
+}
