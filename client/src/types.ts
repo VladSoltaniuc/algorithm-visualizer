@@ -4,6 +4,10 @@ export interface AlgorithmStep {
   description: string;
   highlightIndices: number[];
   sortedIndices: number[];
+  patternArray?: number[];
+  patternOffset?: number;
+  patternHighlightIndex?: number;
+  isNumericArray?: boolean;
 }
 
 export interface AlgorithmConfig {

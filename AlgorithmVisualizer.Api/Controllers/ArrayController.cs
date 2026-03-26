@@ -12,7 +12,6 @@ public class ArrayController : ControllerBase
     public ArrayController(ArrayService srv)
     {
         _srv = srv;
-        var test = 0;
     }
 
     [HttpPost("bubble-sort")]

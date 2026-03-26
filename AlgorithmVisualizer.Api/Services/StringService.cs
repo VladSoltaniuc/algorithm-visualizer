@@ -19,6 +19,7 @@ public class StringService
     {
         ValidateText(text);
         if (string.IsNullOrEmpty(pattern))
+            // TODO: Error shows code in the frontend
             throw new ArgumentException("Provide a search character.");
         char target = pattern[0];
         var codes = ToCharCodes(text);
@@ -79,6 +80,7 @@ public class StringService
         ValidateText(text);
         ValidateText(pattern);
         var codes = ToCharCodes(text);
+        var patternCodes = ToCharCodes(pattern);
         var steps = new List<AlgorithmStep>();
         int step = 0;
 
@@ -88,27 +90,22 @@ public class StringService
                 StepNumber = step++,
                 Array = (int[])codes.Clone(),
                 Description = $"KMP: searching for \"{pattern}\" in \"{text}\"",
+                PatternArray = patternCodes,
+                PatternOffset = 0,
             }
         );
 
-        // Build failure function
         int[] lps = new int[pattern.Length];
         int len = 0,
             idx = 1;
         while (idx < pattern.Length)
         {
             if (pattern[idx] == pattern[len])
-            {
                 lps[idx++] = ++len;
-            }
             else if (len > 0)
-            {
                 len = lps[len - 1];
-            }
             else
-            {
                 lps[idx++] = 0;
-            }
         }
 
         steps.Add(
@@ -116,7 +113,8 @@ public class StringService
             {
                 StepNumber = step++,
                 Array = lps,
-                Description = $"LPS (failure) table built for \"{pattern}\"",
+                Description = $"LPS table built for \"{pattern}\"",
+                IsNumericArray = true,
             }
         );
 
@@ -133,6 +131,9 @@ public class StringService
                     Description =
                         $"Comparing text[{i}]='{text[i]}' with pattern[{j}]='{pattern[j]}'",
                     HighlightIndices = [i],
+                    PatternArray = patternCodes,
+                    PatternOffset = i - j,
+                    PatternHighlightIndex = j,
                 }
             );
 
@@ -143,12 +144,25 @@ public class StringService
             }
             else if (j > 0)
             {
+                int oldOffset = i - j;
                 j = lps[j - 1];
+                int newOffset = i - j;
+                steps.Add(
+                    new AlgorithmStep
+                    {
+                        StepNumber = step++,
+                        Array = (int[])codes.Clone(),
+                        Description =
+                            $"Mismatch! LPS shifts pattern from position {oldOffset} to {newOffset}",
+                        HighlightIndices = [i],
+                        PatternArray = patternCodes,
+                        PatternOffset = newOffset,
+                        PatternHighlightIndex = j,
+                    }
+                );
             }
             else
-            {
                 i++;
-            }
 
             if (j == pattern.Length)
             {
@@ -161,6 +175,8 @@ public class StringService
                         Array = (int[])codes.Clone(),
                         Description = $"Pattern found at index {matchStart}",
                         SortedIndices = Enumerable.Range(matchStart, pattern.Length).ToArray(),
+                        PatternArray = patternCodes,
+                        PatternOffset = matchStart,
                     }
                 );
                 j = lps[j - 1];

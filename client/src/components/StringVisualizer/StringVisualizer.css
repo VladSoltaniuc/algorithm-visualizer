@@ -48,3 +48,57 @@
   color: #999;
   margin-top: 2px;
 }
+
+/* Row labels for pattern matching visualization */
+.row-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+  margin-top: 6px;
+  text-align: center;
+}
+
+.row-label:first-child {
+  margin-top: 0;
+}
+
+/* When pattern is shown, align text row to flex-start so spacers line up */
+.string-chars.has-pattern {
+  justify-content: flex-start;
+}
+
+/* Pattern row */
+.pattern-row {
+  justify-content: flex-start;
+  margin-top: 0;
+}
+
+.str-cell.spacer {
+  background: transparent;
+  visibility: hidden;
+}
+
+.str-cell.pattern-cell {
+  background: #d4e6f1;
+}
+
+.str-cell.pattern-cell .str-char {
+  color: #2c3e50;
+}
+
+.str-cell.pattern-cell.active {
+  background: #e94560;
+  transform: translateY(4px);
+  box-shadow: 0 -3px 10px rgba(233, 69, 96, 0.35);
+}
+.str-cell.pattern-cell.active .str-char { color: #fff; }
+
+.str-cell.pattern-cell.matched {
+  background: #06d6a0;
+  box-shadow: 0 -2px 8px rgba(6, 214, 160, 0.3);
+}
+.str-cell.pattern-cell.matched .str-char { color: #fff; }
