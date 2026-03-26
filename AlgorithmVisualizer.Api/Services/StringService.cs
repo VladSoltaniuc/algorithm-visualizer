@@ -198,15 +198,17 @@ public class StringService
     }
 
     // 3. Boyer-Moore
-    // Time: O(n/m) best, O(n · m) worst
-    // Space: O(m + σ) where σ = alphabet size
+    // Time: O(n/m) best, O(n*m) worst
+    // Space: O(m + alphabet_size)
     public List<AlgorithmStep> BoyerMoore(string text, string pattern)
     {
         ValidateText(text);
         ValidateText(pattern);
         var codes = ToCharCodes(text);
+        var patternCodes = ToCharCodes(pattern);
         var steps = new List<AlgorithmStep>();
         int step = 0;
+        int m = pattern.Length;
 
         steps.Add(
             new AlgorithmStep
@@ -214,18 +216,24 @@ public class StringService
                 StepNumber = step++,
                 Array = (int[])codes.Clone(),
                 Description = $"Boyer-Moore: searching for \"{pattern}\" in \"{text}\"",
+                PatternArray = patternCodes,
+                PatternOffset = 0,
             }
         );
 
+        // Bad character rule: last occurrence of each character in the pattern
         var badChar = new Dictionary<char, int>();
-        for (int k = 0; k < pattern.Length; k++)
+        for (int k = 0; k < m; k++)
             badChar[pattern[k]] = k;
+
+        // Good suffix rule
+        int[] goodSuffix = BuildGoodSuffixTable(pattern);
 
         int s = 0;
         var found = new List<int>();
-        while (s <= text.Length - pattern.Length)
+        while (s <= text.Length - m)
         {
-            int j = pattern.Length - 1;
+            int j = m - 1;
             while (j >= 0 && pattern[j] == text[s + j])
             {
                 steps.Add(
@@ -235,6 +243,9 @@ public class StringService
                         Array = (int[])codes.Clone(),
                         Description = $"Match at text[{s + j}]='{text[s + j]}'",
                         HighlightIndices = [s + j],
+                        PatternArray = patternCodes,
+                        PatternOffset = s,
+                        PatternHighlightIndex = j,
                     }
                 );
                 j--;
@@ -249,33 +260,34 @@ public class StringService
                         StepNumber = step++,
                         Array = (int[])codes.Clone(),
                         Description = $"Pattern found at index {s}",
-                        SortedIndices = Enumerable.Range(s, pattern.Length).ToArray(),
+                        SortedIndices = Enumerable.Range(s, m).ToArray(),
+                        PatternArray = patternCodes,
+                        PatternOffset = s,
                     }
                 );
-                s +=
-                    (s + pattern.Length < text.Length)
-                        ? pattern.Length
-                            - (
-                                badChar.ContainsKey(text[s + pattern.Length])
-                                    ? badChar[text[s + pattern.Length]]
-                                    : -1
-                            )
-                        : 1;
+                s += Math.Max(1, goodSuffix[0]);
             }
             else
             {
+                int bcIdx = badChar.TryGetValue(text[s + j], out int idx) ? idx : -1;
+                int badCharShift = j - bcIdx;
+                int goodSufShift = goodSuffix[j + 1];
+                int shift = Math.Max(1, Math.Max(badCharShift, goodSufShift));
+                string rule = goodSufShift > badCharShift ? "good-suffix" : "bad-character";
                 steps.Add(
                     new AlgorithmStep
                     {
                         StepNumber = step++,
                         Array = (int[])codes.Clone(),
                         Description =
-                            $"Mismatch at text[{s + j}]='{text[s + j]}', pattern[{j}]='{pattern[j]}'",
+                            $"Mismatch at text[{s + j}]='{text[s + j]}', pattern[{j}]='{pattern[j]}' - shift {shift} ({rule} rule)",
                         HighlightIndices = [s + j],
+                        PatternArray = patternCodes,
+                        PatternOffset = s,
+                        PatternHighlightIndex = j,
                     }
                 );
-                int shift = badChar.ContainsKey(text[s + j]) ? badChar[text[s + j]] : -1;
-                s += Math.Max(1, j - shift);
+                s += shift;
             }
         }
 
@@ -291,6 +303,42 @@ public class StringService
             }
         );
         return steps;
+    }
+
+    // Preprocesses the good-suffix shift table using Gusfield's border method.
+    // shift[k] = shift when k characters from the right have matched.
+    private static int[] BuildGoodSuffixTable(string pattern)
+    {
+        int m = pattern.Length;
+        int[] shift = new int[m + 1];
+        int[] border = new int[m + 1];
+
+        // Phase 1: suffix occurs again in pattern preceded by a different char
+        int i = m,
+            j = m + 1;
+        border[i] = j;
+        while (i > 0)
+        {
+            while (j <= m && pattern[i - 1] != pattern[j - 1])
+            {
+                if (shift[j] == 0)
+                    shift[j] = j - i;
+                j = border[j];
+            }
+            border[--i] = --j;
+        }
+
+        // Phase 2: suffix of matched portion is a prefix of the pattern
+        j = border[0];
+        for (i = 0; i <= m; i++)
+        {
+            if (shift[i] == 0)
+                shift[i] = j;
+            if (i == j)
+                j = border[j];
+        }
+
+        return shift;
     }
 
     // 4. Rabin-Karp
