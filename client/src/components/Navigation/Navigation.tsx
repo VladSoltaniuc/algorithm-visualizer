@@ -32,7 +32,15 @@ function fromString(slugs: string[]) {
 }
 
 function from(slugs: string[]) {
-  const all = [...arrayConfig, ...stringConfig];
+  const all = [
+    ...arrayConfig,
+    ...stringConfig,
+    ...treeConfig,
+    ...graphConfig,
+    ...dpConfig,
+    ...backtrackingConfig,
+    ...nrTheoryConfig,
+  ];
   return slugs.map((slug) => {
     const a = all.find((c) => c.slug === slug)!;
     return { name: a.name, path: `/${a.category}/${a.slug}` };
@@ -73,27 +81,61 @@ const tabs: Tab[] = [
     items: fromString(["run-length-encoding", "levenshtein", "reversal"]),
   },
   {
-    label: "Traverse",
-    basePath: "/traverse",
-    items: [
-      ...treeConfig.map((a) => ({ name: a.name, path: `/tree/${a.slug}` })),
-      ...graphConfig.map((a) => ({ name: a.name, path: `/graph/${a.slug}` })),
-    ],
+    label: "Trees",
+    basePath: "/trees",
+    items: from([
+      "bst-insert-search",
+      "inorder",
+      "level-order",
+      "lca",
+      "diameter",
+      "validate-bst",
+      "invert",
+      "huffman",
+    ]),
   },
   {
-    label: "Misc",
-    basePath: "/misc",
-    items: [
-      ...dpConfig.map((a) => ({ name: a.name, path: `/dp/${a.slug}` })),
-      ...backtrackingConfig.map((a) => ({
-        name: a.name,
-        path: `/backtracking/${a.slug}`,
-      })),
-      ...nrTheoryConfig.map((a) => ({
-        name: a.name,
-        path: `/number-theory/${a.slug}`,
-      })),
-    ],
+    label: "Graphs",
+    basePath: "/graphs",
+    items: from([
+      "bfs",
+      "dfs",
+      "dijkstra",
+      "union-find",
+      "topological-sort",
+      "cycle-detection",
+      "bellman-ford",
+    ]),
+  },
+  {
+    label: "Dynamic Prog.",
+    basePath: "/dp",
+    items: from([
+      "fibonacci",
+      "coin-change",
+      "lcs",
+      "knapsack",
+      "edit-distance",
+      "lis",
+      "subset-sum",
+    ]),
+  },
+  {
+    label: "Backtracking",
+    basePath: "/backtracking",
+    items: from([
+      "n-queens",
+      "combination-sum",
+      "permutations",
+      "sudoku",
+      "word-search",
+      "rat-in-maze",
+    ]),
+  },
+  {
+    label: "Nr. Theory",
+    basePath: "/number-theory",
+    items: from(["sieve", "gcd", "prime-factorization", "bit-manipulation"]),
   },
 ];
 
