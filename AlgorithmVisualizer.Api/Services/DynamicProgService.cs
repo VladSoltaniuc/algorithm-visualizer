@@ -111,18 +111,39 @@ public class DynamicProgService
     {
         if (string.IsNullOrEmpty(text1) || string.IsNullOrEmpty(text2))
             throw new ArgumentException("Provide non-empty strings.");
+        // Longest string on top (columns), shortest on the side (rows)
+        if (text1.Length > text2.Length)
+            (text1, text2) = (text2, text1);
         int m = text1.Length,
             n = text2.Length;
         var dp = new int[m + 1, n + 1];
         var steps = new List<AlgorithmStep>();
         int step = 0;
 
+        string rowHeaders = " " + text1;
+        string colHeaders = " " + text2;
+
+        int[][] SnapshotMatrix()
+        {
+            var matrix = new int[m + 1][];
+            for (int r = 0; r <= m; r++)
+            {
+                matrix[r] = new int[n + 1];
+                for (int c = 0; c <= n; c++)
+                    matrix[r][c] = dp[r, c];
+            }
+            return matrix;
+        }
+
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step++,
                 Array = new int[n + 1],
-                Description = $"LCS of \"{text1}\" and \"{text2}\"",
+                Description = $"LCS of \"{text1}\" and \"{text2}\" — initialise ({m + 1})x({n + 1}) matrix with zeros",
+                DpMatrix = SnapshotMatrix(),
+                RowHeaders = rowHeaders,
+                ColHeaders = colHeaders,
             }
         );
 
@@ -134,20 +155,45 @@ public class DynamicProgService
                     text1[i - 1] == text2[j - 1]
                         ? dp[i - 1, j - 1] + 1
                         : Math.Max(dp[i - 1, j], dp[i, j - 1]);
+                string desc = text1[i - 1] == text2[j - 1]
+                    ? $"'{text1[i - 1]}' == '{text2[j - 1]}': dp[{i}][{j}] = dp[{i - 1}][{j - 1}] + 1 = {dp[i, j]}"
+                    : $"'{text1[i - 1]}' ≠ '{text2[j - 1]}': dp[{i}][{j}] = max({dp[i - 1, j]}, {dp[i, j - 1]}) = {dp[i, j]}";
+                steps.Add(
+                    new AlgorithmStep
+                    {
+                        StepNumber = step++,
+                        Description = desc,
+                        DpMatrix = SnapshotMatrix(),
+                        RowHeaders = rowHeaders,
+                        ColHeaders = colHeaders,
+                        HighlightRow = i,
+                        HighlightCol = j,
+                    }
+                );
             }
-            var row = new int[n + 1];
-            for (int j = 0; j <= n; j++)
-                row[j] = dp[i, j];
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = row,
-                    Description = $"Row {i} ('{text1[i - 1]}')",
-                    HighlightIndices = [i],
-                }
-            );
         }
+
+        // Backtrack to find the LCS string
+        var lcs = new List<char>();
+        var backtrackCells = new List<int>();
+        int x = m,
+            y = n;
+        while (x > 0 && y > 0)
+        {
+            if (text1[x - 1] == text2[y - 1])
+            {
+                backtrackCells.Add(x);
+                backtrackCells.Add(y);
+                lcs.Add(text1[x - 1]);
+                x--;
+                y--;
+            }
+            else if (dp[x - 1, y] > dp[x, y - 1])
+                x--;
+            else
+                y--;
+        }
+        lcs.Reverse();
 
         var finalRow = new int[n + 1];
         for (int j = 0; j <= n; j++)
@@ -157,14 +203,17 @@ public class DynamicProgService
             {
                 StepNumber = step,
                 Array = finalRow,
-                Description = $"LCS length = {dp[m, n]}",
+                Description = $"LCS = \"{new string(lcs.ToArray())}\" (length {lcs.Count})",
                 SortedIndices = Enumerable.Range(0, n + 1).ToArray(),
+                DpMatrix = SnapshotMatrix(),
+                RowHeaders = rowHeaders,
+                ColHeaders = colHeaders,
+                BacktrackPath = backtrackCells.ToArray(),
             }
         );
         return steps;
     }
 
-    // 4. Longest Increasing Subsequence
     // Time: O(n^2)
     // Space: O(n)
     public List<AlgorithmStep> Lis(int[] arr)
@@ -264,67 +313,6 @@ public class DynamicProgService
         );
         return steps;
     }
-
-    // 6. Matrix Chain Multiplication
-    // Time: O(n^3)
-    // Space: O(n^2)
-    public List<AlgorithmStep> MatrixChain(int[] dims)
-    {
-        if (dims.Length < 2)
-            throw new ArgumentException("Provide at least 2 dimensions.");
-        int n = dims.Length - 1;
-        var dp = new int[n, n];
-        var steps = new List<AlgorithmStep>();
-        int step = 0;
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step++,
-                Array = (int[])dims.Clone(),
-                Description = $"Matrix chain: dimensions [{string.Join(", ", dims)}]",
-            }
-        );
-
-        for (int len = 2; len <= n; len++)
-        {
-            for (int i = 0; i <= n - len; i++)
-            {
-                int j = i + len - 1;
-                dp[i, j] = int.MaxValue;
-                for (int k = i; k < j; k++)
-                    dp[i, j] = Math.Min(
-                        dp[i, j],
-                        dp[i, k] + dp[k + 1, j] + dims[i] * dims[k + 1] * dims[j + 1]
-                    );
-            }
-            var diag = new int[n - len + 1];
-            for (int i = 0; i <= n - len; i++)
-                diag[i] = dp[i, i + len - 1];
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = diag,
-                    Description =
-                        $"Chain length {len}: min multiplications = [{string.Join(", ", diag)}]",
-                    HighlightIndices = Enumerable.Range(0, diag.Length).ToArray(),
-                }
-            );
-        }
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step,
-                Array = [dp[0, n - 1]],
-                Description = $"Min scalar multiplications = {dp[0, n - 1]}",
-                SortedIndices = [0],
-            }
-        );
-        return steps;
-    }
-
     // 7. Edit Distance
     // Time: O(m · n)
     // Space: O(m · n)
@@ -392,55 +380,6 @@ public class DynamicProgService
         );
         return steps;
     }
-
-    // 8. Rod Cutting
-    // Time: O(n^2)
-    // Space: O(n)
-    public List<AlgorithmStep> RodCutting(int[] prices)
-    {
-        if (prices.Length == 0)
-            throw new ArgumentException("Provide non-empty prices.");
-        int n = prices.Length;
-        var dp = new int[n + 1];
-        var steps = new List<AlgorithmStep>();
-        int step = 0;
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step++,
-                Array = (int[])dp.Clone(),
-                Description = $"Rod cutting: prices [{string.Join(", ", prices)}]",
-            }
-        );
-
-        for (int i = 1; i <= n; i++)
-        {
-            for (int j = 0; j < i; j++)
-                dp[i] = Math.Max(dp[i], prices[j] + dp[i - j - 1]);
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = (int[])dp.Clone(),
-                    Description = $"Length {i}: max revenue = {dp[i]}",
-                    HighlightIndices = [i],
-                }
-            );
-        }
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step,
-                Array = (int[])dp.Clone(),
-                Description = $"Max revenue for rod of length {n} = {dp[n]}",
-                SortedIndices = Enumerable.Range(0, n + 1).ToArray(),
-            }
-        );
-        return steps;
-    }
-
     // 9. Subset Sum
     // Time: O(n · target)
     // Space: O(target)

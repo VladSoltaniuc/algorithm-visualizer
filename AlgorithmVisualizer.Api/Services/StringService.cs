@@ -349,6 +349,7 @@ public class StringService
         ValidateText(text);
         ValidateText(pattern);
         var codes = ToCharCodes(text);
+        var patternCodes = ToCharCodes(pattern);
         var steps = new List<AlgorithmStep>();
         int step = 0;
         int m = pattern.Length,
@@ -361,7 +362,10 @@ public class StringService
             {
                 StepNumber = step++,
                 Array = (int[])codes.Clone(),
-                Description = $"Rabin-Karp: searching for \"{pattern}\" in \"{text}\"",
+                Description =
+                    $"Rabin-Karp: searching for \"{pattern}\" in \"{text}\" (base={d}, mod={q})",
+                PatternArray = patternCodes,
+                PatternOffset = 0,
             }
         );
 
@@ -390,38 +394,101 @@ public class StringService
             tHash = (d * tHash + text[k]) % q;
         }
 
+        steps.Add(
+            new AlgorithmStep
+            {
+                StepNumber = step++,
+                Array = (int[])codes.Clone(),
+                Description =
+                    $"Initial hashes computed — pattern hash={pHash}, window[0..{m - 1}] hash={tHash}",
+                HighlightIndices = Enumerable.Range(0, m).ToArray(),
+                PatternArray = patternCodes,
+                PatternOffset = 0,
+                TextHash = tHash,
+                PatternHash = pHash,
+            }
+        );
+
         var found = new List<int>();
         for (int i = 0; i <= n - m; i++)
         {
+            bool hashMatch = pHash == tHash;
+            string window = text.Substring(i, m);
+
             steps.Add(
                 new AlgorithmStep
                 {
                     StepNumber = step++,
                     Array = (int[])codes.Clone(),
-                    Description = $"Window [{i}..{i + m - 1}] hash={tHash}, pattern hash={pHash}",
+                    Description = hashMatch
+                        ? $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} == pattern hash={pHash} — hashes match, verifying characters…"
+                        : $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} ≠ pattern hash={pHash} — skip",
                     HighlightIndices = Enumerable.Range(i, m).ToArray(),
+                    PatternArray = patternCodes,
+                    PatternOffset = i,
+                    TextHash = tHash,
+                    PatternHash = pHash,
                 }
             );
 
-            if (pHash == tHash && text.Substring(i, m) == pattern)
+            if (hashMatch)
             {
-                found.Add(i);
+                if (window == pattern)
+                {
+                    found.Add(i);
+                    steps.Add(
+                        new AlgorithmStep
+                        {
+                            StepNumber = step++,
+                            Array = (int[])codes.Clone(),
+                            Description = $"Characters match! Pattern found at index {i}",
+                            SortedIndices = Enumerable.Range(i, m).ToArray(),
+                            PatternArray = patternCodes,
+                            PatternOffset = i,
+                            TextHash = tHash,
+                            PatternHash = pHash,
+                        }
+                    );
+                }
+                else
+                {
+                    steps.Add(
+                        new AlgorithmStep
+                        {
+                            StepNumber = step++,
+                            Array = (int[])codes.Clone(),
+                            Description =
+                                $"Hash collision! \"{window}\" ≠ \"{pattern}\" — spurious hit",
+                            HighlightIndices = Enumerable.Range(i, m).ToArray(),
+                            PatternArray = patternCodes,
+                            PatternOffset = i,
+                            TextHash = tHash,
+                            PatternHash = pHash,
+                        }
+                    );
+                }
+            }
+
+            if (i < n - m)
+            {
+                long oldHash = tHash;
+                tHash = (d * (tHash - text[i] * h) + text[i + m]) % q;
+                if (tHash < 0)
+                    tHash += q;
                 steps.Add(
                     new AlgorithmStep
                     {
                         StepNumber = step++,
                         Array = (int[])codes.Clone(),
-                        Description = $"Pattern found at index {i}",
-                        SortedIndices = Enumerable.Range(i, m).ToArray(),
+                        Description =
+                            $"Rolling hash: remove '{text[i]}', add '{text[i + m]}' → new hash={tHash}",
+                        HighlightIndices = Enumerable.Range(i + 1, m).ToArray(),
+                        PatternArray = patternCodes,
+                        PatternOffset = i + 1,
+                        TextHash = tHash,
+                        PatternHash = pHash,
                     }
                 );
-            }
-
-            if (i < n - m)
-            {
-                tHash = (d * (tHash - text[i] * h) + text[i + m]) % q;
-                if (tHash < 0)
-                    tHash += q;
             }
         }
 
@@ -431,7 +498,9 @@ public class StringService
                 StepNumber = step,
                 Array = (int[])codes.Clone(),
                 Description =
-                    found.Count > 0 ? $"Found {found.Count} match(es)" : "Pattern not found",
+                    found.Count > 0
+                        ? $"Found {found.Count} match(es) at: {string.Join(", ", found)}"
+                        : "Pattern not found",
             }
         );
         return steps;
@@ -444,18 +513,39 @@ public class StringService
     {
         ValidateText(text1);
         ValidateText(text2);
+        // Longest string on top (columns), shortest on the side (rows)
+        if (text1.Length > text2.Length)
+            (text1, text2) = (text2, text1);
         int m = text1.Length,
             n = text2.Length;
         var dp = new int[m + 1, n + 1];
         var steps = new List<AlgorithmStep>();
         int step = 0;
 
+        string rowHeaders = " " + text1;   // leading space for row 0
+        string colHeaders = " " + text2;   // leading space for col 0
+
+        int[][] SnapshotMatrix()
+        {
+            var matrix = new int[m + 1][];
+            for (int r = 0; r <= m; r++)
+            {
+                matrix[r] = new int[n + 1];
+                for (int c = 0; c <= n; c++)
+                    matrix[r][c] = dp[r, c];
+            }
+            return matrix;
+        }
+
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step++,
                 Array = new int[n + 1],
-                Description = $"LCS of \"{text1}\" and \"{text2}\"",
+                Description = $"LCS of \"{text1}\" and \"{text2}\" — initialise ({m + 1})x({n + 1}) matrix with zeros",
+                DpMatrix = SnapshotMatrix(),
+                RowHeaders = rowHeaders,
+                ColHeaders = colHeaders,
             }
         );
 
@@ -467,29 +557,35 @@ public class StringService
                     text1[i - 1] == text2[j - 1]
                         ? dp[i - 1, j - 1] + 1
                         : Math.Max(dp[i - 1, j], dp[i, j - 1]);
+                string desc = text1[i - 1] == text2[j - 1]
+                    ? $"'{text1[i - 1]}' == '{text2[j - 1]}': dp[{i}][{j}] = dp[{i - 1}][{j - 1}] + 1 = {dp[i, j]}"
+                    : $"'{text1[i - 1]}' \u2260 '{text2[j - 1]}': dp[{i}][{j}] = max({dp[i - 1, j]}, {dp[i, j - 1]}) = {dp[i, j]}";
+                steps.Add(
+                    new AlgorithmStep
+                    {
+                        StepNumber = step++,
+                        Description = desc,
+                        DpMatrix = SnapshotMatrix(),
+                        RowHeaders = rowHeaders,
+                        ColHeaders = colHeaders,
+                        HighlightRow = i,
+                        HighlightCol = j,
+                    }
+                );
             }
-            var row = new int[n + 1];
-            for (int j = 0; j <= n; j++)
-                row[j] = dp[i, j];
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = row,
-                    Description = $"Row {i} (char '{text1[i - 1]}'): [{string.Join(",", row)}]",
-                    HighlightIndices = [i],
-                }
-            );
         }
 
         // Backtrack to find the LCS string
         var lcs = new List<char>();
+        var backtrackCells = new List<int>();   // flat pairs [r0,c0, r1,c1, ...]
         int x = m,
             y = n;
         while (x > 0 && y > 0)
         {
             if (text1[x - 1] == text2[y - 1])
             {
+                backtrackCells.Add(x);
+                backtrackCells.Add(y);
                 lcs.Add(text1[x - 1]);
                 x--;
                 y--;
@@ -511,92 +607,192 @@ public class StringService
                 Array = finalRow,
                 Description = $"LCS = \"{new string(lcs.ToArray())}\" (length {lcs.Count})",
                 SortedIndices = Enumerable.Range(0, n + 1).ToArray(),
+                DpMatrix = SnapshotMatrix(),
+                RowHeaders = rowHeaders,
+                ColHeaders = colHeaders,
+                BacktrackPath = backtrackCells.ToArray(),
             }
         );
         return steps;
     }
 
-    // 6. Longest Palindromic Substring
-    // Time: O(n^2)
-    // Space: O(1)
+    // 6. Longest Palindromic Substring (Manacher’s Algorithm)
+    // Time: O(n)
+    // Space: O(n)
     public List<AlgorithmStep> LongestPalindrome(string text)
     {
         ValidateText(text);
-        var codes = ToCharCodes(text);
         var steps = new List<AlgorithmStep>();
-        int step = 0;
-        int start = 0,
-            maxLen = 1;
+        int stepNum = 0;
+
+        // Build transformed string: #c0#c1#...#cn-1#
+        int tLen = 2 * text.Length + 1;
+        var T = new char[tLen];
+        for (int i = 0; i < tLen; i++)
+            T[i] = i % 2 == 0 ? '#' : text[i / 2];
+
+        int[] tCodes = T.Select(c => (int)c).ToArray();
+        int[] P = new int[tLen];
+        int C = 0,
+            R = 0;
 
         steps.Add(
             new AlgorithmStep
             {
-                StepNumber = step++,
-                Array = (int[])codes.Clone(),
-                Description = $"Finding longest palindromic substring in \"{text}\"",
+                StepNumber = stepNum++,
+                Array = (int[])tCodes.Clone(),
+                PArray = (int[])P.Clone(),
+                ManacherCenter = -1,
+                ManacherRight = -1,
+                Description =
+                    $"Manacher’s algorithm on \"{new string(T)}\". "
+                    + "Rules — "
+                    + "R1: mirror palindrome fits inside larger palindrome (not touching border) → copy mirror length. "
+                    + "R2: mirror palindrome reaches exactly to the border → explore beyond mirror length. "
+                    + "R3: mirror palindrome extends beyond larger palindrome → explore beyond larger palindrome. "
+                    + "R4: letter is outside any known palindrome → explore from scratch.",
             }
         );
 
-        for (int center = 0; center < text.Length; center++)
+        for (int i = 0; i < tLen; i++)
         {
-            // Odd length
-            int lo = center,
-                hi = center;
-            while (lo >= 0 && hi < text.Length && text[lo] == text[hi])
+            int mirror = 2 * C - i;
+            bool insidePalindrome = i < R && mirror >= 0;
+            int distToBorder = R - i; // how far i is from the right boundary
+
+            string rule;
+            string outcome;
+
+            if (insidePalindrome && P[mirror] < distToBorder)
             {
-                if (hi - lo + 1 > maxLen)
-                {
-                    maxLen = hi - lo + 1;
-                    start = lo;
-                    steps.Add(
-                        new AlgorithmStep
-                        {
-                            StepNumber = step++,
-                            Array = (int[])codes.Clone(),
-                            Description =
-                                $"Palindrome \"{text.Substring(lo, hi - lo + 1)}\" at [{lo}..{hi}]",
-                            HighlightIndices = Enumerable.Range(lo, hi - lo + 1).ToArray(),
-                        }
-                    );
-                }
-                lo--;
-                hi++;
+                // Rule 1: mirror fits entirely, not touching border
+                P[i] = P[mirror];
+                rule = "R1";
+                outcome =
+                    $"mirror P[{mirror}]={P[mirror]} < distToBorder={distToBorder} → copy P[{i}]={P[i]}";
             }
-            // Even length
-            lo = center;
-            hi = center + 1;
-            while (lo >= 0 && hi < text.Length && text[lo] == text[hi])
+            else if (insidePalindrome && P[mirror] == distToBorder)
             {
-                if (hi - lo + 1 > maxLen)
-                {
-                    maxLen = hi - lo + 1;
-                    start = lo;
-                    steps.Add(
-                        new AlgorithmStep
-                        {
-                            StepNumber = step++,
-                            Array = (int[])codes.Clone(),
-                            Description =
-                                $"Palindrome \"{text.Substring(lo, hi - lo + 1)}\" at [{lo}..{hi}]",
-                            HighlightIndices = Enumerable.Range(lo, hi - lo + 1).ToArray(),
-                        }
-                    );
-                }
-                lo--;
-                hi++;
+                // Rule 2: mirror reaches exactly to border
+                P[i] = P[mirror];
+                rule = "R2";
+                outcome =
+                    $"mirror P[{mirror}]={P[mirror]} = distToBorder={distToBorder} → start at {P[i]}, explore";
+                // expand below
+                while (
+                    i - P[i] - 1 >= 0 && i + P[i] + 1 < tLen && T[i - P[i] - 1] == T[i + P[i] + 1]
+                )
+                    P[i]++;
+                outcome += $" → P[{i}]={P[i]}";
+            }
+            else if (insidePalindrome && P[mirror] > distToBorder)
+            {
+                // Rule 3: mirror extends beyond larger palindrome
+                P[i] = distToBorder;
+                rule = "R3";
+                outcome =
+                    $"mirror P[{mirror}]={P[mirror]} > distToBorder={distToBorder} → start at {P[i]}, explore";
+                // expand below
+                while (
+                    i - P[i] - 1 >= 0 && i + P[i] + 1 < tLen && T[i - P[i] - 1] == T[i + P[i] + 1]
+                )
+                    P[i]++;
+                outcome += $" → P[{i}]={P[i]}";
+            }
+            else
+            {
+                // Rule 4: outside known palindrome
+                P[i] = 0;
+                rule = "R4";
+                outcome = "explore from scratch";
+                while (
+                    i - P[i] - 1 >= 0 && i + P[i] + 1 < tLen && T[i - P[i] - 1] == T[i + P[i] + 1]
+                )
+                    P[i]++;
+                outcome += $" → P[{i}]={P[i]}";
+            }
+
+            // Update rightmost palindrome boundary
+            bool updatedCR = i + P[i] > R;
+            if (updatedCR)
+            {
+                C = i;
+                R = i + P[i];
+            }
+
+            // Build description
+            string desc = $"i={i} \'{T[i]}\': {rule} — {outcome}";
+            if (updatedCR)
+                desc += $"  [C→{C}, R→{R}]";
+
+            // Emit step: show palindrome span for non-trivial (P[i] >= 2)
+            // or show rule application for mirror-optimised steps
+            if (P[i] >= 2)
+            {
+                int origStart = (i - P[i]) / 2;
+                string pal = text.Substring(origStart, P[i]);
+                desc += $"  \"{pal}\"";
+
+                steps.Add(
+                    new AlgorithmStep
+                    {
+                        StepNumber = stepNum++,
+                        Array = (int[])tCodes.Clone(),
+                        PArray = (int[])P.Clone(),
+                        ManacherCenter = C,
+                        ManacherRight = R,
+                        HighlightIndices = Enumerable.Range(i - P[i], 2 * P[i] + 1).ToArray(),
+                        Description = desc,
+                    }
+                );
+            }
+            else if (rule != "R4" || P[i] > 0)
+            {
+                steps.Add(
+                    new AlgorithmStep
+                    {
+                        StepNumber = stepNum++,
+                        Array = (int[])tCodes.Clone(),
+                        PArray = (int[])P.Clone(),
+                        ManacherCenter = C,
+                        ManacherRight = R,
+                        HighlightIndices =
+                            P[i] > 0
+                                ? Enumerable.Range(i - P[i], 2 * P[i] + 1).ToArray()
+                                : new[] { i },
+                        Description = desc,
+                    }
+                );
             }
         }
 
+        // Find the longest palindrome
+        int maxRadius = 0,
+            maxCenter = 0;
+        for (int i = 0; i < tLen; i++)
+        {
+            if (P[i] > maxRadius)
+            {
+                maxRadius = P[i];
+                maxCenter = i;
+            }
+        }
+
+        int resStart = (maxCenter - maxRadius) / 2;
+        int resLen = maxRadius;
+        var origCodes = ToCharCodes(text);
+
         steps.Add(
             new AlgorithmStep
             {
-                StepNumber = step,
-                Array = (int[])codes.Clone(),
+                StepNumber = stepNum,
+                Array = (int[])origCodes.Clone(),
                 Description =
-                    $"Longest palindrome: \"{text.Substring(start, maxLen)}\" (length {maxLen})",
-                SortedIndices = Enumerable.Range(start, maxLen).ToArray(),
+                    $"Longest palindrome: \"{text.Substring(resStart, resLen)}\" (length {resLen})",
+                SortedIndices = Enumerable.Range(resStart, resLen).ToArray(),
             }
         );
+
         return steps;
     }
 

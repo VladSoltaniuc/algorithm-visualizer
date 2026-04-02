@@ -32,15 +32,11 @@ public class DynamicProgController : ControllerBase
     public IActionResult CoinChange([FromBody] int[] coins, int amount) =>
         Ok(_srv.CoinChange(coins, amount));
 
-    [HttpPost("matrix-chain")]
-    public IActionResult MatrixChain([FromBody] int[] dims) => Ok(_srv.MatrixChain(dims));
 
     [HttpPost("edit-distance")]
     public IActionResult EditDistance([FromBody] StringRequest req) =>
         Ok(_srv.EditDistance(req.Text, req.Pattern));
 
-    [HttpPost("rod-cutting")]
-    public IActionResult RodCutting([FromBody] int[] prices) => Ok(_srv.RodCutting(prices));
 
     [HttpPost("subset-sum/{target:int}")]
     public IActionResult SubsetSum([FromBody] int[] input, int target) =>

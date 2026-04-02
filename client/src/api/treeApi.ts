@@ -12,6 +12,16 @@ async function post(url: string, body: number[]): Promise<AlgorithmStep[]> {
   return res.json();
 }
 
+async function postJson(url: string, body: unknown): Promise<AlgorithmStep[]> {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error((await res.text()) || `Server error: ${res.status}`);
+  return res.json();
+}
+
 export const treeApi: Record<string, (...args: unknown[]) => Promise<AlgorithmStep[]>> = {
   inorder: (arr: unknown) => post(`${BASE}/inorder`, arr as number[]),
   preorder: (arr: unknown) => post(`${BASE}/preorder`, arr as number[]),
@@ -25,4 +35,5 @@ export const treeApi: Record<string, (...args: unknown[]) => Promise<AlgorithmSt
   invert: (arr: unknown) => post(`${BASE}/invert`, arr as number[]),
   validateBst: (arr: unknown) => post(`${BASE}/validate-bst`, arr as number[]),
   diameter: (arr: unknown) => post(`${BASE}/diameter`, arr as number[]),
+  huffman: (text: unknown) => postJson(`${BASE}/huffman`, { text, pattern: '' }),
 };

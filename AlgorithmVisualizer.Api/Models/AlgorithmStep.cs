@@ -11,4 +11,17 @@ public class AlgorithmStep
     public int PatternOffset { get; set; } = -1;
     public int PatternHighlightIndex { get; set; } = -1;
     public bool IsNumericArray { get; set; } = false;
+    public long? TextHash { get; set; }
+    public long? PatternHash { get; set; }
+    public int[] PArray { get; set; } = [];
+    public int ManacherCenter { get; set; } = -1;
+    public int ManacherRight { get; set; } = -1;
+
+    // DP matrix visualization (e.g. LCS, Edit Distance)
+    public int[][]? DpMatrix { get; set; }
+    public string? RowHeaders { get; set; }
+    public string? ColHeaders { get; set; }
+    public int HighlightRow { get; set; } = -1;
+    public int HighlightCol { get; set; } = -1;
+    public int[]? BacktrackPath { get; set; }
 }

@@ -1,3 +1,4 @@
+using AlgorithmVisualizer.Api.Models;
 using AlgorithmVisualizer.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,4 +45,8 @@ public class TreeController : ControllerBase
 
     [HttpPost("diameter")]
     public IActionResult Diameter([FromBody] int[] input) => Ok(_srv.Diameter(input));
+
+    [HttpPost("huffman")]
+    public IActionResult Huffman([FromBody] StringRequest req) =>
+        Ok(_srv.HuffmanEncoding(req.Text));
 }

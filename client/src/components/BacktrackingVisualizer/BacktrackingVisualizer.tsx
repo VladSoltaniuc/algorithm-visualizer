@@ -14,7 +14,7 @@ interface Props {
  * Detects the grid shape from the array length and slug to choose the right layout:
  *  - N-Queens: arr[row] = col of queen  →  N×N chessboard
  *  - Sudoku: 81 cells  →  9×9 grid
- *  - Rat/Knight: n² cells  →  n×n grid
+ *  - Rat: n² cells  →  n×n grid
  *  - Others (permutations, subsets, combos): linear cell row
  */
 export default function BacktrackingVisualizer({ steps, onRun, disabled, slug }: Props) {
@@ -35,9 +35,9 @@ export default function BacktrackingVisualizer({ steps, onRun, disabled, slug }:
           return <GridBoard arr={arr} cols={9} hl={hl} done={done} />;
         }
 
-        // Square grids (rat-in-maze, knights-tour)
+        // Square grids (rat-in-maze)
         const sqrt = Math.round(Math.sqrt(arr.length));
-        if (sqrt * sqrt === arr.length && arr.length > 1 && (slug === "rat-in-maze" || slug === "knights-tour")) {
+        if (sqrt * sqrt === arr.length && arr.length > 1 && (slug === "rat-in-maze")) {
           return <GridBoard arr={arr} cols={sqrt} hl={hl} done={done} />;
         }
 

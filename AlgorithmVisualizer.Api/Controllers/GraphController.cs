@@ -27,8 +27,6 @@ public class GraphController : ControllerBase
     [HttpPost("bellman-ford")]
     public IActionResult BellmanFord([FromBody] GraphRequest req) => Ok(_srv.BellmanFord(req));
 
-    [HttpPost("floyd-warshall")]
-    public IActionResult FloydWarshall([FromBody] GraphRequest req) => Ok(_srv.FloydWarshall(req));
 
     [HttpPost("topological-sort")]
     public IActionResult TopologicalSort([FromBody] GraphRequest req) =>

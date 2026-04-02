@@ -60,39 +60,6 @@
   font-family: 'Courier New', monospace;
   color: #666;
 }
-
-/* ── 2×2 Matrix (Fibonacci Matrix) ── */
-.nt-matrix {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  border: 2px solid #555;
-  border-radius: 6px;
-  padding: 4px;
-  background: #e9ecef;
-}
-
-.nt-matrix-row {
-  display: flex;
-  gap: 2px;
-}
-
-.nt-matrix-cell {
-  width: 64px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: #333;
-  transition: background 0.2s, color 0.2s;
-}
-.nt-matrix-cell.active { background: #e94560; color: #fff; }
-.nt-matrix-cell.done { background: #06d6a0; color: #fff; }
-
 /* ── Sieve grid ── */
 .sieve-grid {
   display: grid;

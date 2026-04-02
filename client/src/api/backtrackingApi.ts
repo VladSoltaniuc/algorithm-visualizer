@@ -18,13 +18,6 @@ async function get(url: string): Promise<AlgorithmStep[]> {
   return res.json();
 }
 
-function parseGraphInput(input: string): { nodeCount: number; edges: number[][] } {
-  const parts = input.split(';').map(s => s.trim()).filter(Boolean);
-  const nodeCount = parseInt(parts[0], 10);
-  const edges = parts.slice(1).map(e => e.split(',').map(Number));
-  return { nodeCount, edges };
-}
-
 export const backtrackingApi: Record<string, (...args: unknown[]) => Promise<AlgorithmStep[]>> = {
   nQueens: (n: unknown) => get(`${BASE}/n-queens/${n}`),
   sudoku: (grid: unknown) => post(`${BASE}/sudoku`, grid),
@@ -32,15 +25,10 @@ export const backtrackingApi: Record<string, (...args: unknown[]) => Promise<Alg
   subsets: (arr: unknown) => post(`${BASE}/subsets`, arr),
   ratInMaze: (grid: unknown, n?: unknown) =>
     post(`${BASE}/rat-in-maze/${n}`, grid),
-  knightsTour: (n: unknown) => get(`${BASE}/knights-tour/${n}`),
   wordSearch: (gridStr: unknown, pattern?: unknown) =>
     post(`${BASE}/word-search`, { text: gridStr, pattern: pattern ?? '' }),
   combinationSum: (arr: unknown, target?: unknown) =>
     post(`${BASE}/combination-sum/${target}`, arr),
   palindromePartitioning: (text: unknown) =>
     post(`${BASE}/palindrome-partitioning`, { text, pattern: '' }),
-  graphColoring: (graphStr: unknown, numColors?: unknown) => {
-    const { nodeCount, edges } = parseGraphInput(graphStr as string);
-    return post(`${BASE}/graph-coloring/${numColors}`, { nodeCount, edges, startNode: 0 });
-  },
 };

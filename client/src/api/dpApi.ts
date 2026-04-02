@@ -29,10 +29,8 @@ export const dpApi: Record<string, (...args: unknown[]) => Promise<AlgorithmStep
   lis: (arr: unknown) => post(`${BASE}/lis`, arr),
   coinChange: (coins: unknown, amount?: unknown) =>
     post(`${BASE}/coin-change/${amount}`, coins),
-  matrixChain: (dims: unknown) => post(`${BASE}/matrix-chain`, dims),
   editDistance: (text: unknown, pattern?: unknown) =>
     post(`${BASE}/edit-distance`, { text, pattern: pattern ?? '' }),
-  rodCutting: (prices: unknown) => post(`${BASE}/rod-cutting`, prices),
   subsetSum: (arr: unknown, target?: unknown) =>
     post(`${BASE}/subset-sum/${target}`, arr),
   climbingStairs: (n: unknown) => get(`${BASE}/climbing-stairs/${n}`),

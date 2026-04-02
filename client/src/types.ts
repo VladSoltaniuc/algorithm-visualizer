@@ -8,6 +8,19 @@ export interface AlgorithmStep {
   patternOffset?: number;
   patternHighlightIndex?: number;
   isNumericArray?: boolean;
+  textHash?: number;
+  patternHash?: number;
+  pArray?: number[];
+  manacherCenter?: number;
+  manacherRight?: number;
+
+  // DP matrix visualization (e.g. LCS)
+  dpMatrix?: number[][];
+  rowHeaders?: string;
+  colHeaders?: string;
+  highlightRow?: number;
+  highlightCol?: number;
+  backtrackPath?: number[];
 }
 
 export interface AlgorithmConfig {

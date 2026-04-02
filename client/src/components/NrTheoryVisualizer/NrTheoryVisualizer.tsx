@@ -12,8 +12,8 @@ interface Props {
 /**
  * Number Theory visualizer.
  *  - Sieve: large bitmap grid (index = number, 1 = prime, 0 = composite)
- *  - Small arrays (GCD, ExtGCD, FastExp, Modular, CRT, FibMatrix): labeled value cards
- *  - Growing lists (PrimeFactorization, CatalanNumbers): sequential cells
+ *  - Small arrays (GCD): labeled value cards
+ *  - Growing lists (PrimeFactorization): sequential cells
  */
 export default function NrTheoryVisualizer({ steps, onRun, disabled, slug }: Props) {
   return (
@@ -28,26 +28,6 @@ export default function NrTheoryVisualizer({ steps, onRun, disabled, slug }: Pro
           return <SieveGrid arr={arr} hl={hl} done={done} />;
         }
 
-        // Fibonacci Matrix: 4 cells → 2×2 matrix display
-        if (slug === "fibonacci-matrix" && arr.length === 4) {
-          return (
-            <div className="nt-vis">
-              <div className="nt-matrix">
-                {[0, 1].map((r) => (
-                  <div key={r} className="nt-matrix-row">
-                    {[0, 1].map((c) => {
-                      const idx = r * 2 + c;
-                      let cls = "nt-matrix-cell";
-                      if (done.has(idx)) cls += " done";
-                      else if (hl.has(idx)) cls += " active";
-                      return <div key={c} className={cls}>{arr[idx]}</div>;
-                    })}
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        }
 
         // Bit Manipulation: show as bit-cards with binary representation
         if (slug === "bit-manipulation") {

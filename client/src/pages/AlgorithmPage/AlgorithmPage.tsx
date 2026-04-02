@@ -8,6 +8,7 @@ import { graphApi } from "../../api/graphApi";
 import { dpApi } from "../../api/dpApi";
 import { backtrackingApi } from "../../api/backtrackingApi";
 import { nrTheoryApi } from "../../api/nrTheoryApi";
+import { treeApi } from "../../api/treeApi";
 import ArrayVisualizer from "../../components/ArrayVisualizer/ArrayVisualizer";
 import StringVisualizer from "../../components/StringVisualizer/StringVisualizer";
 import GraphVisualizer from "../../components/GraphVisualizer/GraphVisualizer";
@@ -30,6 +31,7 @@ const apiMap: Record<
   dp: dpApi,
   backtracking: backtrackingApi,
   "number-theory": nrTheoryApi,
+  tree: treeApi,
 };
 
 const slugToApiKey = (slug: string): string =>
@@ -270,6 +272,13 @@ export default function AlgorithmPage() {
         />
       )}
       {category === "array" && (
+        <ArrayVisualizer
+          steps={steps}
+          onRun={handleRun}
+          disabled={loading || spamPrevention}
+        />
+      )}
+      {category === "tree" && (
         <ArrayVisualizer
           steps={steps}
           onRun={handleRun}

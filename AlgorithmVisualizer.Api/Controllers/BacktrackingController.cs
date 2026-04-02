@@ -30,8 +30,6 @@ public class BacktrackingController : ControllerBase
     [HttpPost("rat-in-maze/{n:int}")]
     public IActionResult RatInMaze([FromBody] int[] grid, int n) => Ok(_srv.RatInMaze(grid, n));
 
-    [HttpGet("knights-tour/{n:int}")]
-    public IActionResult KnightsTour(int n) => Ok(_srv.KnightsTour(n));
 
     [HttpPost("word-search")]
     public IActionResult WordSearch([FromBody] StringRequest req) =>
@@ -45,7 +43,4 @@ public class BacktrackingController : ControllerBase
     public IActionResult PalindromePartitioning([FromBody] StringRequest req) =>
         Ok(_srv.PalindromePartitioning(req.Text));
 
-    [HttpPost("graph-coloring/{numColors:int}")]
-    public IActionResult GraphColoring([FromBody] GraphRequest req, int numColors) =>
-        Ok(_srv.GraphColoring(req, numColors));
 }

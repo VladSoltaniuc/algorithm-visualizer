@@ -637,4 +637,119 @@ public class TreeService
         );
         return 1 + Math.Max(l, r);
     }
+
+    // 11. Huffman Encoding
+    // Time: O(n log n) where n = number of unique characters
+    // Space: O(n)
+    public List<AlgorithmStep> HuffmanEncoding(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            throw new ArgumentException("Provide non-empty text.");
+
+        var steps = new List<AlgorithmStep>();
+        int step = 0;
+
+        // Count frequencies
+        var freq = new Dictionary<char, int>();
+        foreach (var ch in text)
+            freq[ch] = freq.TryGetValue(ch, out int v) ? v + 1 : 1;
+
+        // Show frequencies
+        var sortedChars = freq.OrderByDescending(kv => kv.Value).ToList();
+        steps.Add(new AlgorithmStep
+        {
+            StepNumber = step++,
+            Array = sortedChars.Select(kv => kv.Value).ToArray(),
+            Description = $"Character frequencies: {string.Join(", ", sortedChars.Select(kv => $"'{kv.Key}'={kv.Value}"))}",
+            HighlightIndices = Enumerable.Range(0, sortedChars.Count).ToArray(),
+        });
+
+        // Build priority queue (min-heap via sorted list)
+        var nodes = new List<(int weight, string label, HuffNode node)>();
+        foreach (var kv in freq)
+            nodes.Add((kv.Value, kv.Key.ToString(), new HuffNode(kv.Key, kv.Value)));
+
+        // Sort ascending by weight
+        nodes.Sort((a, b) => a.weight.CompareTo(b.weight));
+
+        steps.Add(new AlgorithmStep
+        {
+            StepNumber = step++,
+            Array = nodes.Select(n => n.weight).ToArray(),
+            Description = $"Priority queue (sorted): {string.Join(", ", nodes.Select(n => $"'{n.label}':{n.weight}"))}",
+        });
+
+        // Merge until one node remains
+        while (nodes.Count > 1)
+        {
+            var left = nodes[0];
+            var right = nodes[1];
+            nodes.RemoveAt(0);
+            nodes.RemoveAt(0);
+
+            int merged = left.weight + right.weight;
+            string mergedLabel = $"({left.label}+{right.label})";
+            var parent = new HuffNode(null, merged) { Left = left.node, Right = right.node };
+
+            // Insert in sorted position
+            int pos = nodes.FindIndex(n => n.weight >= merged);
+            if (pos < 0) pos = nodes.Count;
+            nodes.Insert(pos, (merged, mergedLabel, parent));
+
+            steps.Add(new AlgorithmStep
+            {
+                StepNumber = step++,
+                Array = nodes.Select(n => n.weight).ToArray(),
+                Description = $"Merge '{left.label}'({left.weight}) + '{right.label}'({right.weight}) = {merged}",
+                HighlightIndices = [pos],
+            });
+        }
+
+        // Generate codes via DFS
+        var codes = new Dictionary<char, string>();
+        GenerateCodes(nodes[0].node, "", codes);
+
+        var codeList = codes.OrderBy(kv => kv.Value.Length).ThenBy(kv => kv.Key).ToList();
+        string encoded = string.Concat(text.Select(ch => codes[ch]));
+        int originalBits = text.Length * 8;
+        int huffBits = encoded.Length;
+
+        steps.Add(new AlgorithmStep
+        {
+            StepNumber = step++,
+            Array = codeList.Select(kv => kv.Value.Length).ToArray(),
+            Description = $"Huffman codes: {string.Join(", ", codeList.Select(kv => $"'{kv.Key}'={kv.Value}"))}",
+            SortedIndices = Enumerable.Range(0, codeList.Count).ToArray(),
+        });
+
+        steps.Add(new AlgorithmStep
+        {
+            StepNumber = step,
+            Array = [originalBits, huffBits],
+            Description = $"Original: {originalBits} bits | Encoded: {huffBits} bits | Ratio: {(double)huffBits / originalBits:P1}",
+            SortedIndices = [0, 1],
+        });
+
+        return steps;
+    }
+
+    private class HuffNode
+    {
+        public char? Char;
+        public int Weight;
+        public HuffNode? Left, Right;
+        public HuffNode(char? ch, int w) { Char = ch; Weight = w; }
+    }
+
+    private static void GenerateCodes(HuffNode node, string prefix, Dictionary<char, string> codes)
+    {
+        if (node.Left == null && node.Right == null && node.Char.HasValue)
+        {
+            codes[node.Char.Value] = prefix.Length > 0 ? prefix : "0";
+            return;
+        }
+        if (node.Left != null) GenerateCodes(node.Left, prefix + "0", codes);
+        if (node.Right != null) GenerateCodes(node.Right, prefix + "1", codes);
+    }
+
 }
