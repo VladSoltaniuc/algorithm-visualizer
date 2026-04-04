@@ -67,6 +67,15 @@
   border-bottom-color: #e94560;
 }
 
+.nav-tab-label.all-learned {
+  color: #4ade80;
+}
+
+.nav-tab-group:hover .nav-tab-label.all-learned {
+  color: #22c55e;
+  border-bottom-color: #22c55e;
+}
+
 .nav-tab-group:hover .nav-tab-label::after {
   transform: rotate(180deg);
 }

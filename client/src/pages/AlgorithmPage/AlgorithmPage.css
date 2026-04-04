@@ -61,6 +61,119 @@
   white-space: pre-line;
 }
 
+/* ── Info tabs (What is it?, Usecase?, Pros & Cons) ── */
+.algo-tabs {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.algo-tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.algo-tab-btn {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #888;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.algo-tab-btn:hover {
+  color: #1a1a2e;
+}
+
+.algo-tab-btn.active {
+  color: #1a1a2e;
+  border-bottom-color: #e94560;
+  font-weight: 600;
+}
+
+.algo-tab-content {
+  min-height: 60px;
+}
+
+.algo-tab-text {
+  color: #555;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.pros-cons-columns {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.pros-list,
+.cons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  min-width: 240px;
+}
+
+.pro-item,
+.con-item {
+  padding: 0.35rem 0;
+  line-height: 1.45;
+  font-size: 0.92rem;
+}
+
+.pro-item::before {
+  content: "✓ ";
+  font-weight: 700;
+}
+
+.con-item::before {
+  content: "✗ ";
+  font-weight: 700;
+}
+
+.pro-item {
+  color: #16a34a;
+}
+
+.con-item {
+  color: #dc2626;
+}
+
+/* ── YT Tutorial link ── */
+.yt-tutorial-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #1a1a2e;
+  font-weight: 500;
+  font-size: 0.92rem;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.yt-tutorial-link:hover {
+  background: #fef2f2;
+  box-shadow: 0 2px 8px rgba(255, 0, 0, 0.12);
+}
+
+.yt-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
 .algo-controls {
   display: flex;
     flex-wrap: wrap;

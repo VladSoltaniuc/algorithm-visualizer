@@ -148,7 +148,11 @@ export default function Navigation() {
       <div className="nav-tabs">
         {tabs.map((tab) => (
           <div key={tab.label} className="nav-tab-group">
-            <span className="nav-tab-label">{tab.label}</span>
+            <span
+              className={`nav-tab-label${tab.items.every((item) => isLearned(item.path.slice(1))) ? " all-learned" : ""}`}
+            >
+              {tab.label}
+            </span>
             <div className="nav-subtabs">
               {tab.items.map((item) => {
                 const key = item.path.slice(1);

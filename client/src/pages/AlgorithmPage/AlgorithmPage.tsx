@@ -54,6 +54,7 @@ export default function AlgorithmPage() {
   const [loading, setLoading] = useState(false);
   const [spamPrevention, setSpamPrevention] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'what' | 'usecase' | 'proscons'>('what');
 
   useEffect(() => {
     if (!config) return;
@@ -63,6 +64,7 @@ export default function AlgorithmPage() {
     setPattern(config.defaultPattern ?? "");
     setSteps([]);
     setError(null);
+    setActiveTab('what');
   }, [category, slug]);
 
   if (!category || !slug) return <Navigate to="/array/bubble-sort" replace />;
@@ -176,7 +178,49 @@ export default function AlgorithmPage() {
           Mark as learned
         </label>
       </div>
-      <p className="algo-description">{config.description}</p>
+      <div className="algo-tabs">
+        <div className="algo-tab-bar">
+          <button className={`algo-tab-btn${activeTab === 'what' ? ' active' : ''}`} onClick={() => setActiveTab('what')}>What is it?</button>
+          <button className={`algo-tab-btn${activeTab === 'usecase' ? ' active' : ''}`} onClick={() => setActiveTab('usecase')}>Usecase?</button>
+          <button className={`algo-tab-btn${activeTab === 'proscons' ? ' active' : ''}`} onClick={() => setActiveTab('proscons')}>Pros &amp; Cons</button>
+        </div>
+        <div className="algo-tab-content">
+          {activeTab === 'what' && (
+            <p className="algo-tab-text">{config.description}</p>
+          )}
+          {activeTab === 'usecase' && (
+            <p className="algo-tab-text">{config.usecase}</p>
+          )}
+          {activeTab === 'proscons' && (
+            <div className="pros-cons-columns">
+              <ul className="pros-list">
+                {config.pros.map((pro, i) => (
+                  <li key={i} className="pro-item">{pro}</li>
+                ))}
+              </ul>
+              <ul className="cons-list">
+                {config.cons.map((con, i) => (
+                  <li key={i} className="con-item">{con}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        {config.ytTutorial && (
+          <a
+            href={config.ytTutorial}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="yt-tutorial-link"
+          >
+            <svg className="yt-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#FF0000" d="M47.52 13.4a5.97 5.97 0 0 0-4.2-4.22C39.52 8 24 8 24 8s-15.52 0-19.32 1.18a5.97 5.97 0 0 0-4.2 4.22C0 17.18 0 24 0 24s0 6.82.48 10.6a5.97 5.97 0 0 0 4.2 4.22C8.48 40 24 40 24 40s15.52 0 19.32-1.18a5.97 5.97 0 0 0 4.2-4.22C48 30.82 48 24 48 24s0-6.82-.48-10.6Z"/>
+              <path fill="#FFF" d="m19.2 31.2 12.96-7.2L19.2 16.8v14.4Z"/>
+            </svg>
+            Watch Tutorial
+          </a>
+        )}
+      </div>
 
       <div className="algo-controls">
         <div className="input-row">

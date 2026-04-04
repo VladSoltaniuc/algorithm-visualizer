@@ -30,6 +30,9 @@ export interface AlgorithmConfig {
   category: string;
   defaultInput: string;
   description: string;
+  usecase: string;
+  pros: string[];
+  cons: string[];
   inputLabel?: string;
   inputType?: 'numbers' | 'text' | 'number' | 'graph';
   needsTarget?: boolean;
@@ -40,4 +43,5 @@ export interface AlgorithmConfig {
   needsPattern?: boolean;
   patternLabel?: string;
   defaultPattern?: string;
+  ytTutorial?: string;
 }
