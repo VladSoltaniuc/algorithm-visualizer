@@ -8,7 +8,7 @@
 
 .graph-svg {
   width: 100%;
-  max-width: 420px;
+  max-width: 336px;
   height: auto;
 }
 
@@ -28,13 +28,13 @@
 
 .graph-node-id {
   fill: #fff;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
 }
 
 .graph-node-val {
   fill: #fff;
-  font-size: 8px;
+  font-size: 6px;
   font-weight: 500;
   opacity: 0.85;
 }

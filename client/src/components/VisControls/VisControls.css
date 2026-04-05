@@ -33,7 +33,7 @@
   color: #666;
   margin-left: 0.75rem;
 }
-.speed-control input[type="range"] { width: 100px; }
+.speed-control input[type="range"] { width: 80px; }
 
 .step-counter {
   font-size: 0.85rem;

@@ -33,7 +33,7 @@ export const arrayConfig: AlgorithmConfig[] = [
       'Not stable — equal elements may be reordered',
       'O(n) space worst case — deep recursion on pathological inputs',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=Hoixgm4-P4M',
+    ytTutorial: 'https://www.youtube.com/watch?v=MZaf_9IZCrc',
   },
   {
     name: 'Merge Sort', slug: 'merge-sort', endpoint: 'merge-sort', category: 'array', defaultInput: '5,3,8,1,2,7,4',
@@ -64,7 +64,7 @@ export const arrayConfig: AlgorithmConfig[] = [
       'Only works on random-access structures (arrays) — not linked lists',
       'Off-by-one errors make it notoriously tricky to implement correctly',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=s4DPM8ct1pI',
+    ytTutorial: 'https://www.youtube.com/watch?v=MFhxShGxHWc',
   },
   {
     name: 'Insertion Sort', slug: 'insertion-sort', endpoint: 'insertion-sort', category: 'array', defaultInput: '5,3,8,1,2',
@@ -112,7 +112,7 @@ export const arrayConfig: AlgorithmConfig[] = [
       'Requires sorted input — sorting first adds O(n log n)',
       'Only applicable to specific problem patterns — not a general technique',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=On03HWe2tZM',
+    ytTutorial: 'https://youtu.be/-gjxg6Pln50?t=215',
   },
   {
     name: 'Sliding Window', slug: 'sliding-window', endpoint: 'sliding-window', category: 'array', needsWindowSize: true, defaultInput: '2,1,5,1,3,2', defaultWindowSize: 3,
@@ -127,7 +127,7 @@ export const arrayConfig: AlgorithmConfig[] = [
       'Only works on contiguous subarray/substring problems',
       'Variable-size windows can be harder to implement correctly',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=MK-NZ4hN7rs',
+    ytTutorial: 'https://www.youtube.com/watch?v=dOonV4byDEg',
   },
   {
     name: "Kadane's Algorithm", slug: 'kadane', endpoint: 'kadane', category: 'array', defaultInput: '-2,1,-3,4,-1,2,1,-5,4',
@@ -142,7 +142,7 @@ export const arrayConfig: AlgorithmConfig[] = [
       'Only finds the sum — tracking the actual subarray indices requires extra bookkeeping',
       'Requires at least one positive element for a meaningful result (all-negatives edge case needs special handling)',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=86CQq3pKSUw',
+    ytTutorial: 'https://www.youtube.com/watch?v=lq8KOs1Ujas',
   },
 ];
 
@@ -161,11 +161,11 @@ export const stringConfig: AlgorithmConfig[] = [
       'More complex to implement than naive search',
       'Slower in practice than Boyer-Moore for typical English text',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=JoF0Z7nVSrA',
+    ytTutorial: 'https://www.youtube.com/watch?v=V5-7GzOfADQ',
   },
   {
     name: 'Boyer-Moore', slug: 'boyer-moore', endpoint: 'boyer-moore', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'HERE IS A SIMPLE EXAMPLE', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'EXAMPLE',
-    description: 'Imagine you\'re scanning a page looking for the word "EXAMPLE". Instead of reading left to right like most people, Boyer-Moore holds the pattern up against the text and reads it backwards — from right to left. The moment it spots a mismatch, it checks: does this mismatched character even appear anywhere in the pattern? If not, the entire pattern can be skipped past that character in one jump. This is what makes it fast — it skips large chunks of text instead of checking every single character.',
+    description: 'Imagine you\'re scanning a page looking for the word "EXAMPLE". Instead of reading left to right like most people, Boyer-Moore holds the pattern up against the text and reads it backwards — from right to left. The moment it spots a mismatch, it checks: does this mismatched character even appear anywhere in the pattern? If not, the entire pattern can be skipped past that character in one jump. This is what makes it fast — it skips large chunks of text instead of checking every single character. This algorithm is a bit harder, check out the tutorial and learn about the bad-character and good-suffix rules that make those jumps possible. The whole ideea is to apply both rules and see the which one saves you the most steps (which one can jump further ahead).',
     usecase: 'Text search in editors (Ctrl+F), grep implementations, and any single-pattern search on large texts — especially with large alphabets.',
     pros: [
       'Sublinear in practice — often examines fewer than n characters by skipping ahead',
@@ -208,11 +208,11 @@ export const stringConfig: AlgorithmConfig[] = [
       'One of the hardest string algorithms to understand and implement correctly',
       'Requires string preprocessing (inserting separator characters)',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=V-sEwsca1ak',
+    ytTutorial: 'https://www.youtube.com/watch?v=1ir1eryUr80',
   },
   {
     name: 'Anagram Detection', slug: 'anagram-detection', endpoint: 'anagram-detection', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'cbaebabacd', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'abc',
-    description: 'Imagine you\'re looking for all hidden rearrangements of the word "abc" inside the text "cbaebabacd". An anagram is just a reshuffling of the same letters — "bca", "cab", and "abc" are all anagrams of each other. Anagram Detection slides a window the same size as the pattern across the text, and at each position checks whether the window contains exactly the same letters in any order. Instead of rearranging and comparing every time, it keeps a running count of letters in the current window and updates it with each step — dropping the leftmost letter and picking up the new right one.',
+    description: 'Short answer, Sliding Window + Hashmaps. Long answer, imagine you\'re looking for all hidden rearrangements of the word "abc" inside the text "cbaebabacd". An anagram is just a reshuffling of the same letters — "bca", "cab", and "abc" are all anagrams of each other. Anagram Detection slides a window the same size as the pattern across the text, and at each position checks whether the window contains exactly the same letters in any order. Instead of rearranging and comparing every time, it keeps a running count of letters in the current window and updates it with each step — dropping the leftmost letter and picking up the new right one.',
     usecase: 'Word games, spell checking, genomic analysis (finding rearranged DNA subsequences), and text analysis tools.',
     pros: [
       'O(n) time — each character enters and leaves the window exactly once',
@@ -223,7 +223,7 @@ export const stringConfig: AlgorithmConfig[] = [
       'Limited to fixed-length pattern matches — only finds anagrams of the exact pattern length',
       'Alphabet size affects constant factor — larger alphabets mean larger frequency arrays',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=G8xtZy0fDKg',
+    ytTutorial: 'https://www.youtube.com/watch?v=IRN1VcA8CGc',
   },
   {
     name: 'String Reversal', slug: 'reversal', endpoint: 'reversal', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'hello',

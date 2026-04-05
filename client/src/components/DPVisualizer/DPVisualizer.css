@@ -13,7 +13,7 @@
 }
 
 .dp-idx {
-  min-width: 42px;
+  min-width: 34px;
   text-align: center;
   font-size: 0.65rem;
   color: #999;
@@ -27,8 +27,8 @@
 }
 
 .dp-cell {
-  min-width: 42px;
-  height: 42px;
+  min-width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,14 +68,14 @@
 }
 
 .lcs-corner {
-  min-width: 36px;
-  height: 36px;
+  min-width: 29px;
+  height: 29px;
 }
 
 .lcs-col-hdr,
 .lcs-row-hdr {
-  min-width: 36px;
-  height: 36px;
+  min-width: 29px;
+  height: 29px;
   font-weight: 700;
   font-size: 0.85rem;
   color: #495057;
@@ -86,8 +86,8 @@
 }
 
 .lcs-cell {
-  min-width: 36px;
-  height: 36px;
+  min-width: 29px;
+  height: 29px;
   text-align: center;
   vertical-align: middle;
   font-weight: 600;

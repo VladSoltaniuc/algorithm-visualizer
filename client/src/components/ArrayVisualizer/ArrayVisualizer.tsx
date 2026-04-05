@@ -92,12 +92,14 @@ export default function ArrayVisualizer({ steps, onRun, disabled }: Props) {
               );
             })}
           </div>
-          <p className="step-description">{step.description}</p>
-          {step && (
-            <span className="step-counter">
-              Step {currentStep + 1} / {steps.length}
-            </span>
-          )}
+          <p className="step-description">
+            {step.description}
+            {step && (
+              <span className="step-counter">
+                Step {currentStep + 1} / {steps.length}
+              </span>
+            )}
+          </p>
         </>
       )}
     </div>

@@ -10,13 +10,13 @@
 /* ── Value cards (GCD, ExtGCD, etc.) ── */
 .nt-cards {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .nt-card {
-  min-width: 56px;
+  min-width: 45px;
   padding: 0.6rem 0.75rem;
   background: #e9ecef;
   border-radius: 8px;
@@ -63,16 +63,16 @@
 /* ── Sieve grid ── */
 .sieve-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 36px);
-  gap: 3px;
+  grid-template-columns: repeat(auto-fill, 29px);
+  gap: 2px;
   justify-content: center;
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
 }
 
 .sieve-cell {
-  width: 36px;
-  height: 36px;
+  width: 29px;
+  height: 29px;
   display: flex;
   align-items: center;
   justify-content: center;
