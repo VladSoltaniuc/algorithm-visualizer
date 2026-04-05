@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   arrayConfig,
@@ -141,6 +142,13 @@ const tabs: Tab[] = [
 
 export default function Navigation() {
   const { isLearned } = useLearned();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setOpenCategory(null);
+  };
 
   return (
     <nav className="nav">
@@ -174,6 +182,55 @@ export default function Navigation() {
           </div>
         ))}
       </div>
+
+      <button
+        className={`nav-burger${menuOpen ? " open" : ""}`}
+        onClick={() => setMenuOpen((o) => !o)}
+        aria-label="Toggle menu"
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+
+      {menuOpen && (
+        <div className="nav-mobile-menu">
+          {tabs.map((tab) => (
+            <div key={tab.label} className="nav-mobile-group">
+              <button
+                className={`nav-mobile-category${openCategory === tab.label ? " open" : ""}`}
+                onClick={() =>
+                  setOpenCategory((c) => (c === tab.label ? null : tab.label))
+                }
+              >
+                {tab.label}
+                <span className="nav-mobile-arrow">▾</span>
+              </button>
+              {openCategory === tab.label && (
+                <div className="nav-mobile-items">
+                  {tab.items.map((item) => {
+                    const key = item.path.slice(1);
+                    const learned = isLearned(key);
+                    return (
+                      <NavLink
+                        key={item.path}
+                        to={item.path}
+                        onClick={closeMenu}
+                        className={({ isActive }) =>
+                          `nav-mobile-item${isActive ? " active" : ""}${learned ? " learned" : ""}`
+                        }
+                      >
+                        {learned ? "✅ " : ""}
+                        {item.name}
+                      </NavLink>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </nav>
   );
 }

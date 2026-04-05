@@ -205,7 +205,7 @@ export default function AlgorithmPage() {
                   />
                   <path fill="#FFF" d="m19.2 31.2 12.96-7.2L19.2 16.8v14.4Z" />
                 </svg>
-                Tutorial that helped me
+                <span className="yt-label">Tutorial that helped me</span>
               </a>
             )}
             <label className="learned-toggle">
@@ -214,7 +214,7 @@ export default function AlgorithmPage() {
                 checked={isLearned(learnedKey)}
                 onChange={() => toggle(learnedKey)}
               />
-              Mark as learned
+              <span className="learned-label">Mark as learned</span>
             </label>
           </div>
         </div>

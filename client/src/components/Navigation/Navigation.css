@@ -143,3 +143,138 @@
   color: #15803d;
   border-left-color: #22c55e;
 }
+
+/* ── Burger button (hidden on desktop) ── */
+.nav-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.nav-burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #c0c0d8;
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.nav-burger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-burger.open span:nth-child(2) {
+  opacity: 0;
+}
+.nav-burger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Mobile full-width dropdown panel ── */
+.nav-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 45px;
+  left: 0;
+  right: 0;
+  background: #16213e;
+  border-top: 2px solid #e94560;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  max-height: calc(100vh - 45px);
+  overflow-y: auto;
+}
+
+.nav-mobile-group {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.nav-mobile-category {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: none;
+  border: none;
+  color: #c0c0d8;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.nav-mobile-category.open {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-mobile-arrow {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  transition: transform 0.2s;
+}
+
+.nav-mobile-category.open .nav-mobile-arrow {
+  transform: rotate(180deg);
+}
+
+.nav-mobile-items {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.nav-mobile-item {
+  padding: 0.55rem 1.75rem;
+  color: #b0b0cc;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: background 0.12s, color 0.12s;
+}
+
+.nav-mobile-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.nav-mobile-item.active {
+  color: #e94560;
+  font-weight: 600;
+  border-left-color: #e94560;
+  background: rgba(233, 69, 96, 0.1);
+}
+
+.nav-mobile-item.learned {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.nav-mobile-item.learned.active {
+  color: #15803d;
+  border-left-color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+/* ── Responsive: switch to burger below 700px ── */
+@media (max-width: 700px) {
+  .nav-tabs {
+    display: none;
+  }
+
+  .nav-burger {
+    display: flex;
+  }
+
+  .nav-mobile-menu {
+    display: block;
+  }
+}

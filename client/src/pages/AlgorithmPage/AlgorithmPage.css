@@ -44,8 +44,17 @@
 }
 
 @media (max-width: 700px) {
-  .learned-toggle {
-    font-size: 0.8rem;
+  .learned-label {
+    display: none;
+  }
+
+  .yt-label {
+    display: none;
+  }
+
+  .algo-tab-btn {
+    font-size: 0.82rem;
+    padding: 0.5rem 0.6rem;
   }
 }
 
@@ -189,6 +198,7 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .input-row label {
