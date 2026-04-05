@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useLearned } from "../../context/LearnedContext";
 import { allConfigs } from "../../config/algorithms";
@@ -15,6 +15,7 @@ import GraphVisualizer from "../../components/GraphVisualizer/GraphVisualizer";
 import DPVisualizer from "../../components/DPVisualizer/DPVisualizer";
 import BacktrackingVisualizer from "../../components/BacktrackingVisualizer/BacktrackingVisualizer";
 import NrTheoryVisualizer from "../../components/NrTheoryVisualizer/NrTheoryVisualizer";
+import TreeVisualizer from "../../components/TreeVisualizer/TreeVisualizer";
 import type { AlgorithmStep } from "../../types";
 import "./AlgorithmPage.css";
 
@@ -57,6 +58,29 @@ export default function AlgorithmPage() {
   const [activeTab, setActiveTab] = useState<"what" | "usecase" | "proscons">(
     "what",
   );
+
+  /* Parse graph edges from input string for the graph visualizer */
+  const graphData = useMemo(() => {
+    if (category !== "graph") return null;
+    try {
+      const parts = input.split(";").map((s) => s.trim()).filter(Boolean);
+      const nodeCount = parseInt(parts[0], 10);
+      if (isNaN(nodeCount)) return null;
+      const edges = parts.slice(1).map((e) => e.split(",").map(Number));
+      return { nodeCount, edges };
+    } catch {
+      return null;
+    }
+  }, [category, input]);
+
+  /* Parse tree input values for the tree visualizer */
+  const treeInputValues = useMemo(() => {
+    if (category !== "tree") return [];
+    if (config?.inputType === "text") return [];
+    const nums = input.split(",").map((n) => parseInt(n.trim(), 10));
+    if (nums.some(isNaN)) return [];
+    return nums;
+  }, [category, input, config?.inputType]);
 
   useEffect(() => {
     if (!config) return;
@@ -314,6 +338,8 @@ export default function AlgorithmPage() {
           steps={steps}
           onRun={handleRun}
           disabled={loading || spamPrevention}
+          edges={graphData?.edges ?? []}
+          nodeCount={graphData?.nodeCount ?? 0}
         />
       )}
       {category === "dp" && (
@@ -347,10 +373,11 @@ export default function AlgorithmPage() {
         />
       )}
       {category === "tree" && (
-        <ArrayVisualizer
+        <TreeVisualizer
           steps={steps}
           onRun={handleRun}
           disabled={loading || spamPrevention}
+          inputValues={treeInputValues}
         />
       )}
     </div>

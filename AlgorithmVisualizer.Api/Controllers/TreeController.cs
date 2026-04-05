@@ -47,6 +47,5 @@ public class TreeController : ControllerBase
     public IActionResult Diameter([FromBody] int[] input) => Ok(_srv.Diameter(input));
 
     [HttpPost("huffman")]
-    public IActionResult Huffman([FromBody] StringRequest req) =>
-        Ok(_srv.HuffmanEncoding(req.Text));
+    public IActionResult Huffman([FromBody] StringRequest req) => Ok(_srv.HuffmanCoding(req.Text));
 }

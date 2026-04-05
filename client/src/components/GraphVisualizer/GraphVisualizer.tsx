@@ -7,21 +7,37 @@ interface Props {
   steps: AlgorithmStep[];
   onRun: () => void;
   disabled?: boolean;
+  edges: number[][];
+  nodeCount: number;
 }
 
 /**
- * Shows nodes in a circle layout. Array[i] = per-node value (visited/dist/color/parent).
- * Highlighted nodes are active; sorted nodes are finalized.
+ * Renders nodes in a circle and draws actual graph edges between them.
+ * Highlighted = active, sorted = finalized.
  */
-export default function GraphVisualizer({ steps, onRun, disabled }: Props) {
+export default function GraphVisualizer({
+  steps,
+  onRun,
+  disabled,
+  edges,
+  nodeCount,
+}: Props) {
   return (
     <VisControls steps={steps} onRun={onRun} disabled={disabled}>
       {(step: AlgorithmStep) => {
-        const n = step.array.length;
+        const n = step.array.length || nodeCount;
         const hl = new Set(step.highlightIndices ?? []);
         const done = new Set(step.sortedIndices ?? []);
 
-        return <GraphCanvas n={n} values={step.array} hl={hl} done={done} />;
+        return (
+          <GraphCanvas
+            n={n}
+            values={step.array}
+            hl={hl}
+            done={done}
+            edges={edges}
+          />
+        );
       }}
     </VisControls>
   );
@@ -32,11 +48,13 @@ function GraphCanvas({
   values,
   hl,
   done,
+  edges,
 }: {
   n: number;
   values: number[];
   hl: Set<number>;
   done: Set<number>;
+  edges: number[][];
 }) {
   const size = 380;
   const cx = size / 2;
@@ -53,20 +71,37 @@ function GraphCanvas({
   return (
     <div className="graph-vis">
       <svg viewBox={`0 0 ${size} ${size}`} className="graph-svg">
-        {/* edges between consecutive nodes (simple chain for visual context) */}
-        {positions.map((pos, i) => {
-          if (i === n - 1) return null;
-          const next = positions[i + 1];
+        {/* actual graph edges */}
+        {edges.map((e, i) => {
+          const from = e[0];
+          const to = e[1];
+          if (from >= n || to >= n) return null;
+          const p1 = positions[from];
+          const p2 = positions[to];
+          const weight = e.length > 2 ? e[2] : null;
+          const mx = (p1.x + p2.x) / 2;
+          const my = (p1.y + p2.y) / 2;
           return (
-            <line
-              key={`e-${i}`}
-              x1={pos.x}
-              y1={pos.y}
-              x2={next.x}
-              y2={next.y}
-              stroke="#ddd"
-              strokeWidth="1.5"
-            />
+            <g key={`e-${i}`}>
+              <line
+                x1={p1.x}
+                y1={p1.y}
+                x2={p2.x}
+                y2={p2.y}
+                className="graph-edge"
+              />
+              {weight !== null && (
+                <text
+                  x={mx}
+                  y={my}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  className="graph-edge-weight"
+                >
+                  {weight}
+                </text>
+              )}
+            </g>
           );
         })}
 
@@ -77,7 +112,7 @@ function GraphCanvas({
           else if (hl.has(i)) fill = "#e94560";
 
           const val = values[i];
-          const label = val === -1 ? "∞" : String(val);
+          const label = val === -1 ? "∞" : String(val ?? "");
 
           return (
             <g key={i}>
@@ -99,8 +134,9 @@ function GraphCanvas({
               </text>
               <text
                 x={pos.x}
-                y={pos.y + 13}
+                y={pos.y + 9}
                 textAnchor="middle"
+                dominantBaseline="central"
                 className="graph-node-val"
               >
                 {label}

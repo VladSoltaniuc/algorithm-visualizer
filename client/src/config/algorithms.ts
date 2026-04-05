@@ -238,7 +238,7 @@ export const stringConfig: AlgorithmConfig[] = [
       'Trivially simple — limited standalone applications',
       'Doesn\'t handle multi-byte Unicode characters (e.g., emojis) without extra care',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=_d0T_2Lk2qA',
+    ytTutorial: 'https://www.youtube.com/watch?v=OD9PjLapAOQ',
   },
   {
     name: 'Run-Length Encoding', slug: 'run-length-encoding', endpoint: 'run-length-encoding', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'aaabbccdddd',
@@ -254,7 +254,7 @@ export const stringConfig: AlgorithmConfig[] = [
       'Only effective when the same character repeats many times consecutively',
       'Far weaker compression than Huffman, LZ77, or other modern schemes',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=2VxmAoMd_SQ',
+    ytTutorial: 'https://www.youtube.com/watch?v=h-TGpvQYyDI',
   },
   {
     name: 'Levenshtein Distance', slug: 'levenshtein', endpoint: 'levenshtein', category: 'string', inputType: 'text', inputLabel: 'Text 1', defaultInput: 'kitten', needsPattern: true, patternLabel: 'Text 2', defaultPattern: 'sitting',
@@ -348,7 +348,7 @@ export const treeConfig: AlgorithmConfig[] = [
       'O(n) time worst case — if the tree degenerates into a linked list (sorted insertions)',
       'No self-balancing — use AVL or Red-Black trees for guaranteed O(log n)',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=cySVml6e_Fc',
+    ytTutorial: 'https://www.youtube.com/watch?v=wcIRPqTR3Kc',
   },
   {
     name: 'Tree Height', slug: 'height', endpoint: 'height', category: 'tree', inputLabel: 'BST values', defaultInput: '5,3,7,1,4,6,8',
@@ -425,8 +425,8 @@ export const treeConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=bkxqA8Rfv04',
   },
   {
-    name: 'Huffman Encoding', slug: 'huffman', endpoint: 'huffman', category: 'tree', inputType: 'text', inputLabel: 'Text', defaultInput: 'huffman encoding example',
-    description: 'Imagine you\'re sending a long message and want to shrink it as much as possible. Letters that appear often should take up less space, and rare letters can afford to take up more. Huffman Encoding counts how often each letter appears, then builds a tree where the most frequent letters end up closest to the top and the rarest sink to the bottom. Each left branch means "0" and each right branch means "1", so every letter gets its own unique binary code based on its path from the top. The result is a compressed version of the text where common letters are represented by just a few bits.',
+    name: 'Huffman Coding', slug: 'huffman', endpoint: 'huffman', category: 'tree', inputType: 'text', inputLabel: 'Text', defaultInput: 'huffman coding example',
+    description: 'Imagine you\'re sending a long message and want to shrink it as much as possible. Letters that appear often should take up less space, and rare letters can afford to take up more. Huffman Coding counts how often each letter appears, then builds a tree where the most frequent letters end up closest to the top and the rarest sink to the bottom. Each left branch means "0" and each right branch means "1", so every letter gets its own unique binary code based on its path from the top. The result is a compressed version of the text where common letters are represented by just a few bits.',
     usecase: 'File compression (ZIP, GZIP internals), JPEG/MP3 compression as a final encoding stage, and data transmission over bandwidth-limited channels.',
     pros: [
       'Optimal prefix-free encoding — no other prefix code produces a shorter result',

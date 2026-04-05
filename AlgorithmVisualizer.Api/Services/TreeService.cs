@@ -638,10 +638,10 @@ public class TreeService
         return 1 + Math.Max(l, r);
     }
 
-    // 11. Huffman Encoding
+    // 11. Huffman Coding
     // Time: O(n log n) where n = number of unique characters
     // Space: O(n)
-    public List<AlgorithmStep> HuffmanEncoding(string text)
+    public List<AlgorithmStep> HuffmanCoding(string text)
     {
         if (string.IsNullOrEmpty(text))
             throw new ArgumentException("Provide non-empty text.");
@@ -656,13 +656,16 @@ public class TreeService
 
         // Show frequencies
         var sortedChars = freq.OrderByDescending(kv => kv.Value).ToList();
-        steps.Add(new AlgorithmStep
-        {
-            StepNumber = step++,
-            Array = sortedChars.Select(kv => kv.Value).ToArray(),
-            Description = $"Character frequencies: {string.Join(", ", sortedChars.Select(kv => $"'{kv.Key}'={kv.Value}"))}",
-            HighlightIndices = Enumerable.Range(0, sortedChars.Count).ToArray(),
-        });
+        steps.Add(
+            new AlgorithmStep
+            {
+                StepNumber = step++,
+                Array = sortedChars.Select(kv => kv.Value).ToArray(),
+                Description =
+                    $"Character frequencies: {string.Join(", ", sortedChars.Select(kv => $"'{kv.Key}'={kv.Value}"))}",
+                HighlightIndices = Enumerable.Range(0, sortedChars.Count).ToArray(),
+            }
+        );
 
         // Build priority queue (min-heap via sorted list)
         var nodes = new List<(int weight, string label, HuffNode node)>();
@@ -672,12 +675,15 @@ public class TreeService
         // Sort ascending by weight
         nodes.Sort((a, b) => a.weight.CompareTo(b.weight));
 
-        steps.Add(new AlgorithmStep
-        {
-            StepNumber = step++,
-            Array = nodes.Select(n => n.weight).ToArray(),
-            Description = $"Priority queue (sorted): {string.Join(", ", nodes.Select(n => $"'{n.label}':{n.weight}"))}",
-        });
+        steps.Add(
+            new AlgorithmStep
+            {
+                StepNumber = step++,
+                Array = nodes.Select(n => n.weight).ToArray(),
+                Description =
+                    $"Priority queue (sorted): {string.Join(", ", nodes.Select(n => $"'{n.label}':{n.weight}"))}",
+            }
+        );
 
         // Merge until one node remains
         while (nodes.Count > 1)
@@ -693,16 +699,20 @@ public class TreeService
 
             // Insert in sorted position
             int pos = nodes.FindIndex(n => n.weight >= merged);
-            if (pos < 0) pos = nodes.Count;
+            if (pos < 0)
+                pos = nodes.Count;
             nodes.Insert(pos, (merged, mergedLabel, parent));
 
-            steps.Add(new AlgorithmStep
-            {
-                StepNumber = step++,
-                Array = nodes.Select(n => n.weight).ToArray(),
-                Description = $"Merge '{left.label}'({left.weight}) + '{right.label}'({right.weight}) = {merged}",
-                HighlightIndices = [pos],
-            });
+            steps.Add(
+                new AlgorithmStep
+                {
+                    StepNumber = step++,
+                    Array = nodes.Select(n => n.weight).ToArray(),
+                    Description =
+                        $"Merge '{left.label}'({left.weight}) + '{right.label}'({right.weight}) = {merged}",
+                    HighlightIndices = [pos],
+                }
+            );
         }
 
         // Generate codes via DFS
@@ -714,21 +724,27 @@ public class TreeService
         int originalBits = text.Length * 8;
         int huffBits = encoded.Length;
 
-        steps.Add(new AlgorithmStep
-        {
-            StepNumber = step++,
-            Array = codeList.Select(kv => kv.Value.Length).ToArray(),
-            Description = $"Huffman codes: {string.Join(", ", codeList.Select(kv => $"'{kv.Key}'={kv.Value}"))}",
-            SortedIndices = Enumerable.Range(0, codeList.Count).ToArray(),
-        });
+        steps.Add(
+            new AlgorithmStep
+            {
+                StepNumber = step++,
+                Array = codeList.Select(kv => kv.Value.Length).ToArray(),
+                Description =
+                    $"Huffman codes: {string.Join(", ", codeList.Select(kv => $"'{kv.Key}'={kv.Value}"))}",
+                SortedIndices = Enumerable.Range(0, codeList.Count).ToArray(),
+            }
+        );
 
-        steps.Add(new AlgorithmStep
-        {
-            StepNumber = step,
-            Array = [originalBits, huffBits],
-            Description = $"Original: {originalBits} bits | Encoded: {huffBits} bits | Ratio: {(double)huffBits / originalBits:P1}",
-            SortedIndices = [0, 1],
-        });
+        steps.Add(
+            new AlgorithmStep
+            {
+                StepNumber = step,
+                Array = [originalBits, huffBits],
+                Description =
+                    $"Original: {originalBits} bits | Encoded: {huffBits} bits | Ratio: {(double)huffBits / originalBits:P1}",
+                SortedIndices = [0, 1],
+            }
+        );
 
         return steps;
     }
@@ -737,8 +753,14 @@ public class TreeService
     {
         public char? Char;
         public int Weight;
-        public HuffNode? Left, Right;
-        public HuffNode(char? ch, int w) { Char = ch; Weight = w; }
+        public HuffNode? Left,
+            Right;
+
+        public HuffNode(char? ch, int w)
+        {
+            Char = ch;
+            Weight = w;
+        }
     }
 
     private static void GenerateCodes(HuffNode node, string prefix, Dictionary<char, string> codes)
@@ -748,8 +770,9 @@ public class TreeService
             codes[node.Char.Value] = prefix.Length > 0 ? prefix : "0";
             return;
         }
-        if (node.Left != null) GenerateCodes(node.Left, prefix + "0", codes);
-        if (node.Right != null) GenerateCodes(node.Right, prefix + "1", codes);
+        if (node.Left != null)
+            GenerateCodes(node.Left, prefix + "0", codes);
+        if (node.Right != null)
+            GenerateCodes(node.Right, prefix + "1", codes);
     }
-
 }

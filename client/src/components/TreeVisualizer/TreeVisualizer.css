@@ -1,0 +1,62 @@
+.tree-vis {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.tree-svg {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+}
+
+.tree-edge {
+  stroke: #ccc;
+  stroke-width: 2;
+}
+
+.tree-node {
+  transition: fill 0.25s;
+}
+
+.tree-node-label {
+  fill: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+/* ── Fallback for non-tree data (Huffman) ── */
+.tree-fallback {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.tree-fb-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  background: #3a86ff;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.tree-fb-cell.hl {
+  background: #e94560;
+}
+
+.tree-fb-cell.done {
+  background: #06d6a0;
+}

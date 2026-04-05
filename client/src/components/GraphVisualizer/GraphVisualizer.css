@@ -12,6 +12,17 @@
   height: auto;
 }
 
+.graph-edge {
+  stroke: #ccc;
+  stroke-width: 1.5;
+}
+
+.graph-edge-weight {
+  fill: #666;
+  font-size: 9px;
+  font-weight: 600;
+}
+
 .graph-node {
   transition: fill 0.25s;
 }
