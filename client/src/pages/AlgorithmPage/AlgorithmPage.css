@@ -39,9 +39,6 @@
   height: 16px;
   accent-color: #24a152;
 }
-.learned-toggle input[type="checkbox"]:hover {
-  accent-color: #585858;
-}
 
 @media (max-width: 700px) {
   .learned-label {
