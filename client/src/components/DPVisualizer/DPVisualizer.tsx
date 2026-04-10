@@ -19,6 +19,7 @@ export default function DPVisualizer({ steps, onRun, disabled }: Props) {
         const arr = step.array;
         const hl = new Set(step.highlightIndices ?? []);
         const done = new Set(step.sortedIndices ?? []);
+        const notes = step.notes;
 
         const hasDpMatrix =
           step.dpMatrix !== undefined &&
@@ -33,7 +34,8 @@ export default function DPVisualizer({ steps, onRun, disabled }: Props) {
           const hlCol = step.highlightCol ?? -1;
           const bp = step.backtrackPath ?? [];
           const bpSet = new Set<string>();
-          for (let k = 0; k < bp.length; k += 2) bpSet.add(`${bp[k]},${bp[k + 1]}`);
+          for (let k = 0; k < bp.length; k += 2)
+            bpSet.add(`${bp[k]},${bp[k + 1]}`);
 
           return (
             <div className="dp-vis">
@@ -43,7 +45,9 @@ export default function DPVisualizer({ steps, onRun, disabled }: Props) {
                     <tr>
                       <th className="lcs-corner"></th>
                       {[...colHdr].map((ch, j) => (
-                        <th key={j} className="lcs-col-hdr">{ch === " " ? "\u2205" : ch}</th>
+                        <th key={j} className="lcs-col-hdr">
+                          {ch === " " ? "\u2205" : ch}
+                        </th>
                       ))}
                     </tr>
                   </thead>
@@ -51,13 +55,21 @@ export default function DPVisualizer({ steps, onRun, disabled }: Props) {
                     {matrix.map((row, i) => (
                       <tr key={i}>
                         <th className="lcs-row-hdr">
-                          {i < rowHdr.length ? (rowHdr[i] === " " ? "\u2205" : rowHdr[i]) : i}
+                          {i < rowHdr.length
+                            ? rowHdr[i] === " "
+                              ? "\u2205"
+                              : rowHdr[i]
+                            : i}
                         </th>
                         {row.map((val, j) => {
                           let cls = "lcs-cell";
                           if (bpSet.has(`${i},${j}`)) cls += " backtrack";
                           else if (i === hlRow && j === hlCol) cls += " active";
-                          return <td key={j} className={cls}>{val}</td>;
+                          return (
+                            <td key={j} className={cls}>
+                              {val}
+                            </td>
+                          );
                         })}
                       </tr>
                     ))}
@@ -84,7 +96,7 @@ export default function DPVisualizer({ steps, onRun, disabled }: Props) {
                 else if (hl.has(i)) cls += " active";
                 return (
                   <div key={i} className={cls}>
-                    {val}
+                    {notes?.[i] ?? String(val)}
                   </div>
                 );
               })}

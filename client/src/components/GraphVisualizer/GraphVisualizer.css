@@ -49,3 +49,28 @@
   font-weight: 600;
   opacity: 0.9;
 }
+
+.graph-dfs-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #555;
+}
+
+.graph-dfs-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.graph-dfs-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}

@@ -140,7 +140,8 @@ public class DynamicProgService
             {
                 StepNumber = step++,
                 Array = new int[n + 1],
-                Description = $"LCS of \"{text1}\" and \"{text2}\" — initialise ({m + 1})x({n + 1}) matrix with zeros",
+                Description =
+                    $"LCS of \"{text1}\" and \"{text2}\" — initialise ({m + 1})x({n + 1}) matrix with zeros",
                 DpMatrix = SnapshotMatrix(),
                 RowHeaders = rowHeaders,
                 ColHeaders = colHeaders,
@@ -155,9 +156,10 @@ public class DynamicProgService
                     text1[i - 1] == text2[j - 1]
                         ? dp[i - 1, j - 1] + 1
                         : Math.Max(dp[i - 1, j], dp[i, j - 1]);
-                string desc = text1[i - 1] == text2[j - 1]
-                    ? $"'{text1[i - 1]}' == '{text2[j - 1]}': dp[{i}][{j}] = dp[{i - 1}][{j - 1}] + 1 = {dp[i, j]}"
-                    : $"'{text1[i - 1]}' ≠ '{text2[j - 1]}': dp[{i}][{j}] = max({dp[i - 1, j]}, {dp[i, j - 1]}) = {dp[i, j]}";
+                string desc =
+                    text1[i - 1] == text2[j - 1]
+                        ? $"'{text1[i - 1]}' == '{text2[j - 1]}': dp[{i}][{j}] = dp[{i - 1}][{j - 1}] + 1 = {dp[i, j]}"
+                        : $"'{text1[i - 1]}' ≠ '{text2[j - 1]}': dp[{i}][{j}] = max({dp[i - 1, j]}, {dp[i, j - 1]}) = {dp[i, j]}";
                 steps.Add(
                     new AlgorithmStep
                     {
@@ -271,33 +273,102 @@ public class DynamicProgService
     {
         if (coins.Length == 0)
             throw new ArgumentException("Provide non-empty coins.");
+
+        int inf = amount + 1; // sentinel for "unreachable"
         var dp = new int[amount + 1];
-        Array.Fill(dp, amount + 1);
+        Array.Fill(dp, inf);
         dp[0] = 0;
+
         var steps = new List<AlgorithmStep>();
-        int step = 0;
+        int stepNum = 0;
+
+        // Display labels: "?" = not started, "∞" = unreachable, numeral = computed
+        string[] MakeNotes(int upTo) =>
+            Enumerable
+                .Range(0, amount + 1)
+                .Select(j =>
+                {
+                    if (j > upTo)
+                        return "?";
+                    if (dp[j] >= inf)
+                        return "∞";
+                    return dp[j].ToString();
+                })
+                .ToArray();
 
         steps.Add(
             new AlgorithmStep
             {
-                StepNumber = step++,
+                StepNumber = stepNum++,
                 Array = (int[])dp.Clone(),
-                Description = $"Coin change: coins=[{string.Join(",", coins)}], amount={amount}",
+                Notes = MakeNotes(0),
+                Description =
+                    $"Goal: fewest coins from [{string.Join(", ", coins)}] that sum to {amount}. "
+                    + "dp[0] = 0 (zero coins needed for amount 0). All other cells start as ∞ (unreachable).",
+                SortedIndices = [0],
             }
         );
 
         for (int i = 1; i <= amount; i++)
         {
+            var finishedSoFar = Enumerable.Range(0, i).ToArray();
+
             foreach (int coin in coins)
-                if (coin <= i)
-                    dp[i] = Math.Min(dp[i], dp[i - coin] + 1);
+            {
+                if (coin > i)
+                    continue;
+
+                int refVal = dp[i - coin];
+                int prevBest = dp[i];
+                string lookupStr = $"look up dp[{i} − {coin}] = dp[{i - coin}]";
+
+                string outcome;
+                if (refVal >= inf)
+                {
+                    outcome =
+                        $"{lookupStr} = ∞ — that sub-amount is unreachable, so coin {coin} can't help here.";
+                }
+                else
+                {
+                    int candidate = refVal + 1;
+                    bool improved = candidate < prevBest;
+                    if (improved)
+                        dp[i] = candidate;
+
+                    string prevStr = prevBest >= inf ? "∞" : prevBest.ToString();
+                    outcome = improved
+                        ? $"{lookupStr} = {refVal}, so {refVal} + 1 = {candidate} coin(s). "
+                            + $"Current dp[{i}] = {prevStr} → updated to {candidate}!"
+                        : $"{lookupStr} = {refVal}, so {refVal} + 1 = {candidate} coin(s). "
+                            + $"Current dp[{i}] = {prevStr} is already ≤ {candidate} — no change.";
+                }
+
+                string curBest = dp[i] >= inf ? "∞" : dp[i].ToString();
+                steps.Add(
+                    new AlgorithmStep
+                    {
+                        StepNumber = stepNum++,
+                        Array = (int[])dp.Clone(),
+                        Notes = MakeNotes(i),
+                        Description =
+                            $"Amount {i}, try coin {coin}: {outcome} Best so far: dp[{i}] = {curBest}.",
+                        HighlightIndices = [i],
+                        SortedIndices = finishedSoFar,
+                    }
+                );
+            }
+
+            // Finalize dp[i] — flip it from active (red) to done (green)
+            string finalStr =
+                dp[i] >= inf ? "∞ (cannot be formed with these coins)" : dp[i].ToString();
             steps.Add(
                 new AlgorithmStep
                 {
-                    StepNumber = step++,
+                    StepNumber = stepNum++,
                     Array = (int[])dp.Clone(),
-                    Description = $"dp[{i}] = {(dp[i] > amount ? "∞" : dp[i].ToString())}",
-                    HighlightIndices = [i],
+                    Notes = MakeNotes(i),
+                    Description = $"dp[{i}] = {finalStr}. All coins tried for amount {i}.",
+                    SortedIndices = Enumerable.Range(0, i + 1).ToArray(),
                 }
             );
         }
@@ -305,14 +376,20 @@ public class DynamicProgService
         steps.Add(
             new AlgorithmStep
             {
-                StepNumber = step,
+                StepNumber = stepNum,
                 Array = (int[])dp.Clone(),
-                Description = dp[amount] > amount ? "No solution" : $"Min coins = {dp[amount]}",
+                Notes = MakeNotes(amount),
+                Description =
+                    dp[amount] >= inf
+                        ? $"No solution — amount {amount} cannot be formed from [{string.Join(", ", coins)}]."
+                        : $"Answer: {dp[amount]} coin(s) to reach amount {amount}.",
                 SortedIndices = Enumerable.Range(0, amount + 1).ToArray(),
             }
         );
+
         return steps;
     }
+
     // 7. Edit Distance
     // Time: O(m · n)
     // Space: O(m · n)
@@ -380,6 +457,7 @@ public class DynamicProgService
         );
         return steps;
     }
+
     // 9. Subset Sum
     // Time: O(n · target)
     // Space: O(target)

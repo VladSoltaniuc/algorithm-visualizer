@@ -79,7 +79,15 @@ function GraphCanvas({
     });
   }, [n, cx, cy, r]);
 
+  // DFS state labels use fixed semantic colors — not the component palette
+  const DFS_STATE_COLORS: Record<string, string> = {
+    unvisited: "#3a86ff",
+    stack: "#f4a11d",
+    done: "#06d6a0",
+  };
+
   // Build component → color map from labels (distinct color per unique label value)
+  // Skip known DFS state labels so they don't consume palette slots
   const componentPalette = [
     "#3a86ff",
     "#a855f7",
@@ -93,12 +101,14 @@ function GraphCanvas({
   const componentColorMap = new Map<string, string>();
   if (labels?.length) {
     let idx = 0;
-    [...new Set(labels)].forEach((lbl) => {
-      componentColorMap.set(
-        lbl,
-        componentPalette[idx++ % componentPalette.length],
-      );
-    });
+    [...new Set(labels)]
+      .filter((lbl) => !(lbl in DFS_STATE_COLORS))
+      .forEach((lbl) => {
+        componentColorMap.set(
+          lbl,
+          componentPalette[idx++ % componentPalette.length],
+        );
+      });
   }
 
   return (
@@ -166,12 +176,14 @@ function GraphCanvas({
         {/* nodes */}
         {positions.map((pos, i) => {
           let fill = "#3a86ff";
-          // Component color from labels (if present)
+          // DFS state labels take fixed semantic colors
           const compLabel = labels?.[i];
-          if (compLabel && componentColorMap.has(compLabel)) {
+          if (compLabel && compLabel in DFS_STATE_COLORS) {
+            fill = DFS_STATE_COLORS[compLabel];
+          } else if (compLabel && componentColorMap.has(compLabel)) {
             fill = componentColorMap.get(compLabel)!;
           }
-          // Active highlights override component color
+          // Active highlights override component/state color
           if (done.has(i)) fill = "#06d6a0";
           else if (hl.has(i)) fill = "#e94560";
 
@@ -210,6 +222,8 @@ function GraphCanvas({
           );
         })}
       </svg>
+      {/* DFS state legend — only shown when cycle detection labels are present */}
+      {labels?.some((l) => l === "stack" || l === "unvisited")}
     </div>
   );
 }
