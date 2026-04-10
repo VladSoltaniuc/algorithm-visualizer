@@ -14,6 +14,13 @@ export interface AlgorithmStep {
   manacherCenter?: number;
   manacherRight?: number;
 
+  // Per-cell labels and secondary notes (e.g. Huffman char + binary code)
+  labels?: string[];
+  notes?: string[];
+
+  // Full level-order with null gaps for dynamic tree shape reconstruction
+  treeLevelOrder?: (number | null)[];
+
   // DP matrix visualization (e.g. LCS)
   dpMatrix?: number[][];
   rowHeaders?: string;

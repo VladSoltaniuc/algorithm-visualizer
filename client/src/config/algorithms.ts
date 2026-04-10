@@ -490,7 +490,7 @@ export const graphConfig: AlgorithmConfig[] = [
       'O(V) space for the distance array and priority queue',
       'Slower than BFS for unweighted graphs (priority queue overhead)',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=_lHSawdgXpI',
+    ytTutorial: 'https://www.youtube.com/watch?v=EFg3u_E6eHU',
   },
   {
     name: 'Bellman-Ford', slug: 'bellman-ford', endpoint: 'bellman-ford', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to,weight;...)', defaultInput: '5;0,1,6;0,2,7;1,2,8;1,3,5;1,4,-4;2,3,-3;2,4,9;3,1,-2;4,3,7', needsTarget: true, targetLabel: 'Start node', defaultTarget: 0,
@@ -605,7 +605,7 @@ export const dpConfig: AlgorithmConfig[] = [
       'Integer overflow for large n — Fibonacci grows exponentially',
       'The problem itself is trivially simple — DP is overkill but illustrative',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=vYquumk4nWw',
+    ytTutorial: 'https://www.youtube.com/watch?v=JXUOMsFBDXQ',
   },
   {
     name: '0/1 Knapsack', slug: 'knapsack', endpoint: 'knapsack', category: 'dp', inputLabel: 'Weights', defaultInput: '1,3,4,5', needsTarget: true, targetLabel: 'Capacity', defaultTarget: 7, needsPattern: true, patternLabel: 'Values', defaultPattern: '1,4,5,7',

@@ -61,6 +61,46 @@ function layoutTree(root: TNode) {
   };
 }
 
+// Build a layout directly from a null-inclusive BFS level-order array.
+// Index i has left child at 2i+1, right child at 2i+2.
+function layoutFromLevelOrder(arr: (number | null)[]) {
+  const nodeMap = new Map<number, number>(); // arr-index → nodes[] index
+  const nodes: LayoutNode[] = [];
+  const edges: [number, number][] = [];
+  let pos = 0;
+
+  function inorder(i: number) {
+    if (i >= arr.length || arr[i] === null) return;
+    inorder(2 * i + 1);
+    const nodeIdx = nodes.length;
+    const depth = Math.floor(Math.log2(i + 1));
+    nodes.push({ value: arr[i]!, x: pos++, y: depth });
+    nodeMap.set(i, nodeIdx);
+    inorder(2 * i + 2);
+  }
+
+  inorder(0);
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === null) continue;
+    const parentIdx = nodeMap.get(i);
+    if (parentIdx === undefined) continue;
+    for (const ci of [2 * i + 1, 2 * i + 2]) {
+      if (ci < arr.length && arr[ci] !== null) {
+        const childIdx = nodeMap.get(ci);
+        if (childIdx !== undefined) edges.push([parentIdx, childIdx]);
+      }
+    }
+  }
+
+  return {
+    nodes,
+    edges,
+    maxX: nodes.length > 0 ? Math.max(...nodes.map((n) => n.x)) : 0,
+    maxY: nodes.length > 0 ? Math.max(...nodes.map((n) => n.y)) : 0,
+  };
+}
+
 /* ── Component ── */
 export default function TreeVisualizer({
   steps,
@@ -80,26 +120,42 @@ export default function TreeVisualizer({
     <VisControls steps={steps} onRun={onRun} disabled={disabled}>
       {(step: AlgorithmStep) => {
         /* Fallback for Huffman / non-numeric input */
-        if (!layout) {
+        if (!layout && !step.treeLevelOrder?.length) {
+          const labels = step.labels ?? [];
+          const notes = step.notes ?? [];
+          const hasLabels = labels.length > 0;
+          const hasNotes = notes.length > 0;
           return (
             <div className="tree-fallback">
               {step.array.map((v, i) => {
                 const hl = step.highlightIndices?.includes(i);
                 const done = step.sortedIndices?.includes(i);
                 return (
-                  <span
+                  <div
                     key={i}
                     className={`tree-fb-cell${hl ? " hl" : ""}${done ? " done" : ""}`}
                   >
-                    {v}
-                  </span>
+                    {hasLabels && (
+                      <span className="tree-fb-label">{labels[i]}</span>
+                    )}
+                    <span className="tree-fb-value">{v}</span>
+                    {hasNotes && notes[i] && (
+                      <span className="tree-fb-note">{notes[i]}</span>
+                    )}
+                  </div>
                 );
               })}
             </div>
           );
         }
 
-        const { nodes, edges, maxX, maxY } = layout;
+        // Use per-step dynamic layout (e.g. Invert) if available, otherwise static
+        const activeLayout =
+          step.treeLevelOrder && step.treeLevelOrder.length > 0
+            ? layoutFromLevelOrder(step.treeLevelOrder)
+            : layout!;
+
+        const { nodes, edges, maxX, maxY } = activeLayout;
         const xSp = Math.min(48, maxX > 0 ? 320 / maxX : 48);
         const ySp = 52;
         const pad = 30;

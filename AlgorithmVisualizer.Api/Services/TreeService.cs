@@ -54,7 +54,33 @@ public class TreeService
         return result.ToArray();
     }
 
-    // 1. Inorder
+    // BFS level-order preserving null gaps so the frontend can reconstruct shape.
+    // Index i has left child at 2i+1 and right child at 2i+2.
+    private static int?[] ToLevelOrderWithNulls(TreeNode? root)
+    {
+        if (root == null)
+            return [];
+        var result = new List<int?>();
+        var queue = new Queue<TreeNode?>();
+        queue.Enqueue(root);
+        while (queue.Count > 0)
+        {
+            var n = queue.Dequeue();
+            if (n == null)
+            {
+                result.Add(null);
+                continue;
+            }
+            result.Add(n.Value);
+            queue.Enqueue(n.Left);
+            queue.Enqueue(n.Right);
+        }
+        // Trim trailing nulls
+        while (result.Count > 0 && result[^1] == null)
+            result.RemoveAt(result.Count - 1);
+        return [.. result];
+    }
+
     // Time: O(n)
     // Space: O(h) where h = tree height
     public List<AlgorithmStep> Inorder(int[] values)
@@ -273,35 +299,26 @@ public class TreeService
             throw new ArgumentException("Provide a non-empty array.");
         var steps = new List<AlgorithmStep>();
         int step = 0;
+
+        // Build the BST silently — only show the search
         TreeNode? root = null;
-
         foreach (var v in values)
-        {
             root = Insert(root, v);
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = ToLevelOrder(root),
-                    Description = $"Inserted {v}",
-                    HighlightIndices = [ToLevelOrder(root).ToList().IndexOf(v)],
-                }
-            );
-        }
 
+        var lo = ToLevelOrder(root!);
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step++,
-                Array = ToLevelOrder(root!),
-                Description = $"BST complete. Searching for {target}",
+                Array = lo,
+                Description = $"BST ready. Searching for {target}.",
             }
         );
 
         var node = root;
         while (node != null)
         {
-            var lo = ToLevelOrder(root!);
+            lo = ToLevelOrder(root!);
             int idx = Array.IndexOf(lo, node.Value);
             if (node.Value == target)
             {
@@ -310,7 +327,7 @@ public class TreeService
                     {
                         StepNumber = step,
                         Array = lo,
-                        Description = $"Found {target}",
+                        Description = $"Found {target}!",
                         SortedIndices = idx >= 0 ? [idx] : [],
                     }
                 );
@@ -322,7 +339,9 @@ public class TreeService
                     StepNumber = step++,
                     Array = lo,
                     Description =
-                        $"At node {node.Value}, go {(target < node.Value ? "left" : "right")}",
+                        target < node.Value
+                            ? $"At node {node.Value}: {target} < {node.Value} — go left"
+                            : $"At node {node.Value}: {target} > {node.Value} — go right",
                     HighlightIndices = idx >= 0 ? [idx] : [],
                 }
             );
@@ -334,7 +353,7 @@ public class TreeService
             {
                 StepNumber = step,
                 Array = ToLevelOrder(root!),
-                Description = $"{target} not found in BST",
+                Description = $"{target} not found in BST.",
             }
         );
         return steps;
@@ -472,44 +491,132 @@ public class TreeService
         var tree = BuildBST(values);
         var steps = new List<AlgorithmStep>();
         int step = 0;
+
+        var initialLo = ToLevelOrder(tree);
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step++,
-                Array = ToLevelOrder(tree),
-                Description = "Original BST",
+                Array = initialLo,
+                TreeLevelOrder = ToLevelOrderWithNulls(tree),
+                Description =
+                    $"Original BST: [{string.Join(", ", initialLo)}]. "
+                    + "We will visit every node top-down and swap its left and right children.",
             }
         );
 
-        InvertHelper(tree, steps, ref step);
+        InvertHelper(tree, tree, steps, ref step);
+
+        var finalLo = ToLevelOrder(tree);
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step,
-                Array = ToLevelOrder(tree),
-                Description = "Tree inverted",
-                SortedIndices = Enumerable.Range(0, ToLevelOrder(tree).Length).ToArray(),
+                Array = finalLo,
+                TreeLevelOrder = ToLevelOrderWithNulls(tree),
+                Description =
+                    $"Done. Inverted tree: [{string.Join(", ", finalLo)}]. "
+                    + "Every subtree is now a mirror of the original.",
+                SortedIndices = Enumerable.Range(0, finalLo.Length).ToArray(),
             }
         );
         return steps;
     }
 
-    private static void InvertHelper(TreeNode? node, List<AlgorithmStep> steps, ref int step)
+    private static void InvertHelper(
+        TreeNode? node,
+        TreeNode root,
+        List<AlgorithmStep> steps,
+        ref int step
+    )
     {
         if (node == null)
             return;
-        (node.Left, node.Right) = (node.Right, node.Left);
-        steps.Add(
-            new AlgorithmStep
+
+        bool hasLeft = node.Left != null;
+        bool hasRight = node.Right != null;
+
+        if (hasLeft || hasRight)
+        {
+            // --- Before swap: highlight node (red) + both children (green) ---
+            var preLo = ToLevelOrder(root);
+            int nodeIdx = Array.IndexOf(preLo, node.Value);
+
+            string leftLabel = hasLeft ? node.Left!.Value.ToString() : "∅";
+            string rightLabel = hasRight ? node.Right!.Value.ToString() : "∅";
+
+            var childIndices = new List<int>();
+            if (hasLeft)
             {
-                StepNumber = step++,
-                Array = [node.Value],
-                Description = $"Swapped children of {node.Value}",
-                HighlightIndices = [0],
+                int li = Array.IndexOf(preLo, node.Left!.Value);
+                if (li >= 0)
+                    childIndices.Add(li);
             }
-        );
-        InvertHelper(node.Left, steps, ref step);
-        InvertHelper(node.Right, steps, ref step);
+
+            if (hasRight)
+            {
+                int ri = Array.IndexOf(preLo, node.Right!.Value);
+                if (ri >= 0)
+                    childIndices.Add(ri);
+            }
+
+            steps.Add(
+                new AlgorithmStep
+                {
+                    StepNumber = step++,
+                    Array = preLo,
+                    TreeLevelOrder = ToLevelOrderWithNulls(root),
+                    Description =
+                        $"Node {node.Value}: left child = {leftLabel}, right child = {rightLabel}. Swapping them.",
+                    HighlightIndices = nodeIdx >= 0 ? [nodeIdx] : [],
+                    SortedIndices = childIndices.ToArray(),
+                }
+            );
+        }
+
+        // Do the swap
+        (node.Left, node.Right) = (node.Right, node.Left);
+
+        if (hasLeft || hasRight)
+        {
+            // --- After swap: node is done (green), new children highlighted (red) ---
+            var postLo = ToLevelOrder(root);
+            int nodeIdx = Array.IndexOf(postLo, node.Value);
+
+            string newLeftLabel = node.Left != null ? node.Left.Value.ToString() : "∅";
+            string newRightLabel = node.Right != null ? node.Right.Value.ToString() : "∅";
+
+            var newChildIndices = new List<int>();
+            if (node.Left != null)
+            {
+                int li = Array.IndexOf(postLo, node.Left.Value);
+                if (li >= 0)
+                    newChildIndices.Add(li);
+            }
+
+            if (node.Right != null)
+            {
+                int ri = Array.IndexOf(postLo, node.Right.Value);
+                if (ri >= 0)
+                    newChildIndices.Add(ri);
+            }
+
+            steps.Add(
+                new AlgorithmStep
+                {
+                    StepNumber = step++,
+                    Array = postLo,
+                    TreeLevelOrder = ToLevelOrderWithNulls(root),
+                    Description =
+                        $"Node {node.Value}: swap done — left is now {newLeftLabel}, right is now {newRightLabel}.",
+                    HighlightIndices = newChildIndices.ToArray(),
+                    SortedIndices = nodeIdx >= 0 ? [nodeIdx] : [],
+                }
+            );
+        }
+
+        InvertHelper(node.Left, root, steps, ref step);
+        InvertHelper(node.Right, root, steps, ref step);
     }
 
     // 9. Validate BST
@@ -654,15 +761,20 @@ public class TreeService
         foreach (var ch in text)
             freq[ch] = freq.TryGetValue(ch, out int v) ? v + 1 : 1;
 
-        // Show frequencies
-        var sortedChars = freq.OrderByDescending(kv => kv.Value).ToList();
+        // Show frequencies sorted descending
+        var sortedChars = freq.OrderByDescending(kv => kv.Value).ThenBy(kv => kv.Key).ToList();
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step++,
                 Array = sortedChars.Select(kv => kv.Value).ToArray(),
+                Labels = sortedChars
+                    .Select(kv => kv.Key == ' ' ? "·" : kv.Key.ToString())
+                    .ToArray(),
                 Description =
-                    $"Character frequencies: {string.Join(", ", sortedChars.Select(kv => $"'{kv.Key}'={kv.Value}"))}",
+                    $"Count how often each character appears. "
+                    + $"Most frequent: '{sortedChars[0].Key}' ({sortedChars[0].Value}×). "
+                    + $"{freq.Count} unique character(s) in \"{text}\".",
                 HighlightIndices = Enumerable.Range(0, sortedChars.Count).ToArray(),
             }
         );
@@ -670,18 +782,26 @@ public class TreeService
         // Build priority queue (min-heap via sorted list)
         var nodes = new List<(int weight, string label, HuffNode node)>();
         foreach (var kv in freq)
-            nodes.Add((kv.Value, kv.Key.ToString(), new HuffNode(kv.Key, kv.Value)));
+            nodes.Add(
+                (kv.Value, kv.Key == ' ' ? "·" : kv.Key.ToString(), new HuffNode(kv.Key, kv.Value))
+            );
 
-        // Sort ascending by weight
-        nodes.Sort((a, b) => a.weight.CompareTo(b.weight));
+        nodes.Sort(
+            (a, b) =>
+                a.weight != b.weight
+                    ? a.weight.CompareTo(b.weight)
+                    : string.Compare(a.label, b.label, StringComparison.Ordinal)
+        );
 
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step++,
                 Array = nodes.Select(n => n.weight).ToArray(),
+                Labels = nodes.Select(n => n.label).ToArray(),
                 Description =
-                    $"Priority queue (sorted): {string.Join(", ", nodes.Select(n => $"'{n.label}':{n.weight}"))}",
+                    "Place every character in a priority queue sorted by frequency (lowest first). "
+                    + "The two smallest nodes will always be merged next.",
             }
         );
 
@@ -694,10 +814,9 @@ public class TreeService
             nodes.RemoveAt(0);
 
             int merged = left.weight + right.weight;
-            string mergedLabel = $"({left.label}+{right.label})";
+            string mergedLabel = $"{left.label}+{right.label}";
             var parent = new HuffNode(null, merged) { Left = left.node, Right = right.node };
 
-            // Insert in sorted position
             int pos = nodes.FindIndex(n => n.weight >= merged);
             if (pos < 0)
                 pos = nodes.Count;
@@ -708,8 +827,11 @@ public class TreeService
                 {
                     StepNumber = step++,
                     Array = nodes.Select(n => n.weight).ToArray(),
+                    Labels = nodes.Select(n => n.label).ToArray(),
                     Description =
-                        $"Merge '{left.label}'({left.weight}) + '{right.label}'({right.weight}) = {merged}",
+                        $"Take the two lightest nodes '{left.label}' ({left.weight}) and '{right.label}' ({right.weight}). "
+                        + $"Combine them into a new internal node with weight {merged}. "
+                        + $"Re-insert it at position {pos + 1} in the queue.",
                     HighlightIndices = [pos],
                 }
             );
@@ -724,24 +846,40 @@ public class TreeService
         int originalBits = text.Length * 8;
         int huffBits = encoded.Length;
 
+        string codesDesc = string.Join(
+            ", ",
+            codeList.Select(kv => $"'{(kv.Key == ' ' ? "·" : kv.Key.ToString())}'={kv.Value}")
+        );
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step++,
                 Array = codeList.Select(kv => kv.Value.Length).ToArray(),
+                Labels = codeList.Select(kv => kv.Key == ' ' ? "·" : kv.Key.ToString()).ToArray(),
+                Notes = codeList.Select(kv => kv.Value).ToArray(),
                 Description =
-                    $"Huffman codes: {string.Join(", ", codeList.Select(kv => $"'{kv.Key}'={kv.Value}"))}",
+                    $"Assign codes by following the tree: left branch = 0, right branch = 1. "
+                    + $"Frequent characters get shorter codes. {codesDesc}.",
                 SortedIndices = Enumerable.Range(0, codeList.Count).ToArray(),
             }
         );
 
+        int savedBits = originalBits - huffBits;
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step,
                 Array = [originalBits, huffBits],
+                Labels = ["Original (ASCII)", "Huffman"],
+                Notes =
+                [
+                    $"{text.Length} chars × 8 bits",
+                    $"saved {savedBits} bits ({(double)savedBits / originalBits:P0})",
+                ],
                 Description =
-                    $"Original: {originalBits} bits | Encoded: {huffBits} bits | Ratio: {(double)huffBits / originalBits:P1}",
+                    $"Original size: {originalBits} bits ({text.Length} chars × 8 bits). "
+                    + $"Huffman size: {huffBits} bits. "
+                    + $"Saved {savedBits} bits — {(double)savedBits / originalBits:P1} smaller.",
                 SortedIndices = [0, 1],
             }
         );

@@ -79,7 +79,7 @@ const tabs: Tab[] = [
   {
     label: "Transform",
     basePath: "/transform",
-    items: fromString(["run-length-encoding", "levenshtein", "reversal"]),
+    items: from(["reversal", "levenshtein", "run-length-encoding", "huffman"]),
   },
   {
     label: "Trees",
@@ -92,7 +92,6 @@ const tabs: Tab[] = [
       "diameter",
       "validate-bst",
       "invert",
-      "huffman",
     ]),
   },
   {

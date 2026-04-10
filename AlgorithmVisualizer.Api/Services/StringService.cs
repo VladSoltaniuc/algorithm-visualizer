@@ -522,8 +522,8 @@ public class StringService
         var steps = new List<AlgorithmStep>();
         int step = 0;
 
-        string rowHeaders = " " + text1;   // leading space for row 0
-        string colHeaders = " " + text2;   // leading space for col 0
+        string rowHeaders = " " + text1; // leading space for row 0
+        string colHeaders = " " + text2; // leading space for col 0
 
         int[][] SnapshotMatrix()
         {
@@ -542,7 +542,8 @@ public class StringService
             {
                 StepNumber = step++,
                 Array = new int[n + 1],
-                Description = $"LCS of \"{text1}\" and \"{text2}\" — initialise ({m + 1})x({n + 1}) matrix with zeros",
+                Description =
+                    $"LCS of \"{text1}\" and \"{text2}\" — initialise ({m + 1})x({n + 1}) matrix with zeros",
                 DpMatrix = SnapshotMatrix(),
                 RowHeaders = rowHeaders,
                 ColHeaders = colHeaders,
@@ -557,9 +558,10 @@ public class StringService
                     text1[i - 1] == text2[j - 1]
                         ? dp[i - 1, j - 1] + 1
                         : Math.Max(dp[i - 1, j], dp[i, j - 1]);
-                string desc = text1[i - 1] == text2[j - 1]
-                    ? $"'{text1[i - 1]}' == '{text2[j - 1]}': dp[{i}][{j}] = dp[{i - 1}][{j - 1}] + 1 = {dp[i, j]}"
-                    : $"'{text1[i - 1]}' \u2260 '{text2[j - 1]}': dp[{i}][{j}] = max({dp[i - 1, j]}, {dp[i, j - 1]}) = {dp[i, j]}";
+                string desc =
+                    text1[i - 1] == text2[j - 1]
+                        ? $"'{text1[i - 1]}' == '{text2[j - 1]}': dp[{i}][{j}] = dp[{i - 1}][{j - 1}] + 1 = {dp[i, j]}"
+                        : $"'{text1[i - 1]}' \u2260 '{text2[j - 1]}': dp[{i}][{j}] = max({dp[i - 1, j]}, {dp[i, j - 1]}) = {dp[i, j]}";
                 steps.Add(
                     new AlgorithmStep
                     {
@@ -577,7 +579,7 @@ public class StringService
 
         // Backtrack to find the LCS string
         var lcs = new List<char>();
-        var backtrackCells = new List<int>();   // flat pairs [r0,c0, r1,c1, ...]
+        var backtrackCells = new List<int>(); // flat pairs [r0,c0, r1,c1, ...]
         int x = m,
             y = n;
         while (x > 0 && y > 0)
@@ -998,57 +1000,146 @@ public class StringService
         var steps = new List<AlgorithmStep>();
         int step = 0;
 
+        // Base cases: cost to convert empty string to/from each prefix
         for (int j = 0; j <= n; j++)
             dp[0, j] = j;
-        for (int i2 = 0; i2 <= m; i2++)
-            dp[i2, 0] = i2;
+        for (int i = 0; i <= m; i++)
+            dp[i, 0] = i;
 
-        var initRow = new int[n + 1];
-        for (int j = 0; j <= n; j++)
-            initRow[j] = dp[0, j];
+        // Row headers: ∅ followed by each char of text1
+        // Col headers: ∅ followed by each char of text2
+        string rowHeaders = " " + text1;
+        string colHeaders = " " + text2;
+
+        int[][] SnapshotMatrix()
+        {
+            var matrix = new int[m + 1][];
+            for (int r = 0; r <= m; r++)
+            {
+                matrix[r] = new int[n + 1];
+                for (int c = 0; c <= n; c++)
+                    matrix[r][c] = dp[r, c];
+            }
+            return matrix;
+        }
+
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step++,
-                Array = initRow,
-                Description = $"Edit distance: \"{text1}\" → \"{text2}\"",
+                Array = [],
+                Description =
+                    $"Levenshtein: \"{text1}\" → \"{text2}\" — initialise {m + 1}×{n + 1} matrix. "
+                    + $"Row 0 = inserts needed to build \"{text2}\" from empty. "
+                    + $"Col 0 = deletes needed to empty \"{text1}\".",
+                DpMatrix = SnapshotMatrix(),
+                RowHeaders = rowHeaders,
+                ColHeaders = colHeaders,
             }
         );
 
-        for (int i2 = 1; i2 <= m; i2++)
+        for (int i = 1; i <= m; i++)
         {
             for (int j = 1; j <= n; j++)
             {
-                int cost = text1[i2 - 1] == text2[j - 1] ? 0 : 1;
-                dp[i2, j] = Math.Min(
-                    Math.Min(dp[i2 - 1, j] + 1, dp[i2, j - 1] + 1),
-                    dp[i2 - 1, j - 1] + cost
+                bool match = text1[i - 1] == text2[j - 1];
+                int deleteCost = dp[i - 1, j] + 1;
+                int insertCost = dp[i, j - 1] + 1;
+                int replaceCost = dp[i - 1, j - 1] + (match ? 0 : 1);
+                dp[i, j] = Math.Min(Math.Min(deleteCost, insertCost), replaceCost);
+
+                string desc;
+                if (match)
+                {
+                    desc =
+                        $"'{text1[i - 1]}' == '{text2[j - 1]}': characters match — no edit needed. "
+                        + $"dp[{i}][{j}] = dp[{i - 1}][{j - 1}] = {dp[i, j]}";
+                }
+                else
+                {
+                    string bestOp;
+                    if (dp[i, j] == replaceCost)
+                        bestOp =
+                            $"replace '{text1[i - 1]}' with '{text2[j - 1]}' (cost {replaceCost})";
+                    else if (dp[i, j] == deleteCost)
+                        bestOp = $"delete '{text1[i - 1]}' (cost {deleteCost})";
+                    else
+                        bestOp = $"insert '{text2[j - 1]}' (cost {insertCost})";
+                    desc =
+                        $"'{text1[i - 1]}' ≠ '{text2[j - 1]}': best is {bestOp}. "
+                        + $"min(delete={deleteCost}, insert={insertCost}, replace={replaceCost}) = {dp[i, j]}";
+                }
+
+                steps.Add(
+                    new AlgorithmStep
+                    {
+                        StepNumber = step++,
+                        Array = [],
+                        Description = desc,
+                        DpMatrix = SnapshotMatrix(),
+                        RowHeaders = rowHeaders,
+                        ColHeaders = colHeaders,
+                        HighlightRow = i,
+                        HighlightCol = j,
+                    }
                 );
             }
-            var row = new int[n + 1];
-            for (int j = 0; j <= n; j++)
-                row[j] = dp[i2, j];
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = row,
-                    Description = $"Row {i2} ('{text1[i2 - 1]}'): [{string.Join(",", row)}]",
-                    HighlightIndices = [i2],
-                }
-            );
         }
 
-        var finalRow = new int[n + 1];
-        for (int j = 0; j <= n; j++)
-            finalRow[j] = dp[m, j];
+        // Backtrack to find the optimal edit path
+        var backtrackCells = new List<int>();
+        int x = m,
+            y = n;
+        while (x > 0 || y > 0)
+        {
+            backtrackCells.Add(x);
+            backtrackCells.Add(y);
+            if (x == 0)
+            {
+                y--;
+            }
+            else if (y == 0)
+            {
+                x--;
+            }
+            else if (text1[x - 1] == text2[y - 1])
+            {
+                x--;
+                y--;
+            }
+            else
+            {
+                int minVal = Math.Min(Math.Min(dp[x - 1, y], dp[x, y - 1]), dp[x - 1, y - 1]);
+                if (minVal == dp[x - 1, y - 1])
+                {
+                    x--;
+                    y--;
+                }
+                else if (minVal == dp[x - 1, y])
+                {
+                    x--;
+                }
+                else
+                {
+                    y--;
+                }
+            }
+        }
+        backtrackCells.Add(0);
+        backtrackCells.Add(0);
+
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step,
-                Array = finalRow,
-                Description = $"Edit distance = {dp[m, n]}",
-                SortedIndices = Enumerable.Range(0, n + 1).ToArray(),
+                Array = [],
+                Description =
+                    $"Edit distance = {dp[m, n]}. "
+                    + $"The highlighted path shows the cheapest sequence of edits to turn \"{text1}\" into \"{text2}\".",
+                DpMatrix = SnapshotMatrix(),
+                RowHeaders = rowHeaders,
+                ColHeaders = colHeaders,
+                BacktrackPath = backtrackCells.ToArray(),
             }
         );
         return steps;

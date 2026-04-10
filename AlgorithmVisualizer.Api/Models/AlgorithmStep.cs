@@ -17,6 +17,14 @@ public class AlgorithmStep
     public int ManacherCenter { get; set; } = -1;
     public int ManacherRight { get; set; } = -1;
 
+    // Per-cell labels and secondary notes (e.g. Huffman char + binary code)
+    public string[] Labels { get; set; } = [];
+    public string[] Notes { get; set; } = [];
+
+    // Full level-order with null gaps so the frontend can reconstruct the tree
+    // shape dynamically (e.g. Invert Binary Tree). null elements = empty slots.
+    public int?[]? TreeLevelOrder { get; set; }
+
     // DP matrix visualization (e.g. LCS, Edit Distance)
     public int[][]? DpMatrix { get; set; }
     public string? RowHeaders { get; set; }

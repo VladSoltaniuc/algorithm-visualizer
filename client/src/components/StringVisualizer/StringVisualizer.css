@@ -275,3 +275,23 @@
   font-weight: 800;
   box-shadow: 0 2px 8px rgba(6, 214, 160, 0.4);
 }
+
+/* Legend for the DP matrix view */
+.matrix-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.lcs-active-swatch {
+  background: #e94560;
+}
+
+.lcs-path-swatch {
+  background: #06d6a0;
+}

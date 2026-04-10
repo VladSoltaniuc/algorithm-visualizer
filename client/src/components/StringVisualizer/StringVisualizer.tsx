@@ -34,7 +34,9 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
         const hashesEqual = hasHash && step.textHash === step.patternHash;
 
         const isManacher =
-          step.pArray !== undefined && step.pArray !== null && step.pArray.length > 0;
+          step.pArray !== undefined &&
+          step.pArray !== null &&
+          step.pArray.length > 0;
         const mCenter = step.manacherCenter ?? -1;
         const mRight = step.manacherRight ?? -1;
 
@@ -51,17 +53,38 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
           const hlCol = step.highlightCol ?? -1;
           const bp = step.backtrackPath ?? [];
           const bpSet = new Set<string>();
-          for (let k = 0; k < bp.length; k += 2) bpSet.add(`${bp[k]},${bp[k + 1]}`);
+          for (let k = 0; k < bp.length; k += 2)
+            bpSet.add(`${bp[k]},${bp[k + 1]}`);
+
+          const showLegend = (hlRow >= 0 && hlCol >= 0) || bpSet.size > 0;
 
           return (
             <div className="string-vis">
+              {showLegend && (
+                <div className="matrix-legend">
+                  {hlRow >= 0 && hlCol >= 0 && bpSet.size === 0 && (
+                    <span className="legend-item">
+                      <span className="legend-swatch lcs-active-swatch" />
+                      computing cell
+                    </span>
+                  )}
+                  {bpSet.size > 0 && (
+                    <span className="legend-item">
+                      <span className="legend-swatch lcs-path-swatch" />
+                      optimal edit path
+                    </span>
+                  )}
+                </div>
+              )}
               <div className="lcs-matrix-wrap">
                 <table className="lcs-matrix">
                   <thead>
                     <tr>
                       <th className="lcs-corner"></th>
                       {[...colHdr].map((ch, j) => (
-                        <th key={j} className="lcs-col-hdr">{ch === " " ? "\u2205" : ch}</th>
+                        <th key={j} className="lcs-col-hdr">
+                          {ch === " " ? "\u2205" : ch}
+                        </th>
                       ))}
                     </tr>
                   </thead>
@@ -69,13 +92,21 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
                     {matrix.map((row, i) => (
                       <tr key={i}>
                         <th className="lcs-row-hdr">
-                          {i < rowHdr.length ? (rowHdr[i] === " " ? "\u2205" : rowHdr[i]) : i}
+                          {i < rowHdr.length
+                            ? rowHdr[i] === " "
+                              ? "\u2205"
+                              : rowHdr[i]
+                            : i}
                         </th>
                         {row.map((val, j) => {
                           let cls = "lcs-cell";
                           if (bpSet.has(`${i},${j}`)) cls += " backtrack";
                           else if (i === hlRow && j === hlCol) cls += " active";
-                          return <td key={j} className={cls}>{val}</td>;
+                          return (
+                            <td key={j} className={cls}>
+                              {val}
+                            </td>
+                          );
                         })}
                       </tr>
                     ))}
@@ -89,12 +120,16 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
         return (
           <div className="string-vis">
             {hasHash && (
-              <div className={`hash-comparison ${hashesEqual ? "hash-match" : "hash-mismatch"}`}>
+              <div
+                className={`hash-comparison ${hashesEqual ? "hash-match" : "hash-mismatch"}`}
+              >
                 <span className="hash-item">
                   <span className="hash-label">Pattern Hash</span>
                   <span className="hash-value">{step.patternHash}</span>
                 </span>
-                <span className={`hash-indicator ${hashesEqual ? "match" : "mismatch"}`}>
+                <span
+                  className={`hash-indicator ${hashesEqual ? "match" : "mismatch"}`}
+                >
                   {hashesEqual ? "=" : "≠"}
                 </span>
                 <span className="hash-item">
@@ -105,15 +140,21 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
             )}
             {isManacher && mCenter >= 0 && (
               <div className="manacher-legend">
-                <span className="legend-item"><span className="legend-swatch center-swatch" />C = {mCenter}</span>
-                <span className="legend-item"><span className="legend-swatch right-swatch" />R = {mRight}</span>
+                <span className="legend-item">
+                  <span className="legend-swatch center-swatch" />C = {mCenter}
+                </span>
+                <span className="legend-item">
+                  <span className="legend-swatch right-swatch" />R = {mRight}
+                </span>
               </div>
             )}
             {patternChars && patternOffset >= 0 && (
               <span className="row-label">Text</span>
             )}
             {isManacher && <span className="row-label">Transformed</span>}
-            <div className={`string-chars${patternChars && patternOffset >= 0 ? " has-pattern" : ""}`}>
+            <div
+              className={`string-chars${patternChars && patternOffset >= 0 ? " has-pattern" : ""}`}
+            >
               {chars.map((ch, i) => {
                 let cls = "str-cell";
                 if (matched.has(i)) cls += " matched";
@@ -143,7 +184,7 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
                     );
                   })}
                 </div>
-              </>            
+              </>
             )}
             {patternChars && patternOffset >= 0 && (
               <>
@@ -165,7 +206,7 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
                     );
                   })}
                 </div>
-              </>            
+              </>
             )}
           </div>
         );
