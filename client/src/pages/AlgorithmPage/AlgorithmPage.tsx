@@ -63,7 +63,10 @@ export default function AlgorithmPage() {
   const graphData = useMemo(() => {
     if (category !== "graph") return null;
     try {
-      const parts = input.split(";").map((s) => s.trim()).filter(Boolean);
+      const parts = input
+        .split(";")
+        .map((s) => s.trim())
+        .filter(Boolean);
       const nodeCount = parseInt(parts[0], 10);
       if (isNaN(nodeCount)) return null;
       const edges = parts.slice(1).map((e) => e.split(",").map(Number));
@@ -340,6 +343,7 @@ export default function AlgorithmPage() {
           disabled={loading || spamPrevention}
           edges={graphData?.edges ?? []}
           nodeCount={graphData?.nodeCount ?? 0}
+          directed={config?.directed}
         />
       )}
       {category === "dp" && (

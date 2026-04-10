@@ -51,4 +51,5 @@ export interface AlgorithmConfig {
   patternLabel?: string;
   defaultPattern?: string;
   ytTutorial?: string;
+  directed?: boolean;
 }

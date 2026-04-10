@@ -523,6 +523,7 @@ export const graphConfig: AlgorithmConfig[] = [
       'Doesn\'t indicate which ordering is "best" — just that it\'s valid',
     ],
     ytTutorial: 'https://www.youtube.com/watch?v=dis_c84ejhQ',
+    directed: true,
   },
   {
     name: 'Cycle Detection', slug: 'cycle-detection', endpoint: 'cycle-detection', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to;...)', defaultInput: '4;0,1;1,2;2,3;3,1',
@@ -539,6 +540,7 @@ export const graphConfig: AlgorithmConfig[] = [
       'Finding all distinct cycles is a much harder problem (exponential in general)',
     ],
     ytTutorial: 'https://www.youtube.com/watch?v=rKQaZuoUR4M',
+    directed: true,
   },
   {
     name: 'Union-Find', slug: 'union-find', endpoint: 'union-find', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to;...)', defaultInput: '5;0,1;1,2;3,4',

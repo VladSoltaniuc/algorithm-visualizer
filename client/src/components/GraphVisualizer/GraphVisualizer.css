@@ -19,7 +19,7 @@
 
 .graph-edge-weight {
   fill: #666;
-  font-size: 9px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -39,13 +39,13 @@
 
 .graph-node-id {
   fill: #fff;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .graph-node-val {
   fill: #fff;
-  font-size: 6px;
-  font-weight: 500;
-  opacity: 0.85;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.9;
 }

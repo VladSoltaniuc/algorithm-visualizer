@@ -319,67 +319,101 @@ public class GraphService
         );
         return steps;
     }
-    // 6. Topological Sort
+
+    // 6. Topological Sort (Kahn's Algorithm)
     // Time: O(V + E)
     // Space: O(V)
     public List<AlgorithmStep> TopologicalSort(GraphRequest req)
     {
-        var adj = BuildAdj(req.NodeCount, req.Edges, directed: true);
-        var inDeg = new int[req.NodeCount];
+        int n = req.NodeCount;
+        var adj = BuildAdj(n, req.Edges, directed: true);
+        var inDeg = new int[n];
         foreach (var e in req.Edges)
             inDeg[e[1]]++;
-        var steps = new List<AlgorithmStep>();
-        int step = 0;
 
+        var steps = new List<AlgorithmStep>();
+        int stepNum = 0;
+
+        // Step 0: show initial in-degrees
+        var initialReady = Enumerable.Range(0, n).Where(i => inDeg[i] == 0).ToList();
         steps.Add(
             new AlgorithmStep
             {
-                StepNumber = step++,
+                StepNumber = stepNum++,
                 Array = (int[])inDeg.Clone(),
-                Description = "In-degrees computed",
+                Description =
+                    $"In-degrees computed. Nodes with in-degree 0 are ready to process: [{string.Join(", ", initialReady)}].",
+                HighlightIndices = initialReady.ToArray(),
+                Notes = Enumerable.Range(0, n).Select(i => $"in:{inDeg[i]}").ToArray(),
             }
         );
 
         var queue = new Queue<int>();
-        for (int i = 0; i < req.NodeCount; i++)
-            if (inDeg[i] == 0)
-                queue.Enqueue(i);
+        foreach (var z in initialReady)
+            queue.Enqueue(z);
 
         var result = new List<int>();
+        var done = new List<int>();
+
         while (queue.Count > 0)
         {
             int u = queue.Dequeue();
             result.Add(u);
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = result.ToArray(),
-                    Description = $"Process node {u} (in-degree 0)",
-                    HighlightIndices = [result.Count - 1],
-                }
-            );
+            done.Add(u);
 
+            var newlyReady = new List<int>();
             foreach (int v in adj[u])
             {
                 inDeg[v]--;
                 if (inDeg[v] == 0)
+                {
                     queue.Enqueue(v);
+                    newlyReady.Add(v);
+                }
             }
+
+            string neighborDesc =
+                adj[u].Count > 0
+                    ? $" Edges processed: {string.Join(", ", adj[u].Select(v => $"{u}→{v} (in-deg now {inDeg[v]})"))}."
+                    : " No outgoing edges.";
+            string readyDesc =
+                newlyReady.Count > 0 ? $" Newly ready: [{string.Join(", ", newlyReady)}]." : "";
+
+            steps.Add(
+                new AlgorithmStep
+                {
+                    StepNumber = stepNum++,
+                    Array = (int[])inDeg.Clone(),
+                    Description =
+                        $"Dequeue node {u} → topological position #{result.Count}.{neighborDesc}{readyDesc}",
+                    HighlightIndices = new[] { u }.Concat(newlyReady).ToArray(),
+                    SortedIndices = done.ToArray(),
+                    Notes = Enumerable.Range(0, n).Select(i => $"in:{inDeg[i]}").ToArray(),
+                }
+            );
         }
+
+        bool valid = result.Count == n;
+        var finalNotes = new string[n];
+        for (int i = 0; i < result.Count; i++)
+            finalNotes[result[i]] = $"#{i + 1}";
+        for (int i = 0; i < n; i++)
+            if (finalNotes[i] == null)
+                finalNotes[i] = "×";
 
         steps.Add(
             new AlgorithmStep
             {
-                StepNumber = step,
-                Array = result.ToArray(),
-                Description =
-                    result.Count == req.NodeCount
-                        ? $"Topological order: [{string.Join(", ", result)}]"
-                        : "Cycle detected — no valid topological order",
-                SortedIndices = Enumerable.Range(0, result.Count).ToArray(),
+                StepNumber = stepNum,
+                Array = (int[])inDeg.Clone(),
+                Description = valid
+                    ? $"Done! Topological order: [{string.Join(" → ", result)}]."
+                    : "Cycle detected — no valid topological order exists.",
+                SortedIndices = valid ? Enumerable.Range(0, n).ToArray() : [],
+                Notes = finalNotes,
             }
         );
+
         return steps;
     }
 
@@ -470,13 +504,33 @@ public class GraphService
         var rank = new int[req.NodeCount];
         var steps = new List<AlgorithmStep>();
         int step = 0;
+        int n = req.NodeCount;
+        int componentCount = n;
+
+        // Non-mutating root finder — used only for label generation
+        static int FindRootPure(int[] p, int x)
+        {
+            while (p[x] != x)
+                x = p[x];
+            return x;
+        }
+
+        string[] MakeLabels() =>
+            Enumerable.Range(0, n).Select(i => FindRootPure(parent, i).ToString()).ToArray();
+
+        string[] MakeNotes() =>
+            Enumerable.Range(0, n).Select(i => parent[i] == i ? "root" : $"→{parent[i]}").ToArray();
 
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = step++,
                 Array = (int[])parent.Clone(),
-                Description = "Union-Find: each node is its own parent",
+                Labels = MakeLabels(),
+                Notes = MakeNotes(),
+                Description =
+                    $"Start: {n} nodes, each in its own component (parent[i] = i). "
+                    + $"{componentCount} separate component(s).",
             }
         );
 
@@ -486,6 +540,7 @@ public class GraphService
                 v = e[1];
             int pu = Find(parent, u),
                 pv = Find(parent, v);
+
             if (pu == pv)
             {
                 steps.Add(
@@ -493,12 +548,17 @@ public class GraphService
                     {
                         StepNumber = step++,
                         Array = (int[])parent.Clone(),
-                        Description = $"Edge {u}-{v}: same set (root={pu}), cycle!",
+                        Labels = MakeLabels(),
+                        Notes = MakeNotes(),
+                        Description =
+                            $"Edge {u}–{v}: both nodes already share root {pu} — same component. "
+                            + "This edge would form a cycle, skipping it.",
                         HighlightIndices = [u, v],
                     }
                 );
                 continue;
             }
+
             if (rank[pu] < rank[pv])
                 parent[pu] = pv;
             else if (rank[pu] > rank[pv])
@@ -508,12 +568,19 @@ public class GraphService
                 parent[pv] = pu;
                 rank[pu]++;
             }
+            componentCount--;
+            int newRoot = FindRootPure(parent, u);
+
             steps.Add(
                 new AlgorithmStep
                 {
                     StepNumber = step++,
                     Array = (int[])parent.Clone(),
-                    Description = $"Union({u},{v}): merge sets of {pu} and {pv}",
+                    Labels = MakeLabels(),
+                    Notes = MakeNotes(),
+                    Description =
+                        $"Union({u}, {v}): merged component of {pu} into component of {pv} — "
+                        + $"new root is {newRoot}. {componentCount} component(s) remaining.",
                     HighlightIndices = [u, v],
                 }
             );
@@ -524,8 +591,12 @@ public class GraphService
             {
                 StepNumber = step,
                 Array = (int[])parent.Clone(),
-                Description = $"Union-Find complete. Parent: [{string.Join(", ", parent)}]",
-                SortedIndices = Enumerable.Range(0, req.NodeCount).ToArray(),
+                Labels = MakeLabels(),
+                Notes = MakeNotes(),
+                Description =
+                    $"Done. {componentCount} connected component(s). "
+                    + $"Parent array: [{string.Join(", ", parent)}].",
+                SortedIndices = Enumerable.Range(0, n).ToArray(),
             }
         );
         return steps;
