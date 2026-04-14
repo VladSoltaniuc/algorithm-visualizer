@@ -48,8 +48,4 @@ public class StringController : ControllerBase
     [HttpPost("run-length-encoding")]
     public IActionResult RunLengthEncoding([FromBody] StringRequest req) =>
         Ok(_srv.RunLengthEncoding(req.Text));
-
-    [HttpPost("levenshtein")]
-    public IActionResult Levenshtein([FromBody] StringRequest req) =>
-        Ok(_srv.Levenshtein(req.Text, req.Pattern));
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { AlgorithmStep } from "../../types";
 import "./ArrayVisualizer.css";
+import "../VisControls/VisControls.css";
 
 interface Props {
   steps: AlgorithmStep[];
@@ -92,14 +93,14 @@ export default function ArrayVisualizer({ steps, onRun, disabled }: Props) {
               );
             })}
           </div>
-          <p className="step-description">
+          <div
+            className={`step-info${currentStep === steps.length - 1 ? " final" : ""}`}
+          >
             {step.description}
-            {step && (
-              <span className="step-counter">
-                Step {currentStep + 1} / {steps.length}
-              </span>
-            )}
-          </p>
+          </div>
+          <span className="step-counter">
+            Step {currentStep + 1} / {steps.length}
+          </span>
         </>
       )}
     </div>

@@ -117,8 +117,14 @@ export default function TreeVisualizer({
   }, [inputValues]);
 
   return (
-    <VisControls steps={steps} onRun={onRun} disabled={disabled}>
+    <VisControls
+      steps={steps}
+      onRun={onRun}
+      disabled={disabled}
+      hideDescription
+    >
       {(step: AlgorithmStep) => {
+        const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;
         /* Fallback for Huffman / non-numeric input */
         if (!layout && !step.treeLevelOrder?.length) {
           const labels = step.labels ?? [];
@@ -126,26 +132,31 @@ export default function TreeVisualizer({
           const hasLabels = labels.length > 0;
           const hasNotes = notes.length > 0;
           return (
-            <div className="tree-fallback">
-              {step.array.map((v, i) => {
-                const hl = step.highlightIndices?.includes(i);
-                const done = step.sortedIndices?.includes(i);
-                return (
-                  <div
-                    key={i}
-                    className={`tree-fb-cell${hl ? " hl" : ""}${done ? " done" : ""}`}
-                  >
-                    {hasLabels && (
-                      <span className="tree-fb-label">{labels[i]}</span>
-                    )}
-                    <span className="tree-fb-value">{v}</span>
-                    {hasNotes && notes[i] && (
-                      <span className="tree-fb-note">{notes[i]}</span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <>
+              <div className="tree-fallback">
+                {step.array.map((v, i) => {
+                  const hl = step.highlightIndices?.includes(i);
+                  const done = step.sortedIndices?.includes(i);
+                  return (
+                    <div
+                      key={i}
+                      className={`tree-fb-cell${hl ? " hl" : ""}${done ? " done" : ""}`}
+                    >
+                      {hasLabels && (
+                        <span className="tree-fb-label">{labels[i]}</span>
+                      )}
+                      <span className="tree-fb-value">{v}</span>
+                      {hasNotes && notes[i] && (
+                        <span className="tree-fb-note">{notes[i]}</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className={`step-info${isFinal ? " final" : ""}`}>
+                {step.description}
+              </div>
+            </>
           );
         }
 
@@ -176,51 +187,56 @@ export default function TreeVisualizer({
         );
 
         return (
-          <div className="tree-vis">
-            <svg viewBox={`0 0 ${svgW} ${svgH}`} className="tree-svg">
-              {edges.map(([pi, ci], i) => {
-                const p = nodes[pi];
-                const c = nodes[ci];
-                return (
-                  <line
-                    key={`e${i}`}
-                    x1={p.x * xSp + pad}
-                    y1={p.y * ySp + pad}
-                    x2={c.x * xSp + pad}
-                    y2={c.y * ySp + pad}
-                    className="tree-edge"
-                  />
-                );
-              })}
-              {nodes.map((n, i) => {
-                let fill = "#3a86ff";
-                if (doneVals.has(n.value)) fill = "#06d6a0";
-                if (hlVals.has(n.value)) fill = "#e94560";
-                const cx = n.x * xSp + pad;
-                const cy = n.y * ySp + pad;
-                return (
-                  <g key={i}>
-                    <circle
-                      cx={cx}
-                      cy={cy}
-                      r={nR}
-                      fill={fill}
-                      className="tree-node"
+          <>
+            <div className="tree-vis">
+              <svg viewBox={`0 0 ${svgW} ${svgH}`} className="tree-svg">
+                {edges.map(([pi, ci], i) => {
+                  const p = nodes[pi];
+                  const c = nodes[ci];
+                  return (
+                    <line
+                      key={`e${i}`}
+                      x1={p.x * xSp + pad}
+                      y1={p.y * ySp + pad}
+                      x2={c.x * xSp + pad}
+                      y2={c.y * ySp + pad}
+                      className="tree-edge"
                     />
-                    <text
-                      x={cx}
-                      y={cy}
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                      className="tree-node-label"
-                    >
-                      {n.value}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
-          </div>
+                  );
+                })}
+                {nodes.map((n, i) => {
+                  let fill = "#3a86ff";
+                  if (doneVals.has(n.value)) fill = "#06d6a0";
+                  if (hlVals.has(n.value)) fill = "#e94560";
+                  const cx = n.x * xSp + pad;
+                  const cy = n.y * ySp + pad;
+                  return (
+                    <g key={i}>
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={nR}
+                        fill={fill}
+                        className="tree-node"
+                      />
+                      <text
+                        x={cx}
+                        y={cy}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        className="tree-node-label"
+                      >
+                        {n.value}
+                      </text>
+                    </g>
+                  );
+                })}
+              </svg>
+            </div>
+            <div className={`step-info${isFinal ? " final" : ""}`}>
+              {step.description}
+            </div>
+          </>
         );
       }}
     </VisControls>

@@ -17,55 +17,109 @@ interface Props {
  *  - Rat: n² cells  →  n×n grid
  *  - Others (permutations, subsets, combos): linear cell row
  */
-export default function BacktrackingVisualizer({ steps, onRun, disabled, slug }: Props) {
+export default function BacktrackingVisualizer({
+  steps,
+  onRun,
+  disabled,
+  slug,
+}: Props) {
   return (
-    <VisControls steps={steps} onRun={onRun} disabled={disabled}>
+    <VisControls
+      steps={steps}
+      onRun={onRun}
+      disabled={disabled}
+      hideDescription
+    >
       {(step: AlgorithmStep) => {
         const arr = step.array;
         const hl = new Set(step.highlightIndices ?? []);
         const done = new Set(step.sortedIndices ?? []);
+        const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;
 
         // N-Queens: array length = n, values are column positions (-1 = empty)
         if (slug === "n-queens") {
-          return <NQueensBoard queens={arr} hl={hl} done={done} />;
+          return (
+            <>
+              <NQueensBoard queens={arr} hl={hl} done={done} />
+              <div className={`step-info${isFinal ? " final" : ""}`}>
+                {step.description}
+              </div>
+            </>
+          );
         }
 
         // Sudoku: exactly 81 cells  →  9×9
         if (arr.length === 81 && slug === "sudoku") {
-          return <GridBoard arr={arr} cols={9} hl={hl} done={done} />;
+          return (
+            <>
+              <GridBoard arr={arr} cols={9} hl={hl} done={done} />
+              <div className={`step-info${isFinal ? " final" : ""}`}>
+                {step.description}
+              </div>
+            </>
+          );
         }
 
         // Square grids (rat-in-maze)
         const sqrt = Math.round(Math.sqrt(arr.length));
-        if (sqrt * sqrt === arr.length && arr.length > 1 && (slug === "rat-in-maze")) {
-          return <GridBoard arr={arr} cols={sqrt} hl={hl} done={done} />;
+        if (
+          sqrt * sqrt === arr.length &&
+          arr.length > 1 &&
+          slug === "rat-in-maze"
+        ) {
+          return (
+            <>
+              <GridBoard arr={arr} cols={sqrt} hl={hl} done={done} />
+              <div className={`step-info${isFinal ? " final" : ""}`}>
+                {step.description}
+              </div>
+            </>
+          );
         }
 
         // Default linear display for permutations, subsets, combos, etc.
         return (
-          <div className="bt-vis">
-            <div className="bt-linear">
-              {arr.map((val, i) => {
-                let cls = "bt-cell";
-                if (done.has(i)) cls += " done";
-                else if (hl.has(i)) cls += " active";
-                return (
-                  <div key={i} className={cls}>{val}</div>
-                );
-              })}
+          <>
+            <div className="bt-vis">
+              <div className="bt-linear">
+                {arr.map((val, i) => {
+                  let cls = "bt-cell";
+                  if (done.has(i)) cls += " done";
+                  else if (hl.has(i)) cls += " active";
+                  return (
+                    <div key={i} className={cls}>
+                      {val}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+            <div className={`step-info${isFinal ? " final" : ""}`}>
+              {step.description}
+            </div>
+          </>
         );
       }}
     </VisControls>
   );
 }
 
-function NQueensBoard({ queens, hl, done }: { queens: number[]; hl: Set<number>; done: Set<number> }) {
+function NQueensBoard({
+  queens,
+  hl,
+  done,
+}: {
+  queens: number[];
+  hl: Set<number>;
+  done: Set<number>;
+}) {
   const n = queens.length;
   return (
     <div className="bt-vis">
-      <div className="bt-board" style={{ gridTemplateColumns: `repeat(${n}, 1fr)` }}>
+      <div
+        className="bt-board"
+        style={{ gridTemplateColumns: `repeat(${n}, 1fr)` }}
+      >
         {Array.from({ length: n * n }, (_, idx) => {
           const row = Math.floor(idx / n);
           const col = idx % n;
@@ -86,10 +140,23 @@ function NQueensBoard({ queens, hl, done }: { queens: number[]; hl: Set<number>;
   );
 }
 
-function GridBoard({ arr, cols, hl, done }: { arr: number[]; cols: number; hl: Set<number>; done: Set<number> }) {
+function GridBoard({
+  arr,
+  cols,
+  hl,
+  done,
+}: {
+  arr: number[];
+  cols: number;
+  hl: Set<number>;
+  done: Set<number>;
+}) {
   return (
     <div className="bt-vis">
-      <div className="bt-board" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+      <div
+        className="bt-board"
+        style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+      >
         {arr.map((val, i) => {
           let cls = "bt-grid-cell";
           if (done.has(i)) cls += " done";

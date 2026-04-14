@@ -10,8 +10,14 @@ interface Props {
 
 export default function StringVisualizer({ steps, onRun, disabled }: Props) {
   return (
-    <VisControls steps={steps} onRun={onRun} disabled={disabled}>
+    <VisControls
+      steps={steps}
+      onRun={onRun}
+      disabled={disabled}
+      hideDescription
+    >
       {(step: AlgorithmStep) => {
+        const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;
         const isNumeric = step.isNumericArray ?? false;
         const chars = isNumeric
           ? step.array.map((v) => String(v))
@@ -59,156 +65,168 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
           const showLegend = (hlRow >= 0 && hlCol >= 0) || bpSet.size > 0;
 
           return (
-            <div className="string-vis">
-              {showLegend && (
-                <div className="matrix-legend">
-                  {hlRow >= 0 && hlCol >= 0 && bpSet.size === 0 && (
-                    <span className="legend-item">
-                      <span className="legend-swatch lcs-active-swatch" />
-                      computing cell
-                    </span>
-                  )}
-                  {bpSet.size > 0 && (
-                    <span className="legend-item">
-                      <span className="legend-swatch lcs-path-swatch" />
-                      optimal edit path
-                    </span>
-                  )}
-                </div>
-              )}
-              <div className="lcs-matrix-wrap">
-                <table className="lcs-matrix">
-                  <thead>
-                    <tr>
-                      <th className="lcs-corner"></th>
-                      {[...colHdr].map((ch, j) => (
-                        <th key={j} className="lcs-col-hdr">
-                          {ch === " " ? "\u2205" : ch}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {matrix.map((row, i) => (
-                      <tr key={i}>
-                        <th className="lcs-row-hdr">
-                          {i < rowHdr.length
-                            ? rowHdr[i] === " "
-                              ? "\u2205"
-                              : rowHdr[i]
-                            : i}
-                        </th>
-                        {row.map((val, j) => {
-                          let cls = "lcs-cell";
-                          if (bpSet.has(`${i},${j}`)) cls += " backtrack";
-                          else if (i === hlRow && j === hlCol) cls += " active";
-                          return (
-                            <td key={j} className={cls}>
-                              {val}
-                            </td>
-                          );
-                        })}
+            <>
+              <div className="string-vis">
+                {showLegend && (
+                  <div className="matrix-legend">
+                    {hlRow >= 0 && hlCol >= 0 && bpSet.size === 0 && (
+                      <span className="legend-item">
+                        <span className="legend-swatch lcs-active-swatch" />
+                        computing cell
+                      </span>
+                    )}
+                    {bpSet.size > 0 && (
+                      <span className="legend-item">
+                        <span className="legend-swatch lcs-path-swatch" />
+                        optimal edit path
+                      </span>
+                    )}
+                  </div>
+                )}
+                <div className="lcs-matrix-wrap">
+                  <table className="lcs-matrix">
+                    <thead>
+                      <tr>
+                        <th className="lcs-corner"></th>
+                        {[...colHdr].map((ch, j) => (
+                          <th key={j} className="lcs-col-hdr">
+                            {ch === " " ? "\u2205" : ch}
+                          </th>
+                        ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {matrix.map((row, i) => (
+                        <tr key={i}>
+                          <th className="lcs-row-hdr">
+                            {i < rowHdr.length
+                              ? rowHdr[i] === " "
+                                ? "\u2205"
+                                : rowHdr[i]
+                              : i}
+                          </th>
+                          {row.map((val, j) => {
+                            let cls = "lcs-cell";
+                            if (bpSet.has(`${i},${j}`)) cls += " backtrack";
+                            else if (i === hlRow && j === hlCol)
+                              cls += " active";
+                            return (
+                              <td key={j} className={cls}>
+                                {val}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+              <div className={`step-info${isFinal ? " final" : ""}`}>
+                {step.description}
+              </div>
+            </>
           );
         }
 
         return (
-          <div className="string-vis">
-            {hasHash && (
-              <div
-                className={`hash-comparison ${hashesEqual ? "hash-match" : "hash-mismatch"}`}
-              >
-                <span className="hash-item">
-                  <span className="hash-label">Pattern Hash</span>
-                  <span className="hash-value">{step.patternHash}</span>
-                </span>
-                <span
-                  className={`hash-indicator ${hashesEqual ? "match" : "mismatch"}`}
+          <>
+            <div className="string-vis">
+              {hasHash && (
+                <div
+                  className={`hash-comparison ${hashesEqual ? "hash-match" : "hash-mismatch"}`}
                 >
-                  {hashesEqual ? "=" : "≠"}
-                </span>
-                <span className="hash-item">
-                  <span className="hash-label">Window Hash</span>
-                  <span className="hash-value">{step.textHash}</span>
-                </span>
+                  <span className="hash-item">
+                    <span className="hash-label">Pattern Hash</span>
+                    <span className="hash-value">{step.patternHash}</span>
+                  </span>
+                  <span
+                    className={`hash-indicator ${hashesEqual ? "match" : "mismatch"}`}
+                  >
+                    {hashesEqual ? "=" : "≠"}
+                  </span>
+                  <span className="hash-item">
+                    <span className="hash-label">Window Hash</span>
+                    <span className="hash-value">{step.textHash}</span>
+                  </span>
+                </div>
+              )}
+              {isManacher && mCenter >= 0 && (
+                <div className="manacher-legend">
+                  <span className="legend-item">
+                    <span className="legend-swatch center-swatch" />C ={" "}
+                    {mCenter}
+                  </span>
+                  <span className="legend-item">
+                    <span className="legend-swatch right-swatch" />R = {mRight}
+                  </span>
+                </div>
+              )}
+              {patternChars && patternOffset >= 0 && (
+                <span className="row-label">Text</span>
+              )}
+              {isManacher && <span className="row-label">Transformed</span>}
+              <div
+                className={`string-chars${patternChars && patternOffset >= 0 ? " has-pattern" : ""}`}
+              >
+                {chars.map((ch, i) => {
+                  let cls = "str-cell";
+                  if (matched.has(i)) cls += " matched";
+                  else if (hl.has(i)) cls += " active";
+                  if (isManacher && i === mCenter) cls += " manacher-center";
+                  if (isManacher && i === mRight) cls += " manacher-right";
+                  return (
+                    <div key={i} className={cls}>
+                      <span className="str-char">{ch}</span>
+                      <span className="str-idx">{i}</span>
+                    </div>
+                  );
+                })}
               </div>
-            )}
-            {isManacher && mCenter >= 0 && (
-              <div className="manacher-legend">
-                <span className="legend-item">
-                  <span className="legend-swatch center-swatch" />C = {mCenter}
-                </span>
-                <span className="legend-item">
-                  <span className="legend-swatch right-swatch" />R = {mRight}
-                </span>
-              </div>
-            )}
-            {patternChars && patternOffset >= 0 && (
-              <span className="row-label">Text</span>
-            )}
-            {isManacher && <span className="row-label">Transformed</span>}
-            <div
-              className={`string-chars${patternChars && patternOffset >= 0 ? " has-pattern" : ""}`}
-            >
-              {chars.map((ch, i) => {
-                let cls = "str-cell";
-                if (matched.has(i)) cls += " matched";
-                else if (hl.has(i)) cls += " active";
-                if (isManacher && i === mCenter) cls += " manacher-center";
-                if (isManacher && i === mRight) cls += " manacher-right";
-                return (
-                  <div key={i} className={cls}>
-                    <span className="str-char">{ch}</span>
-                    <span className="str-idx">{i}</span>
+              {isManacher && (
+                <>
+                  <span className="row-label">P (radius)</span>
+                  <div className="string-chars">
+                    {step.pArray!.map((val, i) => {
+                      let cls = "str-cell p-cell";
+                      if (hl.has(i)) cls += " active";
+                      return (
+                        <div key={`p-${i}`} className={cls}>
+                          <span className="str-char">{val}</span>
+                          <span className="str-idx">{i}</span>
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
+                </>
+              )}
+              {patternChars && patternOffset >= 0 && (
+                <>
+                  <span className="row-label">Pattern</span>
+                  <div className="string-chars pattern-row">
+                    {Array.from({ length: patternOffset }, (_, i) => (
+                      <div key={`spacer-${i}`} className="str-cell spacer" />
+                    ))}
+                    {patternChars.map((ch, i) => {
+                      let cls = "str-cell pattern-cell";
+                      if (matched.size > 0 && matched.has(patternOffset + i))
+                        cls += " matched";
+                      else if (i === patternHl) cls += " active";
+                      return (
+                        <div key={`pat-${i}`} className={cls}>
+                          <span className="str-char">{ch}</span>
+                          <span className="str-idx">{i}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
-            {isManacher && (
-              <>
-                <span className="row-label">P (radius)</span>
-                <div className="string-chars">
-                  {step.pArray!.map((val, i) => {
-                    let cls = "str-cell p-cell";
-                    if (hl.has(i)) cls += " active";
-                    return (
-                      <div key={`p-${i}`} className={cls}>
-                        <span className="str-char">{val}</span>
-                        <span className="str-idx">{i}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-            {patternChars && patternOffset >= 0 && (
-              <>
-                <span className="row-label">Pattern</span>
-                <div className="string-chars pattern-row">
-                  {Array.from({ length: patternOffset }, (_, i) => (
-                    <div key={`spacer-${i}`} className="str-cell spacer" />
-                  ))}
-                  {patternChars.map((ch, i) => {
-                    let cls = "str-cell pattern-cell";
-                    if (matched.size > 0 && matched.has(patternOffset + i))
-                      cls += " matched";
-                    else if (i === patternHl) cls += " active";
-                    return (
-                      <div key={`pat-${i}`} className={cls}>
-                        <span className="str-char">{ch}</span>
-                        <span className="str-idx">{i}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-          </div>
+            <div className={`step-info${isFinal ? " final" : ""}`}>
+              {step.description}
+            </div>
+          </>
         );
       }}
     </VisControls>

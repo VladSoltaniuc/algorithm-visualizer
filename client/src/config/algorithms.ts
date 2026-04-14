@@ -256,22 +256,6 @@ export const stringConfig: AlgorithmConfig[] = [
     ],
     ytTutorial: 'https://www.youtube.com/watch?v=h-TGpvQYyDI',
   },
-  {
-    name: 'Levenshtein Distance', slug: 'levenshtein', endpoint: 'levenshtein', category: 'string', inputType: 'text', inputLabel: 'Text 1', defaultInput: 'kitten', needsPattern: true, patternLabel: 'Text 2', defaultPattern: 'sitting',
-    description: 'Imagine you mistyped "kitten" and meant to write "sitting". How many fixes does it take to get from one to the other? You can insert a letter, delete a letter, or swap a letter for a different one — each counts as one edit. Levenshtein Distance finds the minimum number of such edits needed. It does this by building a grid where each cell answers: what\'s the cheapest way to match the first few letters of one word to the first few letters of the other? It fills the grid step by step, each cell borrowing the best answer from its neighbors, until the bottom-right corner reveals the final answer.',
-    usecase: 'Spell checkers, autocorrect, fuzzy search, DNA sequence alignment, and diff tools.',
-    pros: [
-      'O(n × m) time — fills every cell of the grid exactly once',
-      'Handles all three edit operations (insert, delete, replace)',
-      'O(min(n, m)) space with optimization — only needs two rows at a time',
-    ],
-    cons: [
-      'O(n × m) space for the full grid if you need to reconstruct the edits',
-      'Slow on very long strings — quadratic growth',
-      'Doesn\'t account for transpositions (swapping two adjacent characters) — Damerau-Levenshtein does',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=MiqoA-yF-0M',
-  },
 ];
 
 export const treeConfig: AlgorithmConfig[] = [
@@ -657,8 +641,8 @@ export const dpConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=cjWnW0hdF1Y',
   },
   {
-    name: 'Coin Change', slug: 'coin-change', endpoint: 'coin-change', category: 'dp', inputLabel: 'Coins', defaultInput: '1,5,10,25', needsTarget: true, targetLabel: 'Amount', defaultTarget: 30,
-    description: 'Imagine you want to make exactly 30 cents using coins of 1, 5, 10, and 25 cents, using as few coins as possible. Instead of trying every combination, the algorithm builds up from zero. It asks: what\'s the fewest coins needed to make 1 cent? 2 cents? 3 cents? All the way up to 30. For each amount, it tries every coin and asks: if I use this coin, what\'s the fewest coins needed for the remaining amount? It picks whichever coin leaves the smallest total, building the answer step by step from the ground up.',
+    name: 'Coin Change', slug: 'coin-change', endpoint: 'coin-change', category: 'dp', inputLabel: 'Coins', defaultInput: '1,5,10,25', needsTarget: true, targetLabel: 'Amount', defaultTarget: 22,
+    description: 'Imagine you want to make exactly 22 cents using coins of 1, 5, 10, and 25 cents, using as few coins as possible. Instead of trying every combination, the algorithm builds up from zero. It asks: what\'s the fewest coins needed to make 1 cent? 2 cents? 3 cents? All the way up to 22. For each amount, it tries every coin and asks: if I use this coin, what\'s the fewest coins needed for the remaining amount? It picks whichever coin leaves the smallest total, building the answer step by step from the ground up.',
     usecase: 'Vending machines, currency exchange, making change, and any resource-minimization problem with reusable denominations.',
     pros: [
       'O(n × amount) time — where n is the number of coin types',
@@ -673,8 +657,8 @@ export const dpConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=H9bfqozjoqs',
   },
   {
-    name: 'Edit Distance', slug: 'edit-distance', endpoint: 'edit-distance', category: 'dp', inputType: 'text', inputLabel: 'Text 1', defaultInput: 'kitten', needsPattern: true, patternLabel: 'Text 2', defaultPattern: 'sitting',
-    description: 'This is the same idea as Levenshtein Distance — finding the minimum number of insertions, deletions, or replacements needed to turn one word into another. The difference here is the emphasis on how dynamic programming makes it efficient. Instead of guessing, it builds a grid comparing every prefix of one word against every prefix of the other. Each cell asks: what\'s the cheapest way to match these two prefixes? It looks at its three neighbors — the cell above, to the left, and diagonally — representing delete, insert, and replace, and always picks the cheapest option.',
+    name: 'Levenshtein Distance', slug: 'levenshtein', endpoint: 'levenshtein', category: 'dp', inputType: 'text', inputLabel: 'Text 1', defaultInput: 'kitten', needsPattern: true, patternLabel: 'Text 2', defaultPattern: 'sitting',
+    description: 'Imagine you mistyped "kitten" and meant to write "sitting". How many fixes does it take to get from one to the other? You can insert a letter, delete a letter, or swap a letter for a different one — each counts as one edit. Levenshtein Distance finds the minimum number of such edits needed. It builds a grid comparing every prefix of one word against every prefix of the other. Each cell answers: what\'s the cheapest way to match these two prefixes? It checks three neighbors — the cell above (delete), to the left (insert), and diagonal (replace or free if the characters match) — and picks the cheapest option, building the full answer bottom-up.',
     usecase: 'Spell checkers, autocorrect, DNA/protein sequence alignment, diff tools, and fuzzy string matching.',
     pros: [
       'O(n × m) time — optimal for this problem',

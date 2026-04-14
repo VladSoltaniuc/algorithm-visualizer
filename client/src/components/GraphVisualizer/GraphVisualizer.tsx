@@ -25,23 +25,34 @@ export default function GraphVisualizer({
   directed,
 }: Props) {
   return (
-    <VisControls steps={steps} onRun={onRun} disabled={disabled}>
+    <VisControls
+      steps={steps}
+      onRun={onRun}
+      disabled={disabled}
+      hideDescription
+    >
       {(step: AlgorithmStep) => {
         const n = step.array.length || nodeCount;
         const hl = new Set(step.highlightIndices ?? []);
         const done = new Set(step.sortedIndices ?? []);
+        const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;
 
         return (
-          <GraphCanvas
-            n={n}
-            values={step.array}
-            hl={hl}
-            done={done}
-            edges={edges}
-            labels={step.labels}
-            notes={step.notes}
-            directed={directed}
-          />
+          <>
+            <GraphCanvas
+              n={n}
+              values={step.array}
+              hl={hl}
+              done={done}
+              edges={edges}
+              labels={step.labels}
+              notes={step.notes}
+              directed={directed}
+            />
+            <div className={`step-info${isFinal ? " final" : ""}`}>
+              {step.description}
+            </div>
+          </>
         );
       }}
     </VisControls>

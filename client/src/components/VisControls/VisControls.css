@@ -51,3 +51,26 @@
   text-align: center;
   font-weight: 500;
 }
+
+/* Styled description card — shared by all visualizers */
+.step-info {
+  margin: 14px auto 0;
+  max-width: 620px;
+  background: #eef6ff;
+  border: 1.5px solid #7babff;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.88rem;
+  color: #1a1a2e;
+  text-align: center;
+  line-height: 1.65;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.step-info.final {
+  background: #fffbe6;
+  border-color: #f7b731;
+  color: #6b4f00;
+  font-weight: 600;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+}

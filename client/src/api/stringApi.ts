@@ -31,6 +31,4 @@ export const stringApi: Record<string, (...args: unknown[]) => Promise<Algorithm
     postJson(`${BASE}/reversal`, { text, pattern: '' }),
   runLengthEncoding: (text: unknown) =>
     postJson(`${BASE}/run-length-encoding`, { text, pattern: '' }),
-  levenshtein: (text: unknown, pattern?: unknown) =>
-    postJson(`${BASE}/levenshtein`, { text, pattern: pattern ?? '' }),
 };

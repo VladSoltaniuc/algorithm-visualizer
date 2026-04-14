@@ -25,6 +25,9 @@ export interface AlgorithmStep {
   dpMatrix?: number[][];
   rowHeaders?: string;
   colHeaders?: string;
+  // Multi-character row/column labels (Knapsack, SubsetSum, LIS)
+  rowLabels?: string[];
+  colLabels?: string[];
   highlightRow?: number;
   highlightCol?: number;
   backtrackPath?: number[];

@@ -29,6 +29,10 @@ public class AlgorithmStep
     public int[][]? DpMatrix { get; set; }
     public string? RowHeaders { get; set; }
     public string? ColHeaders { get; set; }
+
+    // Multi-character row/column labels (used by Knapsack, SubsetSum, LIS)
+    public string[]? RowLabels { get; set; }
+    public string[]? ColLabels { get; set; }
     public int HighlightRow { get; set; } = -1;
     public int HighlightCol { get; set; } = -1;
     public int[]? BacktrackPath { get; set; }

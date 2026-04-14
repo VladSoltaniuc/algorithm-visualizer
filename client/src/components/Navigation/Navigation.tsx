@@ -79,7 +79,7 @@ const tabs: Tab[] = [
   {
     label: "Transform",
     basePath: "/transform",
-    items: from(["reversal", "levenshtein", "run-length-encoding", "huffman"]),
+    items: from(["reversal", "run-length-encoding", "huffman"]),
   },
   {
     label: "Trees",
@@ -115,7 +115,7 @@ const tabs: Tab[] = [
       "coin-change",
       "lcs",
       "knapsack",
-      "edit-distance",
+      "levenshtein",
       "lis",
       "subset-sum",
     ]),

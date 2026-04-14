@@ -6,6 +6,7 @@ interface Props {
   steps: AlgorithmStep[];
   onRun: () => void;
   disabled?: boolean;
+  hideDescription?: boolean;
   children: (step: AlgorithmStep) => React.ReactNode;
 }
 
@@ -13,6 +14,7 @@ export default function VisControls({
   steps,
   onRun,
   disabled,
+  hideDescription,
   children,
 }: Props) {
   const { step, currentStep, speed, setSpeed, isPlaying, total } =
@@ -44,7 +46,9 @@ export default function VisControls({
       {step && (
         <>
           {children(step)}
-          <p className="step-description">{step.description}</p>
+          {!hideDescription && (
+            <p className="step-description">{step.description}</p>
+          )}
           <span className="step-counter">
             Step {currentStep + 1} / {total}
           </span>
