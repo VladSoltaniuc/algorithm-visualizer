@@ -261,7 +261,7 @@ export const stringConfig: AlgorithmConfig[] = [
 export const treeConfig: AlgorithmConfig[] = [
   {
     name: 'Inorder Traversal', slug: 'inorder', endpoint: 'inorder', category: 'tree', inputLabel: 'BST values', defaultInput: '5,3,7,1,4,6,8',
-    description: 'Imagine a family tree where every person on the left side has a smaller number than their parent, and everyone on the right has a larger one. Inorder Traversal visits the tree by always going as far left as possible first, then reading the current person, then moving right. If you follow this rule all the way through, you end up reading every number in the tree from smallest to biggest — like magic, it comes out perfectly sorted.',
+    description: 'This is "I want to go left! - the algorithm" Imagine a family tree where every person on the left side has a smaller number than their parent, and everyone on the right has a larger one. Inorder Traversal visits the tree by always going as far left as possible first, then reading the current person, then moving right. If you follow this rule all the way through, you end up reading every number in the tree from smallest to biggest — like magic, it comes out perfectly sorted.',
     usecase: 'Reading BST elements in sorted order, evaluating expression trees, and any scenario where sorted output from a BST is needed.',
     pros: [
       'O(n) time — visits every node exactly once',
