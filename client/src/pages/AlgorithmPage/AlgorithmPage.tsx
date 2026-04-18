@@ -213,6 +213,7 @@ export default function AlgorithmPage() {
           >
             Pros &amp; Cons
           </button>
+          <span className="algo-tab-title">{config.name}</span>
           <div className="algo-tab-right">
             {config.ytTutorial && (
               <a
