@@ -39,7 +39,7 @@
 
 .graph-node-id {
   fill: #fff;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -48,6 +48,76 @@
   font-size: 10px;
   font-weight: 600;
   opacity: 0.9;
+}
+
+.graph-indegree-badge {
+  fill: #333;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+/* ── Topo order strip ── */
+.topo-strip {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: #f0f4ff;
+  border-radius: 8px;
+  border: 1px solid #d0daff;
+  min-height: 36px;
+  transition: background 0.3s;
+}
+
+.topo-strip.final {
+  background: #d4edda;
+  border-color: #b8dfc5;
+}
+
+.topo-strip-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  margin-right: 6px;
+  white-space: nowrap;
+}
+
+.topo-strip-empty {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.topo-strip-item {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.topo-strip-arrow {
+  font-size: 12px;
+  color: #888;
+  margin: 0 2px;
+}
+
+.topo-strip-node {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #3a86ff;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  animation: topo-pop 0.3s ease-out;
+}
+
+.topo-strip.final .topo-strip-node {
+  background: #06d6a0;
 }
 
 .graph-dfs-legend {
@@ -179,4 +249,10 @@
   0%   { transform: scale(1); box-shadow: none; }
   40%  { transform: scale(1.25); box-shadow: 0 0 8px rgba(233, 69, 96, 0.5); }
   100% { transform: scale(1); box-shadow: none; }
+}
+
+@keyframes topo-pop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  70%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
 }

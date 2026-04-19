@@ -41,6 +41,13 @@ export default function GraphVisualizer({
           step.rowLabels &&
           step.colLabels
         );
+        const isTopoStep = step.labels?.some(
+          (l) =>
+            l === "removed" ||
+            l === "ready" ||
+            l === "pending" ||
+            l === "placed",
+        );
 
         return (
           <>
@@ -53,7 +60,14 @@ export default function GraphVisualizer({
               labels={step.labels}
               notes={hasCycleTable ? undefined : step.notes}
               directed={directed}
+              showInDegreeBadge={isTopoStep}
             />
+            {isTopoStep && (
+              <TopoOrderStrip
+                orderedNodes={step.sortedIndices ?? []}
+                isFinal={isFinal}
+              />
+            )}
             {hasCycleTable && (
               <>
                 <CycleLegend />
@@ -85,6 +99,7 @@ function GraphCanvas({
   labels,
   notes,
   directed,
+  showInDegreeBadge,
 }: {
   n: number;
   values: number[];
@@ -94,6 +109,7 @@ function GraphCanvas({
   labels?: string[];
   notes?: string[];
   directed?: boolean;
+  showInDegreeBadge?: boolean;
 }) {
   const size = 380;
   const cx = size / 2;
@@ -112,6 +128,11 @@ function GraphCanvas({
     unvisited: "#3a86ff",
     stack: "#f4a11d",
     done: "#06d6a0",
+    // topo sort states
+    pending: "#3a86ff",
+    ready: "#f4a11d",
+    removed: "#cccccc",
+    placed: "#06d6a0",
   };
 
   // Build component → color map from labels (distinct color per unique label value)
@@ -160,6 +181,7 @@ function GraphCanvas({
           const from = e[0];
           const to = e[1];
           if (from >= n || to >= n) return null;
+          const fromRemoved = labels?.[from] === "removed";
           const p1 = positions[from];
           const p2 = positions[to];
           const weight = e.length > 2 ? e[2] : null;
@@ -177,7 +199,11 @@ function GraphCanvas({
           const lx2 = directed ? p2.x - ux * (nr + 2) : p2.x;
           const ly2 = directed ? p2.y - uy * (nr + 2) : p2.y;
           return (
-            <g key={`e-${i}`}>
+            <g
+              key={`e-${i}`}
+              opacity={fromRemoved ? 0.1 : 1}
+              style={{ transition: "opacity 0.4s" }}
+            >
               <line
                 x1={lx1}
                 y1={ly1}
@@ -203,53 +229,124 @@ function GraphCanvas({
 
         {/* nodes */}
         {positions.map((pos, i) => {
-          let fill = "#3a86ff";
-          // DFS state labels take fixed semantic colors
           const compLabel = labels?.[i];
+          const isRemoved = compLabel === "removed";
+          let fill = "#3a86ff";
+          // DFS / topo state labels take fixed semantic colors
           if (compLabel && compLabel in DFS_STATE_COLORS) {
             fill = DFS_STATE_COLORS[compLabel];
           } else if (compLabel && componentColorMap.has(compLabel)) {
             fill = componentColorMap.get(compLabel)!;
           }
-          // Active highlights override component/state color
-          if (done.has(i)) fill = "#06d6a0";
-          else if (hl.has(i)) fill = "#e94560";
+          // Active highlights override state color (but not removed)
+          if (!isRemoved) {
+            if (done.has(i) && !compLabel) fill = "#06d6a0";
+            else if (hl.has(i)) fill = "#e94560";
+          }
 
           // Sub-label: prefer notes[i], then fallback to parent/dist value
           const subLabel =
             notes?.[i] ?? (values[i] === -1 ? "∞" : String(values[i] ?? ""));
 
+          // In-degree badge value (only when enabled and node is alive)
+          const badgeVal =
+            showInDegreeBadge && !isRemoved ? notes?.[i] : undefined;
+
           return (
-            <g key={i}>
+            <g
+              key={i}
+              opacity={isRemoved ? 0.15 : 1}
+              style={{ transition: "opacity 0.4s" }}
+            >
               <circle
                 cx={pos.x}
                 cy={pos.y}
                 r={22}
                 fill={fill}
-                className={`graph-node${hl.has(i) ? " pulse" : ""}`}
+                className={`graph-node${hl.has(i) && !isRemoved ? " pulse" : ""}`}
               />
               <text
                 x={pos.x}
-                y={pos.y - 2}
+                y={showInDegreeBadge ? pos.y : pos.y - 2}
                 textAnchor="middle"
                 dominantBaseline="central"
                 className="graph-node-id"
               >
                 {i}
               </text>
-              <text
-                x={pos.x}
-                y={pos.y + 9}
-                textAnchor="middle"
-                dominantBaseline="central"
-                className="graph-node-val"
-              >
-                {subLabel}
-              </text>
+              {!showInDegreeBadge && (
+                <text
+                  x={pos.x}
+                  y={pos.y + 9}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  className="graph-node-val"
+                >
+                  {subLabel}
+                </text>
+              )}
+              {/* In-degree badge — shown outside the node when topo sort is active */}
+              {badgeVal !== undefined && badgeVal !== "" && (
+                <g>
+                  <circle
+                    cx={pos.x + 16}
+                    cy={pos.y - 16}
+                    r={10}
+                    fill={hl.has(i) ? "#e94560" : "#fff"}
+                    stroke={hl.has(i) ? "#e94560" : "#888"}
+                    strokeWidth={1.5}
+                  />
+                  <text
+                    x={pos.x + 16}
+                    y={pos.y - 16}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    className="graph-indegree-badge"
+                  >
+                    {badgeVal}
+                  </text>
+                </g>
+              )}
+              {/* Position label for final "placed" step */}
+              {compLabel === "placed" && notes?.[i] && (
+                <text
+                  x={pos.x}
+                  y={pos.y + 10}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  className="graph-node-val"
+                >
+                  {notes[i]}
+                </text>
+              )}
             </g>
           );
         })}
       </svg>
+    </div>
+  );
+}
+
+function TopoOrderStrip({
+  orderedNodes,
+  isFinal,
+}: {
+  orderedNodes: number[];
+  isFinal: boolean;
+}) {
+  return (
+    <div className={`topo-strip${isFinal ? " final" : ""}`}>
+      <span className="topo-strip-label">Topo order:</span>
+      {orderedNodes.length === 0 ? (
+        <span className="topo-strip-empty">—</span>
+      ) : (
+        orderedNodes.map((node, idx) => (
+          <span key={`topo-${idx}`} className="topo-strip-item">
+            {idx > 0 && <span className="topo-strip-arrow">→</span>}
+            <span className="topo-strip-node">{node}</span>
+          </span>
+        ))
+      )}
     </div>
   );
 }

@@ -258,18 +258,41 @@ public class GraphService
 
         var steps = new List<AlgorithmStep>();
         int stepNum = 0;
+        var processed = new HashSet<int>();
+        var result = new List<int>();
 
-        // Step 0: show initial in-degrees
+        // Labels: "pending" | "ready" | "removed"
+        string[] MakeLabels()
+        {
+            var l = new string[n];
+            for (int i = 0; i < n; i++)
+                l[i] =
+                    processed.Contains(i) ? "removed"
+                    : inDeg[i] == 0 ? "ready"
+                    : "pending";
+            return l;
+        }
+
+        // Notes: current in-degree (blank for removed nodes)
+        string[] MakeNotes() =>
+            Enumerable
+                .Range(0, n)
+                .Select(i => processed.Contains(i) ? "" : inDeg[i].ToString())
+                .ToArray();
+
         var initialReady = Enumerable.Range(0, n).Where(i => inDeg[i] == 0).ToList();
+
         steps.Add(
             new AlgorithmStep
             {
                 StepNumber = stepNum++,
                 Array = (int[])inDeg.Clone(),
                 Description =
-                    $"In-degrees computed. Nodes with in-degree 0 are ready to process: [{string.Join(", ", initialReady)}].",
+                    $"Compute in-degrees. Nodes with in-degree 0 are ready (no dependencies): [{string.Join(", ", initialReady)}].",
                 HighlightIndices = initialReady.ToArray(),
-                Notes = Enumerable.Range(0, n).Select(i => $"in:{inDeg[i]}").ToArray(),
+                SortedIndices = [],
+                Labels = MakeLabels(),
+                Notes = MakeNotes(),
             }
         );
 
@@ -277,14 +300,27 @@ public class GraphService
         foreach (var z in initialReady)
             queue.Enqueue(z);
 
-        var result = new List<int>();
-        var done = new List<int>();
-
         while (queue.Count > 0)
         {
             int u = queue.Dequeue();
             result.Add(u);
-            done.Add(u);
+
+            // First step: highlight the chosen node before removing its edges
+            steps.Add(
+                new AlgorithmStep
+                {
+                    StepNumber = stepNum++,
+                    Array = (int[])inDeg.Clone(),
+                    Description =
+                        $"Node {u} has in-degree 0 — pick it as topo position #{result.Count}. Now remove its outgoing edges.",
+                    HighlightIndices = [u],
+                    SortedIndices = result.ToArray(),
+                    Labels = MakeLabels(),
+                    Notes = MakeNotes(),
+                }
+            );
+
+            processed.Add(u);
 
             var newlyReady = new List<int>();
             foreach (int v in adj[u])
@@ -297,47 +333,63 @@ public class GraphService
                 }
             }
 
-            string neighborDesc =
+            string edgeDesc =
                 adj[u].Count > 0
-                    ? $" Edges processed: {string.Join(", ", adj[u].Select(v => $"{u}→{v} (in-deg now {inDeg[v]})"))}."
+                    ? $" Removed edges from {u}; updated in-degrees."
                     : " No outgoing edges.";
             string readyDesc =
-                newlyReady.Count > 0 ? $" Newly ready: [{string.Join(", ", newlyReady)}]." : "";
+                newlyReady.Count > 0
+                    ? $" Newly at in-degree 0: [{string.Join(", ", newlyReady)}]."
+                    : "";
 
             steps.Add(
                 new AlgorithmStep
                 {
                     StepNumber = stepNum++,
                     Array = (int[])inDeg.Clone(),
-                    Description =
-                        $"Dequeue node {u} → topological position #{result.Count}.{neighborDesc}{readyDesc}",
-                    HighlightIndices = new[] { u }.Concat(newlyReady).ToArray(),
-                    SortedIndices = done.ToArray(),
-                    Notes = Enumerable.Range(0, n).Select(i => $"in:{inDeg[i]}").ToArray(),
+                    Description = $"Node {u} removed from graph.{edgeDesc}{readyDesc}",
+                    HighlightIndices = newlyReady.ToArray(),
+                    SortedIndices = result.ToArray(),
+                    Labels = MakeLabels(),
+                    Notes = MakeNotes(),
                 }
             );
         }
 
         bool valid = result.Count == n;
-        var finalNotes = new string[n];
-        for (int i = 0; i < result.Count; i++)
-            finalNotes[result[i]] = $"#{i + 1}";
-        for (int i = 0; i < n; i++)
-            if (finalNotes[i] == null)
-                finalNotes[i] = "×";
+        if (valid)
+        {
+            // Final step: show full topo order with position labels
+            var finalNotes = new string[n];
+            for (int i = 0; i < result.Count; i++)
+                finalNotes[result[i]] = $"#{i + 1}";
 
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = stepNum,
-                Array = (int[])inDeg.Clone(),
-                Description = valid
-                    ? $"Done! Topological order: [{string.Join(" → ", result)}]."
-                    : "Cycle detected — no valid topological order exists.",
-                SortedIndices = valid ? Enumerable.Range(0, n).ToArray() : [],
-                Notes = finalNotes,
-            }
-        );
+            steps.Add(
+                new AlgorithmStep
+                {
+                    StepNumber = stepNum,
+                    Array = (int[])inDeg.Clone(),
+                    Description = $"Done! Topological order: {string.Join(" → ", result)}.",
+                    SortedIndices = result.ToArray(),
+                    Labels = Enumerable.Range(0, n).Select(_ => "placed").ToArray(),
+                    Notes = finalNotes,
+                }
+            );
+        }
+        else
+        {
+            steps.Add(
+                new AlgorithmStep
+                {
+                    StepNumber = stepNum,
+                    Array = (int[])inDeg.Clone(),
+                    Description = "Cycle detected — no valid topological order exists.",
+                    SortedIndices = result.ToArray(),
+                    Labels = MakeLabels(),
+                    Notes = MakeNotes(),
+                }
+            );
+        }
 
         return steps;
     }
