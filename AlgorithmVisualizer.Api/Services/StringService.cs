@@ -112,9 +112,11 @@ public class StringService
             new AlgorithmStep
             {
                 StepNumber = step++,
-                Array = lps,
+                Array = (int[])codes.Clone(),
                 Description = $"LPS table built for \"{pattern}\"",
-                IsNumericArray = true,
+                PatternArray = patternCodes,
+                PatternOffset = 0,
+                PArray = (int[])lps.Clone(),
             }
         );
 
@@ -128,6 +130,7 @@ public class StringService
                 {
                     StepNumber = step++,
                     Array = (int[])codes.Clone(),
+                    PArray = (int[])lps.Clone(),
                     Description =
                         $"Comparing text[{i}]='{text[i]}' with pattern[{j}]='{pattern[j]}'",
                     HighlightIndices = [i],
@@ -158,6 +161,7 @@ public class StringService
                         PatternArray = patternCodes,
                         PatternOffset = newOffset,
                         PatternHighlightIndex = j,
+                        PArray = (int[])lps.Clone(),
                     }
                 );
             }
@@ -177,6 +181,7 @@ public class StringService
                         SortedIndices = Enumerable.Range(matchStart, pattern.Length).ToArray(),
                         PatternArray = patternCodes,
                         PatternOffset = matchStart,
+                        PArray = (int[])lps.Clone(),
                     }
                 );
                 j = lps[j - 1];

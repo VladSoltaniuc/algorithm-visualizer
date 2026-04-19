@@ -42,7 +42,13 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
         const isManacher =
           step.pArray !== undefined &&
           step.pArray !== null &&
-          step.pArray.length > 0;
+          step.pArray.length > 0 &&
+          (step.manacherCenter ?? -1) >= 0;
+        const hasLps =
+          step.pArray !== undefined &&
+          step.pArray !== null &&
+          step.pArray.length > 0 &&
+          !isManacher;
         const mCenter = step.manacherCenter ?? -1;
         const mRight = step.manacherRight ?? -1;
 
@@ -220,6 +226,29 @@ export default function StringVisualizer({ steps, onRun, disabled }: Props) {
                       );
                     })}
                   </div>
+                  {hasLps && (
+                    <>
+                      <span className="row-label">π (LPS)</span>
+                      <div className="string-chars pattern-row">
+                        {Array.from({ length: patternOffset }, (_, i) => (
+                          <div
+                            key={`lps-spacer-${i}`}
+                            className="str-cell spacer"
+                          />
+                        ))}
+                        {step.pArray!.map((val, i) => {
+                          let cls = "str-cell p-cell";
+                          if (i === patternHl) cls += " active";
+                          return (
+                            <div key={`lps-${i}`} className={cls}>
+                              <span className="str-char">{val}</span>
+                              <span className="str-idx">{i}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>
