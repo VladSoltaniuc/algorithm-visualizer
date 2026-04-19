@@ -342,162 +342,187 @@ public class GraphService
         return steps;
     }
 
-    // 7. Cycle Detection (DFS coloring for directed graphs)
-    // Time: O(V + E)
-    // Space: O(V)
+    // 7. Cycle Detection — DFS with visited[] + pathVisited[] (Striver G-19)
+    // Time: O(V + E), Space: O(V)
     public List<AlgorithmStep> CycleDetection(GraphRequest req)
     {
         var adj = BuildAdj(req.NodeCount, req.Edges, directed: true);
         int n = req.NodeCount;
-        var color = new int[n]; // 0=unvisited, 1=on DFS stack (gray), 2=fully done (black)
-        var dfsStack = new List<int>();
+
+        var visited = new bool[n];
+        var pathVisited = new bool[n];
+        int[] nodeIds = Enumerable.Range(0, n).ToArray();
         var steps = new List<AlgorithmStep>();
         int stepNum = 0;
-        bool hasCycle = false;
 
-        for (int u = 0; u < n && !hasCycle; u++)
-            if (color[u] == 0)
-                hasCycle = CycleDfs(u, adj, color, dfsStack, steps, ref stepNum, n);
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = stepNum,
-                Array = (int[])color.Clone(),
-                Description = hasCycle
-                    ? "Cycle detected — a back edge was found. This graph is not a DAG."
-                    : $"No cycle — all {n} nodes fully explored without finding a back edge.",
-                SortedIndices = hasCycle ? [] : Enumerable.Range(0, n).ToArray(),
-                Notes = DfsNotes(color),
-                Labels = DfsLabels(color),
-            }
-        );
-        return steps;
-    }
-
-    private static string[] DfsNotes(int[] c) =>
-        c.Select(ci =>
-                ci switch
-                {
-                    0 => "?",
-                    1 => "stack",
-                    _ => "\u2713",
-                }
-            )
-            .ToArray();
-
-    private static string[] DfsLabels(int[] c) =>
-        c.Select(ci =>
-                ci switch
-                {
-                    0 => "unvisited",
-                    1 => "stack",
-                    _ => "done",
-                }
-            )
-            .ToArray();
-
-    private static bool CycleDfs(
-        int u,
-        List<List<int>> adj,
-        int[] color,
-        List<int> dfsStack,
-        List<AlgorithmStep> steps,
-        ref int stepNum,
-        int n
-    )
-    {
-        color[u] = 1;
-        dfsStack.Add(u);
-        string pathStr = string.Join(" → ", dfsStack);
-
-        steps.Add(
-            new AlgorithmStep
+        AlgorithmStep MakeStep(
+            string desc,
+            int[]? highlight = null,
+            int[]? sorted = null,
+            int changedNode = -1
+        ) =>
+            new()
             {
                 StepNumber = stepNum++,
-                Array = (int[])color.Clone(),
-                Description = $"Enter node {u} — mark as on-stack (orange). DFS path: {pathStr}.",
-                HighlightIndices = [u],
-                SortedIndices = Enumerable.Range(0, n).Where(i => color[i] == 2).ToArray(),
-                Notes = DfsNotes(color),
-                Labels = DfsLabels(color),
-            }
+                Array = (int[])nodeIds.Clone(),
+                Description = desc,
+                HighlightIndices = highlight ?? [],
+                SortedIndices = sorted ?? [],
+                Labels = CycleLabels(visited, pathVisited, n),
+                Notes = new string[n],
+                DpMatrix = CycleMatrix(visited, pathVisited),
+                RowLabels = ["visited", "pathVisited"],
+                ColLabels = Enumerable.Range(0, n).Select(i => i.ToString()).ToArray(),
+                HighlightCol = changedNode,
+            };
+
+        steps.Add(
+            MakeStep("Initialize: visited[] and pathVisited[] are both false for all nodes.")
         );
 
-        foreach (int v in adj[u])
+        List<int>? cycleNodes = null;
+
+        for (int start = 0; start < n && cycleNodes == null; start++)
         {
-            if (color[v] == 1) // back edge → cycle
+            if (visited[start])
+                continue;
+
+            steps.Add(
+                MakeStep($"Node {start} is not visited — start DFS from here.", highlight: [start])
+            );
+
+            // Iterative DFS with explicit stack — (node, neighborIndex) pairs
+            var stack = new Stack<(int node, int nextIdx)>();
+            visited[start] = true;
+            pathVisited[start] = true;
+            stack.Push((start, 0));
+
+            steps.Add(
+                MakeStep(
+                    $"Mark node {start}: visited = true, pathVisited = true.",
+                    highlight: [start],
+                    changedNode: start
+                )
+            );
+
+            while (stack.Count > 0 && cycleNodes == null)
             {
-                int cycleStart = dfsStack.IndexOf(v);
-                var cyclePath = dfsStack.Skip(cycleStart).ToList();
-                string cycleStr = string.Join(" → ", cyclePath) + $" → {v}";
-                steps.Add(
-                    new AlgorithmStep
+                var (u, idx) = stack.Pop();
+
+                if (idx < adj[u].Count)
+                {
+                    int v = adj[u][idx];
+                    stack.Push((u, idx + 1));
+
+                    if (!visited[v])
                     {
-                        StepNumber = stepNum++,
-                        Array = (int[])color.Clone(),
-                        Description =
-                            $"Back edge {u}→{v}: node {v} is already on the DFS stack (orange)! "
-                            + $"Cycle found: {cycleStr}.",
-                        HighlightIndices = cyclePath.ToArray(),
-                        SortedIndices = Enumerable.Range(0, n).Where(i => color[i] == 2).ToArray(),
-                        Notes = DfsNotes(color),
-                        Labels = DfsLabels(color),
+                        // Not visited → mark visited + pathVisited, push onto stack
+                        visited[v] = true;
+                        pathVisited[v] = true;
+                        stack.Push((v, 0));
+
+                        steps.Add(
+                            MakeStep(
+                                $"Edge {u} → {v}: node {v} not visited — mark visited and pathVisited.",
+                                highlight: [u, v],
+                                changedNode: v
+                            )
+                        );
                     }
-                );
-                return true;
-            }
-            if (color[v] == 0)
-            {
-                steps.Add(
-                    new AlgorithmStep
+                    else if (pathVisited[v])
                     {
-                        StepNumber = stepNum++,
-                        Array = (int[])color.Clone(),
-                        Description =
-                            $"Edge {u}→{v}: node {v} is unvisited (blue) — recurse into it.",
-                        HighlightIndices = [u, v],
-                        SortedIndices = Enumerable.Range(0, n).Where(i => color[i] == 2).ToArray(),
-                        Notes = DfsNotes(color),
-                        Labels = DfsLabels(color),
+                        // Already in current path → back edge → cycle!
+                        steps.Add(
+                            MakeStep(
+                                $"Edge {u} → {v}: node {v} is visited AND on current path — back edge found! Cycle!",
+                                highlight: [u, v],
+                                changedNode: v
+                            )
+                        );
+
+                        // Reconstruct cycle from the DFS stack
+                        cycleNodes = [v];
+                        foreach (var (sn, _) in stack)
+                        {
+                            cycleNodes.Add(sn);
+                            if (sn == v)
+                                break;
+                        }
+                        cycleNodes.Reverse();
                     }
-                );
-                if (CycleDfs(v, adj, color, dfsStack, steps, ref stepNum, n))
-                    return true;
-            }
-            else // color[v] == 2 — already fully explored, safe
-            {
-                steps.Add(
-                    new AlgorithmStep
+                    else
                     {
-                        StepNumber = stepNum++,
-                        Array = (int[])color.Clone(),
-                        Description =
-                            $"Edge {u}→{v}: node {v} is already fully explored (green) — no back edge here, safe to skip.",
-                        HighlightIndices = [u, v],
-                        SortedIndices = Enumerable.Range(0, n).Where(i => color[i] == 2).ToArray(),
-                        Notes = DfsNotes(color),
-                        Labels = DfsLabels(color),
+                        // Visited but not in current path → already fully processed, skip
+                        steps.Add(
+                            MakeStep(
+                                $"Edge {u} → {v}: node {v} already processed (not on current path) — skip.",
+                                highlight: [u],
+                                sorted: [v]
+                            )
+                        );
                     }
-                );
+                }
+                else
+                {
+                    // All neighbors done → backtrack: unmark pathVisited
+                    pathVisited[u] = false;
+
+                    steps.Add(
+                        MakeStep(
+                            $"Node {u}: done exploring — backtrack, remove from current path.",
+                            sorted: [u],
+                            changedNode: u
+                        )
+                    );
+                }
             }
         }
 
-        color[u] = 2;
-        dfsStack.RemoveAt(dfsStack.Count - 1);
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = stepNum++,
-                Array = (int[])color.Clone(),
-                Description =
-                    $"Backtrack from node {u} — all neighbors explored, no cycle. Mark {u} as fully done (green).",
-                SortedIndices = Enumerable.Range(0, n).Where(i => color[i] == 2).ToArray(),
-                Notes = DfsNotes(color),
-                Labels = DfsLabels(color),
-            }
-        );
-        return false;
+        // Final step
+        if (cycleNodes != null)
+        {
+            steps.Add(
+                MakeStep(
+                    $"Cycle found: {string.Join(" → ", cycleNodes)}.",
+                    highlight: cycleNodes.Distinct().ToArray()
+                )
+            );
+        }
+        else
+        {
+            steps.Add(
+                MakeStep(
+                    "DFS complete — no cycle detected. The graph is a DAG.",
+                    sorted: Enumerable.Range(0, n).ToArray()
+                )
+            );
+        }
+
+        return steps;
+    }
+
+    private static string[] CycleLabels(bool[] visited, bool[] pathVisited, int n)
+    {
+        var labels = new string[n];
+        for (int i = 0; i < n; i++)
+        {
+            if (pathVisited[i])
+                labels[i] = "stack"; // in current DFS path
+            else if (visited[i])
+                labels[i] = "done"; // processed
+            else
+                labels[i] = "unvisited";
+        }
+        return labels;
+    }
+
+    private static int[][] CycleMatrix(bool[] visited, bool[] pathVisited)
+    {
+        return
+        [
+            visited.Select(v => v ? 1 : 0).ToArray(),
+            pathVisited.Select(v => v ? 1 : 0).ToArray(),
+        ];
     }
 
     // 8. Union-Find

@@ -197,7 +197,7 @@ export const stringConfig: AlgorithmConfig[] = [
   },
   {
     name: 'LPS (Manacher)', slug: 'longest-palindrome', endpoint: 'longest-palindrome', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'babad',
-    description: 'Imagine a word that reads the same forwards and backwards — like "racecar". That\'s a palindrome. Now imagine you want to find the longest such stretch hiding inside a bigger string like "babad". Checking every possible stretch one by one would take forever. Manacher\'s algorithm is smarter — it keeps track of the biggest palindrome it has found so far and uses it as a mirror. Any new stretch that falls inside that mirror has a twin on the other side whose length is already known, so it can be copied instantly instead of rechecked. Only when a stretch reaches or goes beyond the mirror\'s edge does it need to explore new territory.',
+    description: 'Using mirroring to avoid calculating values that can be inferred. Imagine a word that reads the same forwards and backwards — like "racecar". That\'s a palindrome. Now imagine you want to find the longest such stretch hiding inside a bigger string like "babad". Checking every possible stretch one by one would take forever. Manacher\'s algorithm is smarter — it keeps track of the biggest palindrome it has found so far and uses it as a mirror. Any new stretch that falls inside that mirror has a twin on the other side whose length is already known, so it can be copied instantly instead of rechecked. Only when a stretch reaches or goes beyond the mirror\'s edge does it need to explore new territory.',
     usecase: 'Finding the longest palindromic substring, DNA sequence analysis (biological palindromes), and text processing tasks requiring palindrome detection.',
     pros: [
       'O(n) time — optimal, finds all palindromes in a single linear pass',
@@ -494,20 +494,20 @@ export const graphConfig: AlgorithmConfig[] = [
     directed: true,
   },
   {
-    name: 'Cycle Detection', slug: 'cycle-detection', endpoint: 'cycle-detection', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to;...)', defaultInput: '4;0,1;1,2;2,3;3,1',
-    description: 'Imagine you\'re following a trail of arrows between cities and you want to know if any trail loops back on itself — if you could end up going in circles forever. Cycle Detection walks the graph using DFS and color-codes every city as it goes: white means unvisited, grey means currently being explored, black means fully done. If you ever follow an arrow and land on a grey city — one you\'re already in the middle of exploring — you\'ve found a cycle. A black city is safe, only grey means trouble.',
-    usecase: 'Deadlock detection in operating systems, validating dependency graphs, preventing infinite loops in state machines, and checking if topological sort is possible.',
+    name: 'Cycle Detection', slug: 'cycle-detection', endpoint: 'cycle-detection', category: 'graph', inputType: 'graph', inputLabel: 'Directed graph (nodes;from,to;...)', defaultInput: '5;0,1;1,2;2,3;3,4;4,2',
+    description: "Imagine you're following a trail of arrows between cities on a map. You want to know if any trail eventually loops back to a city you've already passed through on the current path. This algorithm uses DFS with two tracking arrays: visited[] (has this node ever been seen?) and pathVisited[] (is this node on the current DFS path?). When DFS enters a node, both are marked true. When backtracking, pathVisited is set back to false. If we ever reach a neighbor where both visited and pathVisited are true, we've found a back edge — proof that a cycle exists.",
+    usecase: 'Detecting circular dependencies (build systems, package managers), validating DAGs (task scheduling, course prerequisites), deadlock detection in resource-allocation graphs.',
     pros: [
-      'O(V + E) time — standard DFS traversal',
-      'O(V) space for the color/visited array',
-      'Gives a definitive yes/no answer',
+      'O(V + E) time — visits every node and edge exactly once',
+      'Works on any directed graph — not limited to linked-list-like structures',
+      'Naturally identifies the cycle path via the DFS stack',
     ],
     cons: [
-      'DFS coloring is specific to directed graphs — undirected graphs need a different approach',
-      'Only detects the existence of a cycle — doesn\'t enumerate all cycles',
-      'Finding all distinct cycles is a much harder problem (exponential in general)',
+      'O(V) space — needs visited[] and pathVisited[] arrays plus recursion/stack space',
+      'Only works on directed graphs — undirected cycle detection needs a different approach (union-find or parent tracking)',
+      'Does not find all cycles — stops at the first one detected',
     ],
-    ytTutorial: 'https://www.youtube.com/watch?v=rKQaZuoUR4M',
+    ytTutorial: 'https://www.youtube.com/watch?v=9twcmtQj4DU',
     directed: true,
   },
   {

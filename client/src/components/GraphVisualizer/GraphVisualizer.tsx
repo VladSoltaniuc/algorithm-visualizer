@@ -36,6 +36,11 @@ export default function GraphVisualizer({
         const hl = new Set(step.highlightIndices ?? []);
         const done = new Set(step.sortedIndices ?? []);
         const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;
+        const hasCycleTable = !!(
+          step.dpMatrix &&
+          step.rowLabels &&
+          step.colLabels
+        );
 
         return (
           <>
@@ -46,9 +51,21 @@ export default function GraphVisualizer({
               done={done}
               edges={edges}
               labels={step.labels}
-              notes={step.notes}
+              notes={hasCycleTable ? undefined : step.notes}
               directed={directed}
             />
+            {hasCycleTable && (
+              <>
+                <CycleLegend />
+                <StateArrayTable
+                  matrix={step.dpMatrix!}
+                  rowLabels={step.rowLabels!}
+                  colLabels={step.colLabels!}
+                  highlightIndices={hl}
+                  changedCol={step.highlightCol ?? -1}
+                />
+              </>
+            )}
             <div className={`step-info${isFinal ? " final" : ""}`}>
               {step.description}
             </div>
@@ -233,8 +250,81 @@ function GraphCanvas({
           );
         })}
       </svg>
-      {/* DFS state legend — only shown when cycle detection labels are present */}
-      {labels?.some((l) => l === "stack" || l === "unvisited")}
+    </div>
+  );
+}
+
+function CycleLegend() {
+  return (
+    <div className="cycle-legend">
+      <span className="cycle-legend-item">
+        <span className="cycle-legend-dot" style={{ background: "#3a86ff" }} />
+        Unvisited
+      </span>
+      <span className="cycle-legend-item">
+        <span className="cycle-legend-dot" style={{ background: "#f4a11d" }} />
+        On current path
+      </span>
+      <span className="cycle-legend-item">
+        <span className="cycle-legend-dot" style={{ background: "#06d6a0" }} />
+        Fully processed
+      </span>
+      <span className="cycle-legend-item">
+        <span className="cycle-legend-dot" style={{ background: "#e94560" }} />
+        Active this step
+      </span>
+    </div>
+  );
+}
+
+function StateArrayTable({
+  matrix,
+  rowLabels,
+  colLabels,
+  highlightIndices,
+  changedCol,
+}: {
+  matrix: number[][];
+  rowLabels: string[];
+  colLabels: string[];
+  highlightIndices: Set<number>;
+  changedCol: number;
+}) {
+  return (
+    <div className="state-array-wrap">
+      <table className="state-array-table">
+        <thead>
+          <tr>
+            <th className="state-array-corner" />
+            {colLabels.map((col, j) => (
+              <th
+                key={`col-${col}`}
+                className={`state-array-col${highlightIndices.has(j) ? " hl" : ""}${j === changedCol ? " changed" : ""}`}
+              >
+                {col}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {matrix.map((row, i) => (
+            <tr key={`row-${rowLabels[i]}`}>
+              <td className="state-array-label">{rowLabels[i]}</td>
+              {row.map((val, j) => {
+                const isChanged = j === changedCol;
+                return (
+                  <td
+                    key={`cell-${rowLabels[i]}-${j}`}
+                    className={`state-array-cell${val ? " on" : " off"}${isChanged ? " changed" : ""}${highlightIndices.has(j) ? " hl" : ""}`}
+                  >
+                    {val ? "✓" : "✗"}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
