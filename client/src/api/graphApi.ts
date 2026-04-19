@@ -32,10 +32,6 @@ export const graphApi: Record<string, (...args: unknown[]) => Promise<AlgorithmS
     const { nodeCount, edges } = parseGraphInput(graphStr as string);
     return postJson(`${BASE}/dijkstra`, { nodeCount, edges, startNode: Number(startNode ?? 0) });
   },
-  bellmanFord: (graphStr: unknown, startNode?: unknown) => {
-    const { nodeCount, edges } = parseGraphInput(graphStr as string);
-    return postJson(`${BASE}/bellman-ford`, { nodeCount, edges, startNode: Number(startNode ?? 0) });
-  },
   topologicalSort: (graphStr: unknown) => {
     const { nodeCount, edges } = parseGraphInput(graphStr as string);
     return postJson(`${BASE}/topological-sort`, { nodeCount, edges, startNode: 0 });

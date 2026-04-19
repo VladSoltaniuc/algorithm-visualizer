@@ -13,8 +13,6 @@ interface Props {
  * Renders board/grid state for backtracking algorithms.
  * Detects the grid shape from the array length and slug to choose the right layout:
  *  - N-Queens: arr[row] = col of queen  →  N×N chessboard
- *  - Sudoku: 81 cells  →  9×9 grid
- *  - Rat: n² cells  →  n×n grid
  *  - Others (permutations, subsets, combos): linear cell row
  */
 export default function BacktrackingVisualizer({
@@ -41,35 +39,6 @@ export default function BacktrackingVisualizer({
           return (
             <>
               <NQueensBoard queens={arr} hl={hl} done={done} />
-              <div className={`step-info${isFinal ? " final" : ""}`}>
-                {step.description}
-              </div>
-            </>
-          );
-        }
-
-        // Sudoku: exactly 81 cells  →  9×9
-        if (arr.length === 81 && slug === "sudoku") {
-          return (
-            <>
-              <GridBoard arr={arr} cols={9} hl={hl} done={done} />
-              <div className={`step-info${isFinal ? " final" : ""}`}>
-                {step.description}
-              </div>
-            </>
-          );
-        }
-
-        // Square grids (rat-in-maze)
-        const sqrt = Math.round(Math.sqrt(arr.length));
-        if (
-          sqrt * sqrt === arr.length &&
-          arr.length > 1 &&
-          slug === "rat-in-maze"
-        ) {
-          return (
-            <>
-              <GridBoard arr={arr} cols={sqrt} hl={hl} done={done} />
               <div className={`step-info${isFinal ? " final" : ""}`}>
                 {step.description}
               </div>
@@ -132,45 +101,6 @@ function NQueensBoard({
           return (
             <div key={idx} className={cls}>
               {isQueen ? "♛" : ""}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function GridBoard({
-  arr,
-  cols,
-  hl,
-  done,
-}: {
-  arr: number[];
-  cols: number;
-  hl: Set<number>;
-  done: Set<number>;
-}) {
-  return (
-    <div className="bt-vis">
-      <div
-        className="bt-board"
-        style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
-      >
-        {arr.map((val, i) => {
-          let cls = "bt-grid-cell";
-          if (done.has(i)) cls += " done";
-          else if (hl.has(i)) cls += " active";
-          else if (val !== 0) cls += " filled";
-          // Sudoku 3×3 box borders
-          if (cols === 9) {
-            if (i % 9 !== 0 && i % 3 === 0) cls += " box-left";
-            const row = Math.floor(i / 9);
-            if (row !== 0 && row % 3 === 0 && i % 9 < 9) cls += " box-top";
-          }
-          return (
-            <div key={i} className={cls}>
-              {val !== 0 ? val : ""}
             </div>
           );
         })}

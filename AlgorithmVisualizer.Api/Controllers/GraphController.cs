@@ -24,10 +24,6 @@ public class GraphController : ControllerBase
     [HttpPost("dijkstra")]
     public IActionResult Dijkstra([FromBody] GraphRequest req) => Ok(_srv.Dijkstra(req));
 
-    [HttpPost("bellman-ford")]
-    public IActionResult BellmanFord([FromBody] GraphRequest req) => Ok(_srv.BellmanFord(req));
-
-
     [HttpPost("topological-sort")]
     public IActionResult TopologicalSort([FromBody] GraphRequest req) =>
         Ok(_srv.TopologicalSort(req));

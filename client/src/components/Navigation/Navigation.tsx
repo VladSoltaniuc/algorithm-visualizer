@@ -104,7 +104,6 @@ const tabs: Tab[] = [
       "union-find",
       "topological-sort",
       "cycle-detection",
-      "bellman-ford",
     ]),
   },
   {
@@ -123,14 +122,7 @@ const tabs: Tab[] = [
   {
     label: "Backtracking",
     basePath: "/backtracking",
-    items: from([
-      "n-queens",
-      "combination-sum",
-      "permutations",
-      "sudoku",
-      "word-search",
-      "rat-in-maze",
-    ]),
+    items: from(["n-queens", "combination-sum", "permutations"]),
   },
   {
     label: "Nr. Theory",

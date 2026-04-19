@@ -261,7 +261,7 @@ export const stringConfig: AlgorithmConfig[] = [
 export const treeConfig: AlgorithmConfig[] = [
   {
     name: 'Inorder Traversal', slug: 'inorder', endpoint: 'inorder', category: 'tree', inputLabel: 'BST values', defaultInput: '5,3,7,1,4,6,8',
-    description: 'This is "I want to go left! - the algorithm" Imagine a family tree where every person on the left side has a smaller number than their parent, and everyone on the right has a larger one. Inorder Traversal visits the tree by always going as far left as possible first, then reading the current person, then moving right. If you follow this rule all the way through, you end up reading every number in the tree from smallest to biggest — like magic, it comes out perfectly sorted.',
+    description: 'This is "I want to go left!" - the algorithm. Imagine a family tree where every person on the left side has a smaller number than their parent, and everyone on the right has a larger one. Inorder Traversal visits the tree by always going as far left as possible first, then reading the current person, then moving right. If you follow this rule all the way through, you end up reading every number in the tree from smallest to biggest — like magic, it comes out perfectly sorted.',
     usecase: 'Reading BST elements in sorted order, evaluating expression trees, and any scenario where sorted output from a BST is needed.',
     pros: [
       'O(n) time — visits every node exactly once',
@@ -475,22 +475,6 @@ export const graphConfig: AlgorithmConfig[] = [
       'Slower than BFS for unweighted graphs (priority queue overhead)',
     ],
     ytTutorial: 'https://www.youtube.com/watch?v=EFg3u_E6eHU',
-  },
-  {
-    name: 'Bellman-Ford', slug: 'bellman-ford', endpoint: 'bellman-ford', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to,weight;...)', defaultInput: '5;0,1,6;0,2,7;1,2,8;1,3,5;1,4,-4;2,3,-3;2,4,9;3,1,-2;4,3,7', needsTarget: true, targetLabel: 'Start node', defaultTarget: 0,
-    description: 'Like Dijkstra, Bellman-Ford finds the shortest path from a starting point to every other location. The difference is that some roads have negative costs — maybe a road gives you fuel instead of consuming it. Dijkstra can\'t handle this, but Bellman-Ford can. It works by going through every single road in the graph repeatedly — once for each node — and asking: can I find a cheaper way to reach this destination? It also detects a dangerous trap called a negative cycle, where a loop of roads keeps reducing your cost forever, making a true shortest path impossible.',
-    usecase: 'Currency arbitrage detection (negative cycles), routing protocols (RIP/BGP), and any shortest-path problem allowing negative edge weights.',
-    pros: [
-      'Handles negative edge weights correctly',
-      'Detects negative cycles — reports when no valid shortest path exists',
-      'Simpler to implement than Dijkstra (no priority queue needed)',
-    ],
-    cons: [
-      'O(V × E) time — much slower than Dijkstra for large graphs',
-      'O(V) space for distance array',
-      'Overkill if all edge weights are non-negative — use Dijkstra instead',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=obWXjtg0L64',
   },
   {
     name: 'Topological Sort', slug: 'topological-sort', endpoint: 'topological-sort', category: 'graph', inputType: 'graph', inputLabel: 'DAG (nodes;from,to;...)', defaultInput: '6;5,2;5,0;4,0;4,1;2,3;3,1',
@@ -723,22 +707,6 @@ export const backtrackingConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=Ph95IHmRp5M',
   },
   {
-    name: 'Sudoku Solver', slug: 'sudoku', endpoint: 'sudoku', category: 'backtracking', inputLabel: 'Grid (81 values, 0=empty)', defaultInput: '5,3,0,0,7,0,0,0,0,6,0,0,1,9,5,0,0,0,0,9,8,0,0,0,0,6,0,8,0,0,0,6,0,0,0,3,4,0,0,8,0,3,0,0,1,7,0,0,0,2,0,0,0,6,0,6,0,0,0,0,2,8,0,0,0,0,4,1,9,0,0,5,0,0,0,0,8,0,0,7,9',
-    description: 'Imagine a 9×9 Sudoku grid with some numbers already filled in. The rule is every row, column, and 3×3 box must contain the digits 1 through 9 with no repeats. The algorithm scans for the first empty cell and tries placing every digit from 1 to 9. For each digit it asks: does this break any rule? If not, it fills the cell and moves to the next empty one. If it ever reaches a cell where no digit fits, it backtracks — erases the last placed digit, tries the next one, and continues. It keeps filling and backtracking until every cell is filled correctly.',
-    usecase: 'Puzzle solving, constraint propagation problems, SAT solvers (Sudoku reduces to SAT), and teaching recursive backtracking.',
-    pros: [
-      'Guarantees a solution if one exists',
-      'O(1) space — the grid is always 9×9 (81 cells, fixed size)',
-      'Can be enhanced with constraint propagation for massive speedups',
-    ],
-    cons: [
-      'O(9^(empty cells)) worst case — exponential in the number of blanks',
-      'Slow on puzzles with many empty cells without optimizations',
-      'Brute force — doesn\'t use human-like solving logic without added heuristics',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=mcXc8Mva2bA',
-  },
-  {
     name: 'Generate Permutations', slug: 'permutations', endpoint: 'permutations', category: 'backtracking', inputLabel: 'Array', defaultInput: '1,2,3',
     description: 'Imagine you have three numbered tiles — 1, 2, 3 — and you want to list every possible order they can be arranged in. The algorithm builds each arrangement one position at a time. It picks a tile for the first position, then picks from the remaining tiles for the second position, then the last tile fills the third. Every time it completes a full arrangement, it records it, then backtracks and swaps in a different tile to explore the next arrangement. It keeps doing this until every possible ordering has been found.',
     usecase: 'Brute-force optimization (try all orderings), generating test cases, combinatorial analysis, and scheduling all possible sequences.',
@@ -767,37 +735,6 @@ export const backtrackingConfig: AlgorithmConfig[] = [
       'Output itself is O(n * 2^n) — storing all subsets requires exponential memory',
     ],
     ytTutorial: 'https://www.youtube.com/watch?v=REOH22Xwdkk',
-  },
-  {
-    name: 'Rat in a Maze', slug: 'rat-in-maze', endpoint: 'rat-in-maze', category: 'backtracking', inputLabel: 'Grid (1=open, 0=blocked)', defaultInput: '1,0,0,0,1,1,0,0,0,1,1,0,0,0,0,1', needsTarget: true, targetLabel: 'Grid size (n)', defaultTarget: 4,
-    description: 'Imagine a rat sitting in the top-left corner of a grid. Some cells are open and some are blocked. The rat wants to reach the bottom-right corner. The algorithm tries moving right first, then down. Before each move it checks: is this cell open and not yet visited? If yes, it steps in and tries again from there. If it gets completely stuck with no valid moves, it backtracks — steps back to the previous cell and tries a different direction. It keeps exploring and backtracking until it finds a path to the exit or confirms no path exists.',
-    usecase: 'Robot navigation, pathfinding in constrained environments, maze solving, and grid-based puzzle games.',
-    pros: [
-      'Finds a valid path if one exists',
-      'O(n²) space for the visited/solution grid',
-      'Simple and intuitive recursive approach',
-    ],
-    cons: [
-      'O(2^(n²)) worst case — exponential in grid size',
-      'Does not find the shortest path — just any valid path',
-      'Much slower than BFS for shortest-path problems',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=bLGZhJlt98Y',
-  },
-  {
-    name: 'Word Search in Grid', slug: 'word-search', endpoint: 'word-search', category: 'backtracking', inputType: 'text', inputLabel: 'Grid (rows separated by ;)', defaultInput: 'ABCE;SFCS;ADEE', needsPattern: true, patternLabel: 'Word', defaultPattern: 'ABCCED',
-    description: 'Imagine a grid of random letters and you\'re looking for the word "ABCCED" hidden somewhere in it, where each next letter must be directly above, below, left, or right of the previous one. The algorithm scans every cell in the grid looking for the first letter of the word. When it finds one, it tries to extend the match in all four directions, letter by letter. If it ever hits a wrong letter or a dead end, it backtracks — unmarks the path and tries a different direction. It keeps searching until it either spells out the full word or exhausts every possibility.',
-    usecase: 'Word games (Boggle), puzzle solving, pattern detection in grids, and DNA sequence searching in 2D structures.',
-    pros: [
-      'Early termination — abandons a path the moment a letter doesn\'t match',
-      'O(L) space where L is the word length — only stores the current path',
-    ],
-    cons: [
-      'O(n * m * 4^L) worst case — exponential in word length L',
-      'Slow for long words in large grids',
-      'Each cell can be a starting point — n * m DFS attempts in the worst case',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=pfiQ_PS1g8E',
   },
   {
     name: 'Combination Sum', slug: 'combination-sum', endpoint: 'combination-sum', category: 'backtracking', inputLabel: 'Candidates', defaultInput: '2,3,6,7', needsTarget: true, targetLabel: 'Target', defaultTarget: 7,

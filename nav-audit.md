@@ -17,9 +17,9 @@
 | **Patterns** | kmp, boyer-moore, rabin-karp, anagram-detection |
 | **Transform** | run-length-encoding, levenshtein, reversal |
 | **Trees** | bst-insert-search, inorder, level-order, lca, diameter, validate-bst, invert, huffman |
-| **Graphs** | bfs, dfs, dijkstra, union-find, topological-sort, cycle-detection, bellman-ford |
+| **Graphs** | bfs, dfs, dijkstra, union-find, topological-sort, cycle-detection |
 | **Dynamic Prog.** | coin-change, lcs, knapsack, edit-distance, lis, subset-sum, fibonacci |
-| **Backtracking** | n-queens, combination-sum, permutations, sudoku, word-search, rat-in-maze |
+| **Backtracking** | n-queens, combination-sum, permutations, subsets, palindrome-partitioning |
 | **Nr. Theory** | sieve, gcd, prime-factorization, bit-manipulation |
 
 ---
