@@ -6,15 +6,22 @@ interface Props {
   steps: AlgorithmStep[];
   onRun: () => void;
   disabled?: boolean;
+  inputControls?: React.ReactNode;
 }
 
-export default function StringVisualizer({ steps, onRun, disabled }: Props) {
+export default function StringVisualizer({
+  steps,
+  onRun,
+  disabled,
+  inputControls,
+}: Props) {
   return (
     <VisControls
       steps={steps}
       onRun={onRun}
       disabled={disabled}
       hideDescription
+      inputControls={inputControls}
     >
       {(step: AlgorithmStep) => {
         const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;

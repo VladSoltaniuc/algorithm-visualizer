@@ -10,6 +10,7 @@ interface Props {
   edges: number[][];
   nodeCount: number;
   directed?: boolean;
+  inputControls?: React.ReactNode;
 }
 
 /**
@@ -23,6 +24,7 @@ export default function GraphVisualizer({
   edges,
   nodeCount,
   directed,
+  inputControls,
 }: Props) {
   return (
     <VisControls
@@ -30,6 +32,7 @@ export default function GraphVisualizer({
       onRun={onRun}
       disabled={disabled}
       hideDescription
+      inputControls={inputControls}
     >
       {(step: AlgorithmStep) => {
         const n = step.array.length || nodeCount;

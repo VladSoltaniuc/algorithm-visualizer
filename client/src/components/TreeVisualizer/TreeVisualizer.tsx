@@ -8,6 +8,7 @@ interface Props {
   onRun: () => void;
   disabled?: boolean;
   inputValues: number[];
+  inputControls?: React.ReactNode;
 }
 
 /* ── BST helpers ── */
@@ -107,6 +108,7 @@ export default function TreeVisualizer({
   onRun,
   disabled,
   inputValues,
+  inputControls,
 }: Props) {
   const layout = useMemo(() => {
     if (!inputValues.length) return null;
@@ -122,6 +124,7 @@ export default function TreeVisualizer({
       onRun={onRun}
       disabled={disabled}
       hideDescription
+      inputControls={inputControls}
     >
       {(step: AlgorithmStep) => {
         const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;

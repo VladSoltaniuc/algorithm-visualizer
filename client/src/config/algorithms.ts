@@ -461,7 +461,7 @@ export const graphConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=Urx87-NMm6c',
   },
   {
-    name: "Dijkstra's Shortest Path", slug: 'dijkstra', endpoint: 'dijkstra', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to,weight;...)', defaultInput: '5;0,1,4;0,2,1;1,3,1;2,1,2;2,3,5;3,4,3', needsTarget: true, targetLabel: 'Start node', defaultTarget: 0,
+    name: "Dijkstra's Shortest Path", slug: 'dijkstra', endpoint: 'dijkstra', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to,weight;...)', defaultInput: '7;0,1,3;0,2,2;1,2,2;1,3,1;2,3,3;1,4,4;4,5,1;3,5,2;2,5,6;2,6,5;6,5,2', needsTarget: true, targetLabel: 'Start node', defaultTarget: 0,
     description: 'Imagine you\'re a GPS trying to find the fastest route from your home to every other location in a city. Each road has a travel time. Dijkstra\'s algorithm starts at your home and always visits the closest unvisited location next — the one with the smallest total travel time from home. When it visits a location, it checks whether going through it offers a faster route to any of its neighbors, and updates the estimate if so. It keeps doing this, always picking the cheapest unvisited stop, until it has found the shortest path to everywhere.',
     usecase: 'GPS navigation, network routing (OSPF protocol), game pathfinding (A* is an extension of Dijkstra), and any weighted shortest path problem.',
     pros: [

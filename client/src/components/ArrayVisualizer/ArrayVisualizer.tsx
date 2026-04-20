@@ -7,9 +7,15 @@ interface Props {
   steps: AlgorithmStep[];
   onRun: () => void;
   disabled?: boolean;
+  inputControls?: React.ReactNode;
 }
 
-export default function ArrayVisualizer({ steps, onRun, disabled }: Props) {
+export default function ArrayVisualizer({
+  steps,
+  onRun,
+  disabled,
+  inputControls,
+}: Props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(500);
@@ -47,6 +53,7 @@ export default function ArrayVisualizer({ steps, onRun, disabled }: Props) {
   return (
     <div className="visualizer">
       <div className="vis-controls">
+        {inputControls}
         <label className="speed-control">
           Speed
           <input

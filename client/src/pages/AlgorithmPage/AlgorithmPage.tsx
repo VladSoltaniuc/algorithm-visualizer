@@ -192,25 +192,79 @@ export default function AlgorithmPage() {
 
   const learnedKey = `${category}/${slug}`;
 
+  const inputControls = (
+    <div className="input-row">
+      <label>
+        {config.inputLabel ?? "Array"}
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={
+            config.inputType === "text"
+              ? "Enter text"
+              : config.inputType === "number"
+                ? "Enter a number"
+                : "Comma-separated values"
+          }
+        />
+      </label>
+
+      {config.needsTarget && (
+        <label>
+          {config.targetLabel ?? "Target"}
+          <input
+            type="number"
+            value={target}
+            onChange={(e) => setTarget(e.target.value)}
+          />
+        </label>
+      )}
+
+      {config.needsPattern && (
+        <label>
+          {config.patternLabel ?? "Pattern"}
+          <input
+            type="text"
+            value={pattern}
+            onChange={(e) => setPattern(e.target.value)}
+          />
+        </label>
+      )}
+
+      {config.needsWindowSize && (
+        <label>
+          Window size
+          <input
+            type="number"
+            value={windowSize}
+            onChange={(e) => setWindowSize(e.target.value)}
+            min={1}
+          />
+        </label>
+      )}
+    </div>
+  );
+
   return (
     <div className="algorithm-page">
       <div className="algo-tabs">
         <div className="algo-tab-bar">
           <button
             className={`algo-tab-btn${activeTab === "what" ? " active" : ""}`}
-            onClick={() => setActiveTab("what")}
+            onMouseEnter={() => setActiveTab("what")}
           >
             What is it?
           </button>
           <button
             className={`algo-tab-btn${activeTab === "usecase" ? " active" : ""}`}
-            onClick={() => setActiveTab("usecase")}
+            onMouseEnter={() => setActiveTab("usecase")}
           >
             What for?
           </button>
           <button
             className={`algo-tab-btn${activeTab === "proscons" ? " active" : ""}`}
-            onClick={() => setActiveTab("proscons")}
+            onMouseEnter={() => setActiveTab("proscons")}
           >
             Pros &amp; Cons
           </button>
@@ -275,60 +329,6 @@ export default function AlgorithmPage() {
         </div>
       </div>
 
-      <div className="algo-controls">
-        <div className="input-row">
-          <label>
-            {config.inputLabel ?? "Array"}
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={
-                config.inputType === "text"
-                  ? "Enter text"
-                  : config.inputType === "number"
-                    ? "Enter a number"
-                    : "Comma-separated values"
-              }
-            />
-          </label>
-
-          {config.needsTarget && (
-            <label>
-              {config.targetLabel ?? "Target"}
-              <input
-                type="number"
-                value={target}
-                onChange={(e) => setTarget(e.target.value)}
-              />
-            </label>
-          )}
-
-          {config.needsPattern && (
-            <label>
-              {config.patternLabel ?? "Pattern"}
-              <input
-                type="text"
-                value={pattern}
-                onChange={(e) => setPattern(e.target.value)}
-              />
-            </label>
-          )}
-
-          {config.needsWindowSize && (
-            <label>
-              Window size
-              <input
-                type="number"
-                value={windowSize}
-                onChange={(e) => setWindowSize(e.target.value)}
-                min={1}
-              />
-            </label>
-          )}
-        </div>
-      </div>
-
       {error && <p className="error">{error}</p>}
 
       {category === "string" && (
@@ -336,6 +336,7 @@ export default function AlgorithmPage() {
           steps={steps}
           onRun={handleRun}
           disabled={loading || spamPrevention}
+          inputControls={inputControls}
         />
       )}
       {category === "graph" && (
@@ -346,6 +347,7 @@ export default function AlgorithmPage() {
           edges={graphData?.edges ?? []}
           nodeCount={graphData?.nodeCount ?? 0}
           directed={config?.directed}
+          inputControls={inputControls}
         />
       )}
       {category === "dp" && (
@@ -353,6 +355,7 @@ export default function AlgorithmPage() {
           steps={steps}
           onRun={handleRun}
           disabled={loading || spamPrevention}
+          inputControls={inputControls}
         />
       )}
       {category === "backtracking" && (
@@ -361,6 +364,7 @@ export default function AlgorithmPage() {
           onRun={handleRun}
           disabled={loading || spamPrevention}
           slug={slug}
+          inputControls={inputControls}
         />
       )}
       {category === "number-theory" && (
@@ -369,6 +373,7 @@ export default function AlgorithmPage() {
           onRun={handleRun}
           disabled={loading || spamPrevention}
           slug={slug}
+          inputControls={inputControls}
         />
       )}
       {category === "array" && (
@@ -376,6 +381,7 @@ export default function AlgorithmPage() {
           steps={steps}
           onRun={handleRun}
           disabled={loading || spamPrevention}
+          inputControls={inputControls}
         />
       )}
       {category === "tree" && (
@@ -384,6 +390,7 @@ export default function AlgorithmPage() {
           onRun={handleRun}
           disabled={loading || spamPrevention}
           inputValues={treeInputValues}
+          inputControls={inputControls}
         />
       )}
     </div>

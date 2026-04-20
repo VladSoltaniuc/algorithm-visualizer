@@ -65,14 +65,15 @@
 /* ── Info tabs (What is it?, Usecase?, Pros & Cons) ── */
 .algo-tabs {
   text-align: left;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
+  position: relative;
 }
 
 .algo-tab-bar {
   display: flex;
   gap: 0;
   border-bottom: 2px solid #e5e7eb;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .algo-tab-btn {
@@ -140,8 +141,28 @@
 }
 
 .algo-tab-content {
-  height: 80px;
-  overflow-y: auto;
+  max-height: 0;
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #fafafa;
+  z-index: 10;
+  transition: max-height 0.25s ease, padding 0.25s ease;
+  padding: 0;
+  border-bottom: 2px solid transparent;
+}
+
+.algo-tab-bar:has(.algo-tab-btn:not(.algo-tab-yt):hover) + .algo-tab-content {
+  max-height: 100px;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+  border-bottom-color: #e5e7eb;
+  animation: enable-scroll 0s 0.25s forwards;
+}
+
+@keyframes enable-scroll {
+  to { overflow-y: auto; }
 }
 
 .algo-tab-text {

@@ -7,6 +7,7 @@ interface Props {
   onRun: () => void;
   disabled?: boolean;
   slug?: string;
+  inputControls?: React.ReactNode;
 }
 
 /**
@@ -20,6 +21,7 @@ export default function BacktrackingVisualizer({
   onRun,
   disabled,
   slug,
+  inputControls,
 }: Props) {
   return (
     <VisControls
@@ -27,6 +29,7 @@ export default function BacktrackingVisualizer({
       onRun={onRun}
       disabled={disabled}
       hideDescription
+      inputControls={inputControls}
     >
       {(step: AlgorithmStep) => {
         const arr = step.array;

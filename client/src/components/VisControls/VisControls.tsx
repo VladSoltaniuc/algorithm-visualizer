@@ -7,6 +7,7 @@ interface Props {
   onRun: () => void;
   disabled?: boolean;
   hideDescription?: boolean;
+  inputControls?: React.ReactNode;
   children: (step: AlgorithmStep) => React.ReactNode;
 }
 
@@ -15,6 +16,7 @@ export default function VisControls({
   onRun,
   disabled,
   hideDescription,
+  inputControls,
   children,
 }: Props) {
   const { step, currentStep, speed, setSpeed, isPlaying, total } =
@@ -23,6 +25,7 @@ export default function VisControls({
   return (
     <div className="visualizer">
       <div className="vis-controls">
+        {inputControls}
         <label className="speed-control">
           Speed
           <input

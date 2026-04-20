@@ -6,19 +6,26 @@ interface Props {
   steps: AlgorithmStep[];
   onRun: () => void;
   disabled?: boolean;
+  inputControls?: React.ReactNode;
 }
 
 /**
  * Shows the 1-D DP table as a grid of cells.
  * Highlighted cells are the ones just updated; sorted cells are finalized.
  */
-export default function DPVisualizer({ steps, onRun, disabled }: Props) {
+export default function DPVisualizer({
+  steps,
+  onRun,
+  disabled,
+  inputControls,
+}: Props) {
   return (
     <VisControls
       steps={steps}
       onRun={onRun}
       disabled={disabled}
       hideDescription
+      inputControls={inputControls}
     >
       {(step: AlgorithmStep) => {
         const arr = step.array;
