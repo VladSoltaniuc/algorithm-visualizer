@@ -494,7 +494,7 @@ export const graphConfig: AlgorithmConfig[] = [
     directed: true,
   },
   {
-    name: 'Cycle Detection', slug: 'cycle-detection', endpoint: 'cycle-detection', category: 'graph', inputType: 'graph', inputLabel: 'Directed graph (nodes;from,to;...)', defaultInput: '5;0,1;1,2;2,3;3,4;4,2',
+    name: 'Cycle Detection', slug: 'cycle-detection', endpoint: 'cycle-detection', category: 'graph', inputType: 'graph', inputLabel: 'Directed graph (nodes;from,to;...)', defaultInput: '10;0,1;1,2;2,3;3,4;4,5;2,6;6,4;7,1;7,8;9,7;8,9',
     description: "Imagine you're following a trail of arrows between cities on a map. You want to know if any trail eventually loops back to a city you've already passed through on the current path. This algorithm uses DFS with two tracking arrays: visited[] (has this node ever been seen?) and pathVisited[] (is this node on the current DFS path?). When DFS enters a node, both are marked true. When backtracking, pathVisited is set back to false. If we ever reach a neighbor where both visited and pathVisited are true, we've found a back edge — proof that a cycle exists.",
     usecase: 'Detecting circular dependencies (build systems, package managers), validating DAGs (task scheduling, course prerequisites), deadlock detection in resource-allocation graphs.',
     pros: [
