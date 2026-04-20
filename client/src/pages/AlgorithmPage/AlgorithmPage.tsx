@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useLearned } from "../../context/LearnedContext";
 import { allConfigs } from "../../config/algorithms";
@@ -59,31 +59,11 @@ export default function AlgorithmPage() {
     "what",
   );
 
-  /* Parse graph edges from input string for the graph visualizer */
-  const graphData = useMemo(() => {
-    if (category !== "graph") return null;
-    try {
-      const parts = input
-        .split(";")
-        .map((s) => s.trim())
-        .filter(Boolean);
-      const nodeCount = parseInt(parts[0], 10);
-      if (isNaN(nodeCount)) return null;
-      const edges = parts.slice(1).map((e) => e.split(",").map(Number));
-      return { nodeCount, edges };
-    } catch {
-      return null;
-    }
-  }, [category, input]);
-
-  /* Parse tree input values for the tree visualizer */
-  const treeInputValues = useMemo(() => {
-    if (category !== "tree") return [];
-    if (config?.inputType === "text") return [];
-    const nums = input.split(",").map((n) => parseInt(n.trim(), 10));
-    if (nums.some(isNaN)) return [];
-    return nums;
-  }, [category, input, config?.inputType]);
+  const [graphData, setGraphData] = useState<{
+    nodeCount: number;
+    edges: number[][];
+  } | null>(null);
+  const [treeInputValues, setTreeInputValues] = useState<number[]>([]);
 
   useEffect(() => {
     if (!config) return;
@@ -94,6 +74,8 @@ export default function AlgorithmPage() {
     setSteps([]);
     setError(null);
     setActiveTab("what");
+    setGraphData(null);
+    setTreeInputValues([]);
   }, [category, slug]);
 
   if (!category || !slug) return <Navigate to="/array/bubble-sort" replace />;
@@ -179,6 +161,25 @@ export default function AlgorithmPage() {
         data = await apiFn(parsedInput);
       }
       setSteps(data);
+      if (category === "graph") {
+        try {
+          const parts = input
+            .split(";")
+            .map((s) => s.trim())
+            .filter(Boolean);
+          const nodeCount = Number.parseInt(parts[0], 10);
+          if (!Number.isNaN(nodeCount)) {
+            const edges = parts.slice(1).map((e) => e.split(",").map(Number));
+            setGraphData({ nodeCount, edges });
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+      if (category === "tree" && config.inputType !== "text") {
+        const nums = input.split(",").map((n) => Number.parseInt(n.trim(), 10));
+        if (!nums.some(Number.isNaN)) setTreeInputValues(nums);
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unexpected error occurred.",
