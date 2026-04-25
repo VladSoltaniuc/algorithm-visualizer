@@ -18,20 +18,6 @@ interface Tab {
   items: { name: string; path: string }[];
 }
 
-function fromArray(slugs: string[]) {
-  return slugs.map((slug) => {
-    const a = arrayConfig.find((c) => c.slug === slug)!;
-    return { name: a.name, path: `/array/${a.slug}` };
-  });
-}
-
-function fromString(slugs: string[]) {
-  return slugs.map((slug) => {
-    const a = stringConfig.find((c) => c.slug === slug)!;
-    return { name: a.name, path: `/string/${a.slug}` };
-  });
-}
-
 function from(slugs: string[]) {
   const all = [
     ...arrayConfig,
