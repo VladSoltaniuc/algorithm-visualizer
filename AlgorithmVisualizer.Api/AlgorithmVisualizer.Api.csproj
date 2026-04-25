@@ -10,4 +10,14 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
+
+  <Target Name="BuildReactApp" BeforeTargets="Build">
+    <Exec Command="npm install" WorkingDirectory="$(ProjectDir)../client" />
+    <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)../client" />
+    <MakeDir Directories="$(ProjectDir)wwwroot" />
+    <ItemGroup>
+      <DistFiles Include="$(ProjectDir)../client/dist/**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DistFiles)" DestinationFolder="$(ProjectDir)wwwroot/%(RecursiveDir)" SkipUnchangedFiles="false" />
+  </Target>
 </Project>
