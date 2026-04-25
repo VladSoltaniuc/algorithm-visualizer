@@ -19,7 +19,9 @@ RUN dotnet restore AlgorithmVisualizer.Api/AlgorithmVisualizer.Api.csproj
 COPY AlgorithmVisualizer.Api/ AlgorithmVisualizer.Api/
 
 # Copy React output into wwwroot before publish
-RUN mkdir -p AlgorithmVisualizer.Api/wwwroot && cp -r client/dist/. AlgorithmVisualizer.Api/wwwroot/
+RUN mkdir -p AlgorithmVisualizer.Api/wwwroot && \
+    cp -r client/dist/* AlgorithmVisualizer.Api/wwwroot/ && \
+    ls -la AlgorithmVisualizer.Api/wwwroot/
 
 RUN dotnet publish AlgorithmVisualizer.Api/AlgorithmVisualizer.Api.csproj -c Release -o /app/publish --no-restore
 
