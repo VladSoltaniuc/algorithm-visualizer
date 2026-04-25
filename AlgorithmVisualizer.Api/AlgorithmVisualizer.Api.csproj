@@ -11,6 +11,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="wwwroot/**/*" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <Target Name="BuildReactApp" BeforeTargets="Build">
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)../client" />
     <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)../client" />
