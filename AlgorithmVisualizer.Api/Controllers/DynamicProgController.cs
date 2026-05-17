@@ -32,14 +32,6 @@ public class DynamicProgController : ControllerBase
     public IActionResult CoinChange([FromBody] int[] coins, int amount) =>
         Ok(_srv.CoinChange(coins, amount));
 
-    [HttpPost("levenshtein")]
-    public IActionResult Levenshtein([FromBody] StringRequest req) =>
-        Ok(_srv.Levenshtein(req.Text, req.Pattern));
-
-    [HttpPost("subset-sum/{target:int}")]
-    public IActionResult SubsetSum([FromBody] int[] input, int target) =>
-        Ok(_srv.SubsetSum(input, target));
-
     [HttpGet("climbing-stairs/{n:int}")]
     public IActionResult ClimbingStairs(int n) => Ok(_srv.ClimbingStairs(n));
 }

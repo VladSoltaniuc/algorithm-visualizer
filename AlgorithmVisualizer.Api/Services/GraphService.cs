@@ -1,4 +1,4 @@
-using AlgorithmVisualizer.Api.Models;
+﻿using AlgorithmVisualizer.Api.Models;
 
 namespace AlgorithmVisualizer.Api.Services;
 
@@ -224,7 +224,7 @@ public class GraphService
                         {
                             StepNumber = step++,
                             Array = dist.Select(d => d == int.MaxValue ? -1 : d).ToArray(),
-                            Description = $"Relax edge {u}→{v}: dist={dist[v]}",
+                            Description = $"Relax edge {u}â†’{v}: dist={dist[v]}",
                             HighlightIndices = [v],
                         }
                     );
@@ -238,7 +238,7 @@ public class GraphService
                 StepNumber = step,
                 Array = dist.Select(d => d == int.MaxValue ? -1 : d).ToArray(),
                 Description =
-                    $"Dijkstra complete. Distances: [{string.Join(", ", dist.Select(d => d == int.MaxValue ? "∞" : d.ToString()))}]",
+                    $"Dijkstra complete. Distances: [{string.Join(", ", dist.Select(d => d == int.MaxValue ? "âˆž" : d.ToString()))}]",
                 SortedIndices = Enumerable.Range(0, req.NodeCount).ToArray(),
             }
         );
@@ -312,7 +312,7 @@ public class GraphService
                     StepNumber = stepNum++,
                     Array = (int[])inDeg.Clone(),
                     Description =
-                        $"Node {u} has in-degree 0 — pick it as topo position #{result.Count}. Now remove its outgoing edges.",
+                        $"Node {u} has in-degree 0 â€” pick it as topo position #{result.Count}. Now remove its outgoing edges.",
                     HighlightIndices = [u],
                     SortedIndices = result.ToArray(),
                     Labels = MakeLabels(),
@@ -369,7 +369,7 @@ public class GraphService
                 {
                     StepNumber = stepNum,
                     Array = (int[])inDeg.Clone(),
-                    Description = $"Done! Topological order: {string.Join(" → ", result)}.",
+                    Description = $"Done! Topological order: {string.Join(" â†’ ", result)}.",
                     SortedIndices = result.ToArray(),
                     Labels = Enumerable.Range(0, n).Select(_ => "placed").ToArray(),
                     Notes = finalNotes,
@@ -383,7 +383,7 @@ public class GraphService
                 {
                     StepNumber = stepNum,
                     Array = (int[])inDeg.Clone(),
-                    Description = "Cycle detected — no valid topological order exists.",
+                    Description = "Cycle detected â€” no valid topological order exists.",
                     SortedIndices = result.ToArray(),
                     Labels = MakeLabels(),
                     Notes = MakeNotes(),
@@ -394,7 +394,7 @@ public class GraphService
         return steps;
     }
 
-    // 7. Cycle Detection — DFS with visited[] + pathVisited[] (Striver G-19)
+    // 7. Cycle Detection â€” DFS with visited[] + pathVisited[] (Striver G-19)
     // Time: O(V + E), Space: O(V)
     public List<AlgorithmStep> CycleDetection(GraphRequest req)
     {
@@ -440,10 +440,10 @@ public class GraphService
                 continue;
 
             steps.Add(
-                MakeStep($"Node {start} is not visited — start DFS from here.", highlight: [start])
+                MakeStep($"Node {start} is not visited â€” start DFS from here.", highlight: [start])
             );
 
-            // Iterative DFS with explicit stack — (node, neighborIndex) pairs
+            // Iterative DFS with explicit stack â€” (node, neighborIndex) pairs
             var stack = new Stack<(int node, int nextIdx)>();
             visited[start] = true;
             pathVisited[start] = true;
@@ -468,14 +468,14 @@ public class GraphService
 
                     if (!visited[v])
                     {
-                        // Not visited → mark visited + pathVisited, push onto stack
+                        // Not visited â†’ mark visited + pathVisited, push onto stack
                         visited[v] = true;
                         pathVisited[v] = true;
                         stack.Push((v, 0));
 
                         steps.Add(
                             MakeStep(
-                                $"Edge {u} → {v}: node {v} not visited — mark visited and pathVisited.",
+                                $"Edge {u} â†’ {v}: node {v} not visited â€” mark visited and pathVisited.",
                                 highlight: [u, v],
                                 changedNode: v
                             )
@@ -483,10 +483,10 @@ public class GraphService
                     }
                     else if (pathVisited[v])
                     {
-                        // Already in current path → back edge → cycle!
+                        // Already in current path â†’ back edge â†’ cycle!
                         steps.Add(
                             MakeStep(
-                                $"Edge {u} → {v}: node {v} is visited AND on current path — back edge found! Cycle!",
+                                $"Edge {u} â†’ {v}: node {v} is visited AND on current path â€” back edge found! Cycle!",
                                 highlight: [u, v],
                                 changedNode: v
                             )
@@ -504,10 +504,10 @@ public class GraphService
                     }
                     else
                     {
-                        // Visited but not in current path → already fully processed, skip
+                        // Visited but not in current path â†’ already fully processed, skip
                         steps.Add(
                             MakeStep(
-                                $"Edge {u} → {v}: node {v} already processed (not on current path) — skip.",
+                                $"Edge {u} â†’ {v}: node {v} already processed (not on current path) â€” skip.",
                                 highlight: [u],
                                 sorted: [v]
                             )
@@ -516,12 +516,12 @@ public class GraphService
                 }
                 else
                 {
-                    // All neighbors done → backtrack: unmark pathVisited
+                    // All neighbors done â†’ backtrack: unmark pathVisited
                     pathVisited[u] = false;
 
                     steps.Add(
                         MakeStep(
-                            $"Node {u}: done exploring — backtrack, remove from current path.",
+                            $"Node {u}: done exploring â€” backtrack, remove from current path.",
                             sorted: [u],
                             changedNode: u
                         )
@@ -535,7 +535,7 @@ public class GraphService
         {
             steps.Add(
                 MakeStep(
-                    $"Cycle found: {string.Join(" → ", cycleNodes)}.",
+                    $"Cycle found: {string.Join(" â†’ ", cycleNodes)}.",
                     highlight: cycleNodes.Distinct().ToArray()
                 )
             );
@@ -544,7 +544,7 @@ public class GraphService
         {
             steps.Add(
                 MakeStep(
-                    "DFS complete — no cycle detected. The graph is a DAG.",
+                    "DFS complete â€” no cycle detected. The graph is a DAG.",
                     sorted: Enumerable.Range(0, n).ToArray()
                 )
             );
@@ -577,112 +577,6 @@ public class GraphService
         ];
     }
 
-    // 8. Union-Find
-    // Time: O(α(n)) per operation (nearly O(1) amortized)
-    // Space: O(V)
-    public List<AlgorithmStep> UnionFind(GraphRequest req)
-    {
-        var parent = Enumerable.Range(0, req.NodeCount).ToArray();
-        var rank = new int[req.NodeCount];
-        var steps = new List<AlgorithmStep>();
-        int step = 0;
-        int n = req.NodeCount;
-        int componentCount = n;
-
-        // Non-mutating root finder — used only for label generation
-        static int FindRootPure(int[] p, int x)
-        {
-            while (p[x] != x)
-                x = p[x];
-            return x;
-        }
-
-        string[] MakeLabels() =>
-            Enumerable.Range(0, n).Select(i => FindRootPure(parent, i).ToString()).ToArray();
-
-        string[] MakeNotes() =>
-            Enumerable.Range(0, n).Select(i => parent[i] == i ? "root" : $"→{parent[i]}").ToArray();
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step++,
-                Array = (int[])parent.Clone(),
-                Labels = MakeLabels(),
-                Notes = MakeNotes(),
-                Description =
-                    $"Start: {n} nodes, each in its own component (parent[i] = i). "
-                    + $"{componentCount} separate component(s).",
-            }
-        );
-
-        foreach (var e in req.Edges)
-        {
-            int u = e[0],
-                v = e[1];
-            int pu = Find(parent, u),
-                pv = Find(parent, v);
-
-            if (pu == pv)
-            {
-                steps.Add(
-                    new AlgorithmStep
-                    {
-                        StepNumber = step++,
-                        Array = (int[])parent.Clone(),
-                        Labels = MakeLabels(),
-                        Notes = MakeNotes(),
-                        Description =
-                            $"Edge {u}–{v}: both nodes already share root {pu} — same component. "
-                            + "This edge would form a cycle, skipping it.",
-                        HighlightIndices = [u, v],
-                    }
-                );
-                continue;
-            }
-
-            if (rank[pu] < rank[pv])
-                parent[pu] = pv;
-            else if (rank[pu] > rank[pv])
-                parent[pv] = pu;
-            else
-            {
-                parent[pv] = pu;
-                rank[pu]++;
-            }
-            componentCount--;
-            int newRoot = FindRootPure(parent, u);
-
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = (int[])parent.Clone(),
-                    Labels = MakeLabels(),
-                    Notes = MakeNotes(),
-                    Description =
-                        $"Union({u}, {v}): merged component of {pu} into component of {pv} — "
-                        + $"new root is {newRoot}. {componentCount} component(s) remaining.",
-                    HighlightIndices = [u, v],
-                }
-            );
-        }
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step,
-                Array = (int[])parent.Clone(),
-                Labels = MakeLabels(),
-                Notes = MakeNotes(),
-                Description =
-                    $"Done. {componentCount} connected component(s). "
-                    + $"Parent array: [{string.Join(", ", parent)}].",
-                SortedIndices = Enumerable.Range(0, n).ToArray(),
-            }
-        );
-        return steps;
-    }
 
     private static int Find(int[] parent, int x)
     {

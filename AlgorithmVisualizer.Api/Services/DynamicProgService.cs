@@ -1,4 +1,4 @@
-using AlgorithmVisualizer.Api.Models;
+﻿using AlgorithmVisualizer.Api.Models;
 
 namespace AlgorithmVisualizer.Api.Services;
 
@@ -52,8 +52,8 @@ public class DynamicProgService
     }
 
     // 2. 0/1 Knapsack
-    // Time: O(n · W)
-    // Space: O(n · W) — full 2-D table for matrix visualisation
+    // Time: O(n Â· W)
+    // Space: O(n Â· W) â€” full 2-D table for matrix visualisation
     public List<AlgorithmStep> Knapsack(int[] weights, int[] values, int capacity)
     {
         if (weights.Length == 0)
@@ -62,7 +62,7 @@ public class DynamicProgService
         var dp = new int[n + 1, capacity + 1]; // dp[i][w] = max value, first i items, capacity w
 
         var rowLabels = new string[n + 1];
-        rowLabels[0] = "∅";
+        rowLabels[0] = "âˆ…";
         for (int i = 1; i <= n; i++)
             rowLabels[i] = $"#{i - 1}(w={weights[i - 1]},v={values[i - 1]})";
         var colLabels = Enumerable.Range(0, capacity + 1).Select(w => w.ToString()).ToArray();
@@ -88,7 +88,7 @@ public class DynamicProgService
                 StepNumber = stepNum++,
                 Array = [],
                 Description =
-                    $"0/1 Knapsack — {n} items, capacity {capacity}. Row 0 = 0 (no items selected).",
+                    $"0/1 Knapsack â€” {n} items, capacity {capacity}. Row 0 = 0 (no items selected).",
                 DpMatrix = Snap(),
                 RowLabels = rowLabels,
                 ColLabels = colLabels,
@@ -113,7 +113,7 @@ public class DynamicProgService
                     Array = [],
                     Description =
                         $"Item {i - 1} (w={wi}, v={vi}): best value at capacity {capacity} = {rowAns}"
-                        + (improved ? $" ↑ (was {dp[i - 1, capacity]})" : " (unchanged)")
+                        + (improved ? $" â†‘ (was {dp[i - 1, capacity]})" : " (unchanged)")
                         + ".",
                     DpMatrix = Snap(),
                     RowLabels = rowLabels,
@@ -143,7 +143,7 @@ public class DynamicProgService
 
         string selStr =
             selected.Count > 0
-                ? $" Selected: {string.Join(", ", selected.Select(i => $"#{i}(v={values[i]})"))} → total value {dp[n, capacity]}."
+                ? $" Selected: {string.Join(", ", selected.Select(i => $"#{i}(v={values[i]})"))} â†’ total value {dp[n, capacity]}."
                 : " No items selected.";
         steps.Add(
             new AlgorithmStep
@@ -161,8 +161,8 @@ public class DynamicProgService
     }
 
     // 3. Longest Common Subsequence
-    // Time: O(m · n)
-    // Space: O(m · n)
+    // Time: O(m Â· n)
+    // Space: O(m Â· n)
     public List<AlgorithmStep> Lcs(string text1, string text2)
     {
         if (string.IsNullOrEmpty(text1) || string.IsNullOrEmpty(text2))
@@ -197,7 +197,7 @@ public class DynamicProgService
                 StepNumber = step++,
                 Array = new int[n + 1],
                 Description =
-                    $"LCS of \"{text1}\" and \"{text2}\" — initialise ({m + 1})x({n + 1}) matrix with zeros",
+                    $"LCS of \"{text1}\" and \"{text2}\" â€” initialise ({m + 1})x({n + 1}) matrix with zeros",
                 DpMatrix = SnapshotMatrix(),
                 RowHeaders = rowHeaders,
                 ColHeaders = colHeaders,
@@ -215,7 +215,7 @@ public class DynamicProgService
                 string desc =
                     text1[i - 1] == text2[j - 1]
                         ? $"'{text1[i - 1]}' == '{text2[j - 1]}': dp[{i}][{j}] = dp[{i - 1}][{j - 1}] + 1 = {dp[i, j]}"
-                        : $"'{text1[i - 1]}' ≠ '{text2[j - 1]}': dp[{i}][{j}] = max({dp[i - 1, j]}, {dp[i, j - 1]}) = {dp[i, j]}";
+                        : $"'{text1[i - 1]}' â‰  '{text2[j - 1]}': dp[{i}][{j}] = max({dp[i - 1, j]}, {dp[i, j - 1]}) = {dp[i, j]}";
                 steps.Add(
                     new AlgorithmStep
                     {
@@ -273,7 +273,7 @@ public class DynamicProgService
     }
 
     // Time: O(n^2)
-    // Space: O(n^2) — comparison matrix for visualisation
+    // Space: O(n^2) â€” comparison matrix for visualisation
     public List<AlgorithmStep> Lis(int[] arr)
     {
         if (arr.Length == 0)
@@ -285,9 +285,9 @@ public class DynamicProgService
         Array.Fill(pred, -1);
 
         // matrix[i][j]:
-        //  j == i  → dp[i] (LIS length ending at arr[i])
-        //  j < i   → dp[j]+1 if arr[j] < arr[i], else 0 (invalid predecessor)
-        //  j > i   → -1 ("–", not yet computed)
+        //  j == i  â†’ dp[i] (LIS length ending at arr[i])
+        //  j < i   â†’ dp[j]+1 if arr[j] < arr[i], else 0 (invalid predecessor)
+        //  j > i   â†’ -1 ("â€“", not yet computed)
         var matrix = new int[n][];
         for (int i = 0; i < n; i++)
         {
@@ -315,7 +315,7 @@ public class DynamicProgService
                 StepNumber = stepNum++,
                 Array = [],
                 Description =
-                    $"LIS of [{string.Join(", ", arr)}] — each row i shows: "
+                    $"LIS of [{string.Join(", ", arr)}] â€” each row i shows: "
                     + "candidates dp[j]+1 (green when arr[j] < arr[i]), "
                     + "0 (invalid), diagonal = dp[i].",
                 DpMatrix = Snap(),
@@ -347,10 +347,10 @@ public class DynamicProgService
             matrix[i][i] = dp[i];
 
             string note =
-                i == 0 ? "No predecessors — dp[0] = 1."
+                i == 0 ? "No predecessors â€” dp[0] = 1."
                 : pred[i] >= 0
-                    ? $"Best predecessor: arr[{pred[i]}]={arr[pred[i]]} → dp[{i}] = {dp[i]}."
-                : $"No valid predecessors — dp[{i}] = 1.";
+                    ? $"Best predecessor: arr[{pred[i]}]={arr[pred[i]]} â†’ dp[{i}] = {dp[i]}."
+                : $"No valid predecessors â€” dp[{i}] = 1.";
             steps.Add(
                 new AlgorithmStep
                 {
@@ -407,7 +407,7 @@ public class DynamicProgService
     }
 
     // 5. Coin Change
-    // Time: O(n · amount)
+    // Time: O(n Â· amount)
     // Space: O(amount)
     public List<AlgorithmStep> CoinChange(int[] coins, int amount)
     {
@@ -432,12 +432,12 @@ public class DynamicProgService
                 .Range(0, amount + 1)
                 .Select(j =>
                     j > upTo ? "?"
-                    : dp[j] >= inf ? "∞"
+                    : dp[j] >= inf ? "âˆž"
                     : dp[j].ToString()
                 )
                 .ToArray();
 
-        // Coin-denomination label row: "" = not reached, "∅" = base, "✗" = unreachable, "+C" = coin C
+        // Coin-denomination label row: "" = not reached, "âˆ…" = base, "âœ—" = unreachable, "+C" = coin C
         string[] MakeCoinLabels(int upTo) =>
             Enumerable
                 .Range(0, amount + 1)
@@ -446,9 +446,9 @@ public class DynamicProgService
                     if (j > upTo)
                         return "";
                     if (j == 0)
-                        return "∅";
+                        return "âˆ…";
                     if (dp[j] >= inf)
-                        return "✗";
+                        return "âœ—";
                     if (coinUsed[j] == 0)
                         return "";
                     return $"+{coinUsed[j]}";
@@ -463,8 +463,8 @@ public class DynamicProgService
                 Notes = MakeNotes(0),
                 Labels = MakeCoinLabels(0),
                 Description =
-                    $"dp[0] = 0 — zero coins needed for amount 0. "
-                    + "All other cells start as ∞ (unreachable so far).",
+                    $"dp[0] = 0 â€” zero coins needed for amount 0. "
+                    + "All other cells start as âˆž (unreachable so far).",
                 SortedIndices = [0],
                 PatternOffset = -1,
             }
@@ -492,7 +492,7 @@ public class DynamicProgService
                             Array = (int[])dp.Clone(),
                             Notes = MakeNotes(i),
                             Labels = MakeCoinLabels(i - 1),
-                            Description = $"Coin {coin}: dp[{lookupIdx}] = ∞ (unreachable) — skip.",
+                            Description = $"Coin {coin}: dp[{lookupIdx}] = âˆž (unreachable) â€” skip.",
                             HighlightIndices = [i],
                             PatternOffset = lookupIdx,
                             SortedIndices = finishedSoFar,
@@ -509,10 +509,10 @@ public class DynamicProgService
                         coinUsed[i] = coin;
                     }
 
-                    string prevStr = prevBest >= inf ? "∞" : prevBest.ToString();
+                    string prevStr = prevBest >= inf ? "âˆž" : prevBest.ToString();
                     string outcome = improved
-                        ? $"dp[{i}]: {prevStr} → {candidate} ✓"
-                        : $"dp[{i}] stays {prevBest} (already ≤ {candidate})";
+                        ? $"dp[{i}]: {prevStr} â†’ {candidate} âœ“"
+                        : $"dp[{i}] stays {prevBest} (already â‰¤ {candidate})";
 
                     steps.Add(
                         new AlgorithmStep
@@ -541,7 +541,7 @@ public class DynamicProgService
                     Labels = MakeCoinLabels(i),
                     Description =
                         dp[i] >= inf
-                            ? $"dp[{i}] = ∞ — amount {i} cannot be formed."
+                            ? $"dp[{i}] = âˆž â€” amount {i} cannot be formed."
                             : $"dp[{i}] = {dp[i]}. Best coin: +{coinUsed[i]}.",
                     PatternOffset = -1,
                     SortedIndices = Enumerable.Range(0, i + 1).ToArray(),
@@ -577,7 +577,7 @@ public class DynamicProgService
                 Labels = MakeCoinLabels(amount),
                 Description =
                     dp[amount] >= inf
-                        ? $"No solution — {amount} cannot be formed from [{string.Join(", ", coins)}]."
+                        ? $"No solution â€” {amount} cannot be formed from [{string.Join(", ", coins)}]."
                         : $"Answer: {dp[amount]} coin(s) to make {amount}.{coinsUsedStr}",
                 SortedIndices = Enumerable.Range(0, amount + 1).ToArray(),
                 HighlightIndices = tracePath,
@@ -585,288 +585,6 @@ public class DynamicProgService
             }
         );
 
-        return steps;
-    }
-
-    // 7. Levenshtein Distance
-    // Time: O(m · n)
-    // Space: O(m · n)
-    public List<AlgorithmStep> Levenshtein(string text1, string text2)
-    {
-        if (string.IsNullOrEmpty(text1) || string.IsNullOrEmpty(text2))
-            throw new ArgumentException("Provide non-empty strings.");
-        int m = text1.Length,
-            n = text2.Length;
-        var dp = new int[m + 1, n + 1];
-        for (int j = 0; j <= n; j++)
-            dp[0, j] = j;
-        for (int i = 0; i <= m; i++)
-            dp[i, 0] = i;
-
-        string rowHeaders = " " + text1;
-        string colHeaders = " " + text2;
-
-        int[][] SnapshotMatrix()
-        {
-            var matrix = new int[m + 1][];
-            for (int r = 0; r <= m; r++)
-            {
-                matrix[r] = new int[n + 1];
-                for (int c = 0; c <= n; c++)
-                    matrix[r][c] = dp[r, c];
-            }
-            return matrix;
-        }
-
-        var steps = new List<AlgorithmStep>();
-        int step = 0;
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step++,
-                Array = [],
-                Description =
-                    $"Levenshtein: \"{text1}\" → \"{text2}\" — initialise {m + 1}×{n + 1} matrix. "
-                    + $"Row 0 = inserts needed to build \"{text2}\" from empty. "
-                    + $"Col 0 = deletes needed to empty \"{text1}\".",
-                DpMatrix = SnapshotMatrix(),
-                RowHeaders = rowHeaders,
-                ColHeaders = colHeaders,
-            }
-        );
-
-        for (int i = 1; i <= m; i++)
-        {
-            for (int j = 1; j <= n; j++)
-            {
-                bool match = text1[i - 1] == text2[j - 1];
-                int deleteCost = dp[i - 1, j] + 1;
-                int insertCost = dp[i, j - 1] + 1;
-                int replaceCost = dp[i - 1, j - 1] + (match ? 0 : 1);
-                dp[i, j] = Math.Min(Math.Min(deleteCost, insertCost), replaceCost);
-
-                string desc;
-                if (match)
-                {
-                    desc =
-                        $"'{text1[i - 1]}' == '{text2[j - 1]}': characters match — no edit needed. "
-                        + $"dp[{i}][{j}] = dp[{i - 1}][{j - 1}] = {dp[i, j]}";
-                }
-                else
-                {
-                    string bestOp;
-                    if (dp[i, j] == replaceCost)
-                        bestOp =
-                            $"replace '{text1[i - 1]}' with '{text2[j - 1]}' (cost {replaceCost})";
-                    else if (dp[i, j] == deleteCost)
-                        bestOp = $"delete '{text1[i - 1]}' (cost {deleteCost})";
-                    else
-                        bestOp = $"insert '{text2[j - 1]}' (cost {insertCost})";
-                    desc =
-                        $"'{text1[i - 1]}' ≠ '{text2[j - 1]}': best is {bestOp}. "
-                        + $"min(delete={deleteCost}, insert={insertCost}, replace={replaceCost}) = {dp[i, j]}";
-                }
-
-                steps.Add(
-                    new AlgorithmStep
-                    {
-                        StepNumber = step++,
-                        Array = [],
-                        Description = desc,
-                        DpMatrix = SnapshotMatrix(),
-                        RowHeaders = rowHeaders,
-                        ColHeaders = colHeaders,
-                        HighlightRow = i,
-                        HighlightCol = j,
-                    }
-                );
-            }
-        }
-
-        // Backtrack to find the optimal edit path
-        var backtrackCells = new List<int>();
-        int x = m,
-            y = n;
-        while (x > 0 || y > 0)
-        {
-            backtrackCells.Add(x);
-            backtrackCells.Add(y);
-            if (x == 0)
-            {
-                y--;
-            }
-            else if (y == 0)
-            {
-                x--;
-            }
-            else if (text1[x - 1] == text2[y - 1])
-            {
-                x--;
-                y--;
-            }
-            else
-            {
-                int minVal = Math.Min(Math.Min(dp[x - 1, y], dp[x, y - 1]), dp[x - 1, y - 1]);
-                if (minVal == dp[x - 1, y - 1])
-                {
-                    x--;
-                    y--;
-                }
-                else if (minVal == dp[x - 1, y])
-                {
-                    x--;
-                }
-                else
-                {
-                    y--;
-                }
-            }
-        }
-        backtrackCells.Add(0);
-        backtrackCells.Add(0);
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step,
-                Array = [],
-                Description =
-                    $"Edit distance = {dp[m, n]}. "
-                    + $"The highlighted path shows the cheapest sequence of edits to turn \"{text1}\" into \"{text2}\".",
-                DpMatrix = SnapshotMatrix(),
-                RowHeaders = rowHeaders,
-                ColHeaders = colHeaders,
-                BacktrackPath = backtrackCells.ToArray(),
-            }
-        );
-        return steps;
-    }
-
-    // 9. Subset Sum
-    // Time: O(n · target)
-    // Space: O(n · target) — full 2-D table for matrix visualisation
-    public List<AlgorithmStep> SubsetSum(int[] arr, int target)
-    {
-        if (arr.Length == 0)
-            throw new ArgumentException("Provide a non-empty array.");
-        int n = arr.Length;
-        // dp[i][j] = 1 (true) if sum j is reachable using first i elements
-        var dp = new int[n + 1, target + 1];
-        dp[0, 0] = 1;
-
-        var rowLabels = new string[n + 1];
-        rowLabels[0] = "∅";
-        for (int i = 1; i <= n; i++)
-            rowLabels[i] = arr[i - 1].ToString();
-        var colLabels = Enumerable.Range(0, target + 1).Select(j => j.ToString()).ToArray();
-
-        int[][] Snap()
-        {
-            var m = new int[n + 1][];
-            for (int r = 0; r <= n; r++)
-            {
-                m[r] = new int[target + 1];
-                for (int c = 0; c <= target; c++)
-                    m[r][c] = dp[r, c];
-            }
-            return m;
-        }
-
-        var steps = new List<AlgorithmStep>();
-        int stepNum = 0;
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = stepNum++,
-                Array = [],
-                Description =
-                    $"Subset sum: [{string.Join(", ", arr)}], target = {target}. "
-                    + "dp[0][0] = 1 (empty set reaches sum 0). All others = 0.",
-                DpMatrix = Snap(),
-                RowLabels = rowLabels,
-                ColLabels = colLabels,
-                HighlightRow = 0,
-                HighlightCol = 0,
-            }
-        );
-
-        for (int i = 1; i <= n; i++)
-        {
-            int num = arr[i - 1];
-            for (int j = 0; j <= target; j++)
-            {
-                dp[i, j] = dp[i - 1, j] == 1 ? 1 : (j >= num && dp[i - 1, j - num] == 1 ? 1 : 0);
-            }
-
-            bool reachable = dp[i, target] == 1;
-            string gained = num > target ? "larger than target — no new sums." : "";
-            if (string.IsNullOrEmpty(gained))
-            {
-                // Summarise newly reachable sums
-                var newSums = Enumerable
-                    .Range(0, target + 1)
-                    .Where(j => dp[i, j] == 1 && dp[i - 1, j] == 0)
-                    .ToList();
-                gained =
-                    newSums.Count > 0
-                        ? $"New reachable sums: {string.Join(", ", newSums)}."
-                        : "No new sums.";
-            }
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = stepNum++,
-                    Array = [],
-                    Description =
-                        $"Add {num}: {gained} dp[{i}][{target}] = {(reachable ? "1 ✓" : "0 ✗")}.",
-                    DpMatrix = Snap(),
-                    RowLabels = rowLabels,
-                    ColLabels = colLabels,
-                    HighlightRow = i,
-                    HighlightCol = target,
-                }
-            );
-        }
-
-        // Backtrack to find one valid subset (if achievable)
-        var bt = new List<int>();
-        var subset = new List<int>();
-        if (dp[n, target] == 1)
-        {
-            int bi = n,
-                bj = target;
-            while (bi > 0 && bj > 0)
-            {
-                if (dp[bi - 1, bj] == 0 && dp[bi, bj] == 1)
-                {
-                    bt.Add(bi);
-                    bt.Add(bj);
-                    subset.Add(arr[bi - 1]);
-                    bj -= arr[bi - 1];
-                }
-                bi--;
-            }
-        }
-
-        string subStr =
-            subset.Count > 0 ? $" Subset: {{{string.Join(" + ", subset)}}} = {target}." : "";
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = stepNum,
-                Array = [],
-                Description =
-                    dp[n, target] == 1
-                        ? $"Target {target} is achievable ✓.{subStr}"
-                        : $"Target {target} is not achievable ✗.",
-                DpMatrix = Snap(),
-                RowLabels = rowLabels,
-                ColLabels = colLabels,
-                BacktrackPath = bt.ToArray(),
-            }
-        );
         return steps;
     }
 

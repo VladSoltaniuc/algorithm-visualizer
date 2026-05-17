@@ -15,9 +15,6 @@ public class BacktrackingController : ControllerBase
         _srv = srv;
     }
 
-    [HttpGet("n-queens/{n:int}")]
-    public IActionResult NQueens(int n) => Ok(_srv.NQueens(n));
-
     [HttpPost("permutations")]
     public IActionResult Permutations([FromBody] int[] input) => Ok(_srv.Permutations(input));
 

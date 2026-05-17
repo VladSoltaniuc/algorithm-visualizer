@@ -40,6 +40,66 @@
   accent-color: #24a152;
 }
 
+.algo-tab-mobile-menu {
+  display: none;
+  position: relative;
+}
+
+.algo-tab-hamburger {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #888;
+  background: none;
+  border: none;
+  border-left: 1px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.algo-tab-hamburger:hover {
+  color: #585858;
+}
+
+.algo-tab-mobile-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  min-width: 150px;
+}
+
+.algo-tab-mobile-dropdown button {
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.algo-tab-mobile-dropdown button:hover {
+  background: #f5f5f5;
+  color: #1a1a2e;
+}
+
+.algo-tab-mobile-dropdown button:first-child {
+  border-radius: 6px 6px 0 0;
+}
+
+.algo-tab-mobile-dropdown button:last-child {
+  border-radius: 0 0 6px 6px;
+}
+
 @media (max-width: 700px) {
   .learned-label {
     display: none;
@@ -50,8 +110,11 @@
   }
 
   .algo-tab-btn {
-    font-size: 0.82rem;
-    padding: 0.5rem 0.6rem;
+    display: none;
+  }
+
+  .algo-tab-mobile-menu {
+    display: block;
   }
 }
 
@@ -106,14 +169,97 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.35rem;
   font-size: 1rem;
   font-weight: 700;
   color: #1a1a2e;
   pointer-events: none;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
   padding: 0 0.5rem;
+}
+
+.algo-rating-badge {
+  pointer-events: auto;
+  position: relative;
+  font-size: 1.3rem;
+  color: #e94560;
+  cursor: help;
+  flex-shrink: 0;
+  margin-left: 0.6rem;
+  transition: color 0.15s, transform 0.15s;
+  user-select: none;
+  padding-bottom: 0.15rem;
+}
+
+.algo-rating-badge:hover {
+  color: #c0364f;
+  transform: scale(1.15);
+}
+
+.algo-rating-tip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  background: #1a1a2e;
+  color: #e2e2f0;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.45;
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+  z-index: 500;
+}
+
+.algo-rating-tip::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: #1a1a2e;
+}
+
+.algo-rating-stars {
+  display: block;
+  font-size: 1.3rem;
+  letter-spacing: -0.04em;
+  color: #f59e0b;
+  margin-bottom: 0.2rem;
+}
+
+.algo-rating-stars-empty {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.algo-rating-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #f59e0b;
+  opacity: 0.85;
+  margin-bottom: 0.45rem;
+}
+
+.algo-rating-text {
+  display: block;
+  color: #c8c8e0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.algo-rating-badge:hover .algo-rating-tip {
+  display: block;
 }
 
 .algo-tab-right {
@@ -175,7 +321,7 @@
 .pros-cons-columns {
   display: flex;
   gap: 2rem;
-  flex-wrap: wrap;
+  padding: 0 1rem;
 }
 
 .pros-list,
@@ -184,7 +330,7 @@
   padding: 0;
   margin: 0;
   flex: 1;
-  min-width: 240px;
+  min-width: 0;
 }
 
 .pro-item,

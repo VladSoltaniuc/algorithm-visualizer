@@ -10,12 +10,6 @@ interface Props {
   inputControls?: React.ReactNode;
 }
 
-/**
- * Renders board/grid state for backtracking algorithms.
- * Detects the grid shape from the array length and slug to choose the right layout:
- *  - N-Queens: arr[row] = col of queen  →  N×N chessboard
- *  - Others (permutations, subsets, combos): linear cell row
- */
 export default function BacktrackingVisualizer({
   steps,
   onRun,
@@ -36,18 +30,6 @@ export default function BacktrackingVisualizer({
         const hl = new Set(step.highlightIndices ?? []);
         const done = new Set(step.sortedIndices ?? []);
         const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;
-
-        // N-Queens: array length = n, values are column positions (-1 = empty)
-        if (slug === "n-queens") {
-          return (
-            <>
-              <NQueensBoard queens={arr} hl={hl} done={done} />
-              <div className={`step-info${isFinal ? " final" : ""}`}>
-                {step.description}
-              </div>
-            </>
-          );
-        }
 
         // Default linear display for permutations, subsets, combos, etc.
         return (
@@ -76,38 +58,3 @@ export default function BacktrackingVisualizer({
   );
 }
 
-function NQueensBoard({
-  queens,
-  hl,
-  done,
-}: {
-  queens: number[];
-  hl: Set<number>;
-  done: Set<number>;
-}) {
-  const n = queens.length;
-  return (
-    <div className="bt-vis">
-      <div
-        className="bt-board"
-        style={{ gridTemplateColumns: `repeat(${n}, 1fr)` }}
-      >
-        {Array.from({ length: n * n }, (_, idx) => {
-          const row = Math.floor(idx / n);
-          const col = idx % n;
-          const isQueen = queens[row] === col;
-          const isDark = (row + col) % 2 === 1;
-          let cls = `bt-square${isDark ? " dark" : ""}`;
-          if (isQueen && done.has(row)) cls += " done";
-          else if (isQueen && hl.has(row)) cls += " active";
-          else if (isQueen) cls += " queen";
-          return (
-            <div key={idx} className={cls}>
-              {isQueen ? "♛" : ""}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}

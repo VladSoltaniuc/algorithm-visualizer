@@ -10,12 +10,22 @@ import {
   nrTheoryConfig,
 } from "../../config/algorithms";
 import { useLearned } from "../../context/LearnedContext";
+import { algorithmRatings } from "../../config/ratings";
 import "./Navigation.css";
+
+function Stars({ n }: Readonly<{ n: number }>) {
+  return (
+    <span className="nav-stars">
+      {"★".repeat(n)}
+      <span className="nav-stars-empty">{"★".repeat(5 - n)}</span>
+    </span>
+  );
+}
 
 interface Tab {
   label: string;
   basePath: string;
-  items: { name: string; path: string }[];
+  items: { name: string; path: string; rating: number }[];
 }
 
 function from(slugs: string[]) {
@@ -28,10 +38,12 @@ function from(slugs: string[]) {
     ...backtrackingConfig,
     ...nrTheoryConfig,
   ];
-  return slugs.map((slug) => {
-    const a = all.find((c) => c.slug === slug)!;
-    return { name: a.name, path: `/${a.category}/${a.slug}` };
-  });
+  return slugs
+    .map((slug) => {
+      const a = all.find((c) => c.slug === slug)!;
+      return { name: a.name, path: `/${a.category}/${a.slug}`, rating: algorithmRatings[slug]?.stars ?? 0 };
+    })
+    .sort((a, b) => b.rating - a.rating);
 }
 
 const tabs: Tab[] = [
@@ -65,7 +77,7 @@ const tabs: Tab[] = [
   {
     label: "Transform",
     basePath: "/transform",
-    items: from(["reversal", "run-length-encoding", "huffman"]),
+    items: from(["reversal", "huffman"]),
   },
   {
     label: "Trees",
@@ -87,7 +99,6 @@ const tabs: Tab[] = [
       "bfs",
       "dfs",
       "dijkstra",
-      "union-find",
       "topological-sort",
       "cycle-detection",
     ]),
@@ -100,20 +111,18 @@ const tabs: Tab[] = [
       "coin-change",
       "lcs",
       "knapsack",
-      "levenshtein",
       "lis",
-      "subset-sum",
     ]),
   },
   {
     label: "Backtracking",
     basePath: "/backtracking",
-    items: from(["n-queens", "combination-sum", "permutations"]),
+    items: from(["combination-sum", "permutations"]),
   },
   {
     label: "Nr. Theory",
     basePath: "/number-theory",
-    items: from(["sieve", "gcd", "prime-factorization", "bit-manipulation"]),
+    items: from(["bit-manipulation"]),
   },
 ];
 
@@ -150,8 +159,8 @@ export default function Navigation() {
                       `nav-subtab${isActive ? " active" : ""}${learned ? " learned" : ""}`
                     }
                   >
-                    {learned ? "✅ " : ""}
-                    {item.name}
+                    <span>{learned ? "✅ " : ""}{item.name}</span>
+                    <Stars n={item.rating} />
                   </NavLink>
                 );
               })}
@@ -197,8 +206,8 @@ export default function Navigation() {
                           `nav-mobile-item${isActive ? " active" : ""}${learned ? " learned" : ""}`
                         }
                       >
-                        {learned ? "✅ " : ""}
-                        {item.name}
+                        <span>{learned ? "✅ " : ""}{item.name}</span>
+                        <Stars n={item.rating} />
                       </NavLink>
                     );
                   })}

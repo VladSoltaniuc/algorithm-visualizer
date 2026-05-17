@@ -240,22 +240,6 @@ export const stringConfig: AlgorithmConfig[] = [
     ],
     ytTutorial: 'https://www.youtube.com/watch?v=OD9PjLapAOQ',
   },
-  {
-    name: 'Run-Length Encoding', slug: 'run-length-encoding', endpoint: 'run-length-encoding', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'aaabbccdddd',
-    description: 'Imagine you\'re sending a text message describing a wall that goes "aaabbccdddd". Instead of typing every letter out, you write "3a2b2c4d" — meaning three a\'s, two b\'s, two c\'s, four d\'s. That\'s Run-Length Encoding. It scans the string from left to right, counts how many times each character repeats in a row, and writes the count followed by the character. It\'s one of the simplest forms of compression and works best when the same character repeats many times in a row.',
-    usecase: 'Simple image compression (BMP, TIFF, fax machines), game map storage, and any data with long runs of repeated values.',
-    pros: [
-      'O(n) time — single pass through the string',
-      'O(1) extra space — output is built directly',
-      'Dead simple to implement — both encoding and decoding',
-    ],
-    cons: [
-      'Can increase size — "abcd" becomes "1a1b1c1d" (doubles the length)',
-      'Only effective when the same character repeats many times consecutively',
-      'Far weaker compression than Huffman, LZ77, or other modern schemes',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=h-TGpvQYyDI',
-  },
 ];
 
 export const treeConfig: AlgorithmConfig[] = [
@@ -511,22 +495,6 @@ export const graphConfig: AlgorithmConfig[] = [
     directed: true,
   },
   {
-    name: 'Union-Find', slug: 'union-find', endpoint: 'union-find', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to;...)', defaultInput: '5;0,1;1,2;3,4',
-    description: 'This is not an algorithm, but a Data Structure which you will need to know to learn more advanced concepts such as Kruskal, but it\'s quite easy to understand. Imagine you have a bunch of colored magnets scattered on a table — each one is its own little group. When you pick up two magnets and touch them together, they snap into one cluster. That\'s a Union. Now if you bring a third magnet near any magnet in that cluster, the whole thing sticks together — the clusters merge. Find just answers: "which cluster does this magnet belong to?" You check by following magnets until you reach the one at the center that doesn\'t point anywhere else — that\'s the root. With path compression, every magnet you touch along the way gets re-attached directly to the root, so next time the lookup is instant. With union by rank, you always attach the smaller cluster onto the bigger one so the tree stays flat.',
-    usecase: 'Kruskal\'s MST implementation, network connectivity queries, image segmentation (connected pixel regions), and equivalence class tracking.',
-    pros: [
-      'Nearly O(1) amortized per operation — with path compression and union by rank, operations take O(α(n)) which is effectively constant',
-      'O(n) space — one parent entry per element',
-      'Extremely fast for connectivity queries',
-    ],
-    cons: [
-      'Only tracks connectivity — doesn\'t store the actual path or edges between nodes',
-      'Not suitable for directed graphs — only works with undirected connectivity',
-      'Doesn\'t support disconnecting (splitting) groups efficiently',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=ibjEGG7ylHk',
-  },
-  {
     name: "Kruskal's MST", slug: 'kruskal', endpoint: 'kruskal', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to,weight;...)', defaultInput: '4;0,1,10;0,2,6;0,3,5;1,3,15;2,3,4',
     description: 'Imagine you\'re building a road network to connect a group of cities as cheaply as possible — every city must be reachable but you want to spend the least on road construction. Kruskal\'s algorithm sorts all possible roads by cost, cheapest first, and goes through them one by one. It adds a road to the network only if it connects two cities that aren\'t already connected — skipping any road that would create a redundant loop. It keeps adding roads until every city is connected. The result is a Minimum Spanning Tree — the cheapest possible network that reaches everywhere.',
     usecase: 'Network design (laying cable/fiber), clustering (removing the most expensive edges), circuit design, and approximation algorithms for NP-hard problems.',
@@ -641,38 +609,6 @@ export const dpConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=H9bfqozjoqs',
   },
   {
-    name: 'Levenshtein Distance', slug: 'levenshtein', endpoint: 'levenshtein', category: 'dp', inputType: 'text', inputLabel: 'Text 1', defaultInput: 'kitten', needsPattern: true, patternLabel: 'Text 2', defaultPattern: 'sitting',
-    description: 'Imagine you mistyped "kitten" and meant to write "sitting". How many fixes does it take to get from one to the other? You can insert a letter, delete a letter, or swap a letter for a different one — each counts as one edit. Levenshtein Distance finds the minimum number of such edits needed. It builds a grid comparing every prefix of one word against every prefix of the other. Each cell answers: what\'s the cheapest way to match these two prefixes? It checks three neighbors — the cell above (delete), to the left (insert), and diagonal (replace or free if the characters match) — and picks the cheapest option, building the full answer bottom-up.',
-    usecase: 'Spell checkers, autocorrect, DNA/protein sequence alignment, diff tools, and fuzzy string matching.',
-    pros: [
-      'O(n × m) time — optimal for this problem',
-      'Handles all three edit operations uniformly',
-      'O(min(n, m)) space with rolling-row optimization',
-    ],
-    cons: [
-      'O(n × m) space for the full grid if you need to reconstruct the edits',
-      'Quadratic — slow on very long strings (thousands of characters)',
-      'Doesn\'t handle transpositions — Damerau-Levenshtein adds that',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=MiqoA-yF-0M',
-  },
-  {
-    name: 'Subset Sum', slug: 'subset-sum', endpoint: 'subset-sum', category: 'dp', inputLabel: 'Set', defaultInput: '3,34,4,12,5,2', needsTarget: true, targetLabel: 'Target', defaultTarget: 9,
-    description: 'Imagine you have a bag of numbered stones — 3, 34, 4, 12, 5, 2 — and you want to know if any combination of them adds up to exactly 9. You don\'t need to find the combination, just whether it\'s possible. The algorithm builds a grid where each row adds one more stone to consider, and each column represents a target sum from 0 up to 9. Each cell answers: is it possible to reach this sum using only the stones considered so far? It fills the grid by checking: can I reach this sum without the current stone, or can I reach what\'s left after using it?',
-    usecase: 'Scheduling, resource partitioning, cryptographic knapsack problems, and decision problems involving subset selection.',
-    pros: [
-      'O(n × target) time — pseudo-polynomial',
-      'O(target) space with 1D array optimization',
-      'Simple boolean DP — each cell is just true/false',
-    ],
-    cons: [
-      'NP-hard in general — pseudo-polynomial time depends on the target value, not just the number of elements',
-      'Not efficient when the target is astronomically large',
-      'Only answers yes/no — finding the actual subset requires backtracking through the grid',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=s6FhG--P7z0',
-  },
-  {
     name: 'Climbing Stairs', slug: 'climbing-stairs', endpoint: 'climbing-stairs', category: 'dp', inputType: 'number', inputLabel: 'Stairs (n)', defaultInput: '8',
     description: 'Imagine a staircase with 8 steps. You can take either 1 step or 2 steps at a time. How many different ways can you reach the top? It turns out the answer follows the same pattern as Fibonacci. To reach step 8, you either came from step 7 (took 1 step) or from step 6 (took 2 steps). So the number of ways to reach step 8 is just the number of ways to reach step 7 plus the number of ways to reach step 6. The algorithm builds this up from the bottom — starting from step 1 and step 2 — remembering each answer until it reaches the top.',
     usecase: 'Counting path problems, combinatorics, probability calculations, and as a gateway to understanding DP recurrences.',
@@ -690,22 +626,6 @@ export const dpConfig: AlgorithmConfig[] = [
 ];
 
 export const backtrackingConfig: AlgorithmConfig[] = [
-  {
-    name: 'N-Queens', slug: 'n-queens', endpoint: 'n-queens', category: 'backtracking', inputType: 'number', inputLabel: 'Board size (n)', defaultInput: '4',
-    description: 'Imagine placing 4 queens on a 4×4 chessboard so that no queen can attack another — no two queens can share the same row, column, or diagonal. The algorithm places one queen at a time, row by row. For each row it tries every column, and before placing a queen it checks: is this square safe from all queens already placed? If yes, it places it and moves to the next row. If it gets stuck — no safe square exists in the current row — it backtracks to the previous row, moves that queen to the next available safe square, and tries again. It keeps placing and backtracking until all queens are safely placed.',
-    usecase: 'Constraint satisfaction problems, VLSI chip testing, parallel memory storage schemes, and as a classic example of backtracking.',
-    pros: [
-      'Prunes invalid branches early — avoids exploring configurations that already violate constraints',
-      'O(n) space for storing queen positions',
-      'Finds all valid solutions, not just one',
-    ],
-    cons: [
-      'O(n!) time worst case — the number of configurations grows factorially',
-      'Exponential — impractical for very large n (though solutions exist for all n >= 4)',
-      'Brute-force at its core — just smarter than trying every possible placement',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=Ph95IHmRp5M',
-  },
   {
     name: 'Generate Permutations', slug: 'permutations', endpoint: 'permutations', category: 'backtracking', inputLabel: 'Array', defaultInput: '1,2,3',
     description: 'Imagine you have three numbered tiles — 1, 2, 3 — and you want to list every possible order they can be arranged in. The algorithm builds each arrangement one position at a time. It picks a tile for the first position, then picks from the remaining tiles for the second position, then the last tile fills the third. Every time it completes a full arrangement, it records it, then backtracks and swaps in a different tile to explore the next arrangement. It keeps doing this until every possible ordering has been found.',
@@ -771,54 +691,6 @@ export const backtrackingConfig: AlgorithmConfig[] = [
 ];
 
 export const nrTheoryConfig: AlgorithmConfig[] = [
-  {
-    name: 'Sieve of Eratosthenes', slug: 'sieve', endpoint: 'sieve', category: 'number-theory', inputType: 'number', inputLabel: 'Upper bound (n)', defaultInput: '30',
-    description: 'Imagine you have a list of every number from 2 to 30 and you want to cross out all the non-primes, leaving only the primes behind. Start at 2 — the first prime. Cross out every multiple of 2: 4, 6, 8, and so on. Move to the next uncrossed number — 3. Cross out every multiple of 3. Keep going: the next uncrossed number is always a prime, and you cross out all its multiples. By the time you reach the end of the list, every number still standing is a prime. You never had to test any of them individually — you just kept eliminating their multiples.',
-    usecase: 'Generating primes for cryptography (RSA key generation), competitive programming, prime-based number theory problems, and primality lookups.',
-    pros: [
-      'O(n log log n) time — extremely fast for generating all primes up to n',
-      'Simple to implement — just mark multiples',
-      'One pass gives you every prime up to n — no per-number testing needed',
-    ],
-    cons: [
-      'O(n) space — must store a boolean for every number up to n',
-      'Not suitable for very large n (billions+) — memory becomes the bottleneck',
-      'Only generates primes in a range starting from 2 — use segmented sieve for arbitrary ranges',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=pKvGYOnO9Ao',
-  },
-  {
-    name: 'Euclidean Algorithm (GCD)', slug: 'gcd', endpoint: 'gcd', category: 'number-theory', inputType: 'numbers', inputLabel: 'a, b', defaultInput: '48,18',
-    description: 'Imagine you have two pieces of rope — one 48cm and one 18cm — and you want to find the longest ruler that measures both perfectly with no leftover. The Euclidean algorithm works like this: divide the longer rope by the shorter one and keep only the remainder. Now repeat with the shorter rope and the remainder. Keep going until the remainder is zero — the last non-zero remainder is your answer. For 48 and 18: 48 / 18 leaves 12, then 18 / 12 leaves 6, then 12 / 6 leaves 0. The answer is 6 — the greatest common divisor.',
-    usecase: 'Simplifying fractions, RSA cryptography (computing modular inverses), least common multiple (LCM) via GCD, and modular arithmetic.',
-    pros: [
-      'O(log(min(a, b))) time — converges extremely fast',
-      'O(1) space with iterative implementation',
-      'One of the oldest known algorithms — proven correct for millennia',
-    ],
-    cons: [
-      'Recursive version uses O(log(min(a, b))) stack space',
-      'Only finds GCD — LCM requires an additional multiplication step',
-      'Extended Euclidean algorithm needed for modular inverses — slightly more complex',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=p5gn2hj51hs',
-  },
-  {
-    name: 'Prime Factorization', slug: 'prime-factorization', endpoint: 'prime-factorization', category: 'number-theory', inputType: 'number', inputLabel: 'n', defaultInput: '84',
-    description: 'Imagine breaking a number like 84 apart into the smallest possible building blocks — numbers that can\'t be divided any further. These building blocks are called prime numbers. The algorithm starts by trying to divide 84 by the smallest prime, 2. It divides as many times as it can: 84 / 2 = 42, 42 / 2 = 21. Now 21 isn\'t divisible by 2, so it tries 3: 21 / 3 = 7. And 7 is itself a prime, so it stops. The result is 2 * 2 * 3 * 7 — the unique set of prime building blocks that multiply together to make 84.',
-    usecase: 'Cryptography (RSA security relies on factorization being hard for large numbers), number theory, divisor counting, and simplifying mathematical expressions.',
-    pros: [
-      'O(sqrt(n)) time — only needs to check divisors up to the square root',
-      'O(log n) space — the number of prime factors is at most log2(n)',
-      'Simple trial division — easy to implement',
-    ],
-    cons: [
-      'O(sqrt(n)) is slow for very large numbers (hundreds of digits) — basis of RSA security',
-      'Trial division is not the fastest method — Pollard\'s rho and number field sieve are faster for large inputs',
-      'No known polynomial-time algorithm for general factorization',
-    ],
-    ytTutorial: 'https://www.youtube.com/watch?v=6PDtgHhpCHo',
-  },
   {
     name: 'Bit Manipulation', slug: 'bit-manipulation', endpoint: 'bit-manipulation', category: 'number-theory', inputType: 'number', inputLabel: 'n', defaultInput: '42',
     description: 'Every number in a computer is stored as a sequence of 1s and 0s — called bits. For example, the number 42 is stored as 101010 in binary. Bit manipulation is a set of tricks that work directly on these 1s and 0s instead of the number as a whole, making certain operations extremely fast. AND keeps a bit only if both numbers have a 1 there. OR keeps a bit if either number has a 1 there. XOR keeps a bit only if exactly one of the two numbers has a 1 there. These simple rules unlock surprisingly powerful shortcuts — like checking if a number is even, counting how many 1s it has, or swapping two values without using a third variable.',

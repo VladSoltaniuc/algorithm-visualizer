@@ -18,7 +18,7 @@ export default function VisControls({
   hideDescription,
   inputControls,
   children,
-}: Props) {
+}: Readonly<Props>) {
   const { step, currentStep, speed, setSpeed, isPlaying, total } =
     useStepPlayer(steps);
 
@@ -27,7 +27,7 @@ export default function VisControls({
       <div className="vis-controls">
         {inputControls}
         <label className="speed-control">
-          Speed
+          {"Speed"}
           <input
             type="range"
             min={50}

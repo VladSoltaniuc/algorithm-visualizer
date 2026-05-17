@@ -10,11 +10,5 @@ async function get(url: string): Promise<AlgorithmStep[]> {
 
 
 export const nrTheoryApi: Record<string, (...args: unknown[]) => Promise<AlgorithmStep[]>> = {
-  sieve: (n: unknown) => get(`${BASE}/sieve/${n}`),
-  gcd: (input: unknown) => {
-    const parts = String(input).split(',').map(Number);
-    return get(`${BASE}/gcd/${parts[0]}/${parts[1]}`);
-  },
-  primeFactorization: (n: unknown) => get(`${BASE}/prime-factorization/${n}`),
   bitManipulation: (n: unknown) => get(`${BASE}/bit-manipulation/${n}`),
 };

@@ -1,4 +1,4 @@
-using AlgorithmVisualizer.Api.Models;
+﻿using AlgorithmVisualizer.Api.Models;
 
 namespace AlgorithmVisualizer.Api.Services;
 
@@ -347,7 +347,7 @@ public class StringService
     }
 
     // 4. Rabin-Karp
-    // Time: O(n + m) avg, O(n · m) worst
+    // Time: O(n + m) avg, O(n Â· m) worst
     // Space: O(1)
     public List<AlgorithmStep> RabinKarp(string text, string pattern)
     {
@@ -405,7 +405,7 @@ public class StringService
                 StepNumber = step++,
                 Array = (int[])codes.Clone(),
                 Description =
-                    $"Initial hashes computed — pattern hash={pHash}, window[0..{m - 1}] hash={tHash}",
+                    $"Initial hashes computed â€” pattern hash={pHash}, window[0..{m - 1}] hash={tHash}",
                 HighlightIndices = Enumerable.Range(0, m).ToArray(),
                 PatternArray = patternCodes,
                 PatternOffset = 0,
@@ -426,8 +426,8 @@ public class StringService
                     StepNumber = step++,
                     Array = (int[])codes.Clone(),
                     Description = hashMatch
-                        ? $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} == pattern hash={pHash} — hashes match, verifying characters…"
-                        : $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} ≠ pattern hash={pHash} — skip",
+                        ? $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} == pattern hash={pHash} â€” hashes match, verifying charactersâ€¦"
+                        : $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} â‰  pattern hash={pHash} â€” skip",
                     HighlightIndices = Enumerable.Range(i, m).ToArray(),
                     PatternArray = patternCodes,
                     PatternOffset = i,
@@ -463,7 +463,7 @@ public class StringService
                             StepNumber = step++,
                             Array = (int[])codes.Clone(),
                             Description =
-                                $"Hash collision! \"{window}\" ≠ \"{pattern}\" — spurious hit",
+                                $"Hash collision! \"{window}\" â‰  \"{pattern}\" â€” spurious hit",
                             HighlightIndices = Enumerable.Range(i, m).ToArray(),
                             PatternArray = patternCodes,
                             PatternOffset = i,
@@ -486,7 +486,7 @@ public class StringService
                         StepNumber = step++,
                         Array = (int[])codes.Clone(),
                         Description =
-                            $"Rolling hash: remove '{text[i]}', add '{text[i + m]}' → new hash={tHash}",
+                            $"Rolling hash: remove '{text[i]}', add '{text[i + m]}' â†’ new hash={tHash}",
                         HighlightIndices = Enumerable.Range(i + 1, m).ToArray(),
                         PatternArray = patternCodes,
                         PatternOffset = i + 1,
@@ -512,8 +512,8 @@ public class StringService
     }
 
     // 5. Longest Common Subsequence
-    // Time: O(m · n)
-    // Space: O(m · n)
+    // Time: O(m Â· n)
+    // Space: O(m Â· n)
     public List<AlgorithmStep> LongestCommonSubsequence(string text1, string text2)
     {
         ValidateText(text1);
@@ -548,7 +548,7 @@ public class StringService
                 StepNumber = step++,
                 Array = new int[n + 1],
                 Description =
-                    $"LCS of \"{text1}\" and \"{text2}\" — initialise ({m + 1})x({n + 1}) matrix with zeros",
+                    $"LCS of \"{text1}\" and \"{text2}\" â€” initialise ({m + 1})x({n + 1}) matrix with zeros",
                 DpMatrix = SnapshotMatrix(),
                 RowHeaders = rowHeaders,
                 ColHeaders = colHeaders,
@@ -623,7 +623,7 @@ public class StringService
         return steps;
     }
 
-    // 6. Longest Palindromic Substring (Manacher’s Algorithm)
+    // 6. Longest Palindromic Substring (Manacherâ€™s Algorithm)
     // Time: O(n)
     // Space: O(n)
     public List<AlgorithmStep> LongestPalindrome(string text)
@@ -658,7 +658,7 @@ public class StringService
                 P[i] = P[mirror];
                 rule = "R1";
                 outcome =
-                    $"mirror P[{mirror}]={P[mirror]} < distToBorder={distToBorder} → copy P[{i}]={P[i]}";
+                    $"mirror P[{mirror}]={P[mirror]} < distToBorder={distToBorder} â†’ copy P[{i}]={P[i]}";
             }
             else if (insidePalindrome && P[mirror] == distToBorder)
             {
@@ -666,13 +666,13 @@ public class StringService
                 P[i] = P[mirror];
                 rule = "R2";
                 outcome =
-                    $"mirror P[{mirror}]={P[mirror]} = distToBorder={distToBorder} → start at {P[i]}, explore";
+                    $"mirror P[{mirror}]={P[mirror]} = distToBorder={distToBorder} â†’ start at {P[i]}, explore";
                 // expand below
                 while (
                     i - P[i] - 1 >= 0 && i + P[i] + 1 < tLen && T[i - P[i] - 1] == T[i + P[i] + 1]
                 )
                     P[i]++;
-                outcome += $" → P[{i}]={P[i]}";
+                outcome += $" â†’ P[{i}]={P[i]}";
             }
             else if (insidePalindrome && P[mirror] > distToBorder)
             {
@@ -680,13 +680,13 @@ public class StringService
                 P[i] = distToBorder;
                 rule = "R3";
                 outcome =
-                    $"mirror P[{mirror}]={P[mirror]} > distToBorder={distToBorder} → start at {P[i]}, explore";
+                    $"mirror P[{mirror}]={P[mirror]} > distToBorder={distToBorder} â†’ start at {P[i]}, explore";
                 // expand below
                 while (
                     i - P[i] - 1 >= 0 && i + P[i] + 1 < tLen && T[i - P[i] - 1] == T[i + P[i] + 1]
                 )
                     P[i]++;
-                outcome += $" → P[{i}]={P[i]}";
+                outcome += $" â†’ P[{i}]={P[i]}";
             }
             else
             {
@@ -698,7 +698,7 @@ public class StringService
                     i - P[i] - 1 >= 0 && i + P[i] + 1 < tLen && T[i - P[i] - 1] == T[i + P[i] + 1]
                 )
                     P[i]++;
-                outcome += $" → P[{i}]={P[i]}";
+                outcome += $" â†’ P[{i}]={P[i]}";
             }
 
             // Update rightmost palindrome boundary
@@ -710,9 +710,9 @@ public class StringService
             }
 
             // Build description
-            string desc = $"i={i} \'{T[i]}\': {rule} — {outcome}";
+            string desc = $"i={i} \'{T[i]}\': {rule} â€” {outcome}";
             if (updatedCR)
-                desc += $"  [C→{C}, R→{R}]";
+                desc += $"  [Câ†’{C}, Râ†’{R}]";
 
             // Emit step: show palindrome span for non-trivial (P[i] >= 2)
             // or show rule application for mirror-optimised steps
@@ -814,7 +814,7 @@ public class StringService
                 {
                     StepNumber = step,
                     Array = (int[])codes.Clone(),
-                    Description = "Pattern longer than text — no anagrams",
+                    Description = "Pattern longer than text â€” no anagrams",
                 }
             );
             return steps;
@@ -843,7 +843,7 @@ public class StringService
                         Array = (int[])codes.Clone(),
                         Description = match
                             ? $"Anagram found at index {ws}: \"{text.Substring(ws, m)}\""
-                            : $"Window [{ws}..{i}]: \"{text.Substring(ws, m)}\" — not anagram",
+                            : $"Window [{ws}..{i}]: \"{text.Substring(ws, m)}\" â€” not anagram",
                         HighlightIndices = Enumerable.Range(ws, m).ToArray(),
                         SortedIndices = match ? Enumerable.Range(ws, m).ToArray() : [],
                     }
@@ -918,59 +918,4 @@ public class StringService
         return steps;
     }
 
-    // 9. Run-Length Encoding
-    // Time: O(n)
-    // Space: O(n)
-    public List<AlgorithmStep> RunLengthEncoding(string text)
-    {
-        ValidateText(text);
-        var codes = ToCharCodes(text);
-        var steps = new List<AlgorithmStep>();
-        int step = 0;
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step++,
-                Array = (int[])codes.Clone(),
-                Description = $"Run-Length Encoding of \"{text}\"",
-            }
-        );
-
-        var result = new System.Text.StringBuilder();
-        int i = 0;
-        while (i < text.Length)
-        {
-            char c = text[i];
-            int count = 0;
-            int start = i;
-            while (i < text.Length && text[i] == c)
-            {
-                count++;
-                i++;
-            }
-
-            result.Append(c).Append(count);
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = (int[])codes.Clone(),
-                    Description = $"Run: '{c}' × {count} at [{start}..{i - 1}]",
-                    HighlightIndices = Enumerable.Range(start, count).ToArray(),
-                }
-            );
-        }
-
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step,
-                Array = (int[])codes.Clone(),
-                Description = $"Encoded: \"{result}\"",
-                SortedIndices = Enumerable.Range(0, codes.Length).ToArray(),
-            }
-        );
-        return steps;
-    }
 }

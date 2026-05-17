@@ -16,6 +16,7 @@ import DPVisualizer from "../../components/DPVisualizer/DPVisualizer";
 import BacktrackingVisualizer from "../../components/BacktrackingVisualizer/BacktrackingVisualizer";
 import NrTheoryVisualizer from "../../components/NrTheoryVisualizer/NrTheoryVisualizer";
 import TreeVisualizer from "../../components/TreeVisualizer/TreeVisualizer";
+import { algorithmRatings } from "../../config/ratings";
 import type { AlgorithmStep } from "../../types";
 import "./AlgorithmPage.css";
 
@@ -38,6 +39,14 @@ const apiMap: Record<
 const slugToApiKey = (slug: string): string =>
   slug.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
 
+const ratingLabels: Record<number, string> = {
+  1: "Rarely applicable",
+  2: "Niche use",
+  3: "Situational",
+  4: "Broadly useful",
+  5: "Reach for it constantly",
+};
+
 export default function AlgorithmPage() {
   const { category, slug } = useParams<{ category: string; slug: string }>();
   const { isLearned, toggle } = useLearned();
@@ -55,9 +64,8 @@ export default function AlgorithmPage() {
   const [loading, setLoading] = useState(false);
   const [spamPrevention, setSpamPrevention] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"what" | "usecase" | "proscons">(
-    "what",
-  );
+  const [activeTab, setActiveTab] = useState<"what" | "proscons">("what");
+  const [mobileTabOpen, setMobileTabOpen] = useState(false);
 
   const [graphData, setGraphData] = useState<{
     nodeCount: number;
@@ -254,13 +262,7 @@ export default function AlgorithmPage() {
             className={`algo-tab-btn${activeTab === "what" ? " active" : ""}`}
             onMouseEnter={() => setActiveTab("what")}
           >
-            What is it?
-          </button>
-          <button
-            className={`algo-tab-btn${activeTab === "usecase" ? " active" : ""}`}
-            onMouseEnter={() => setActiveTab("usecase")}
-          >
-            What for?
+            Explanation
           </button>
           <button
             className={`algo-tab-btn${activeTab === "proscons" ? " active" : ""}`}
@@ -268,7 +270,40 @@ export default function AlgorithmPage() {
           >
             Pros &amp; Cons
           </button>
-          <span className="algo-tab-title">{config.name}</span>
+          <div className="algo-tab-mobile-menu">
+            <button
+              className="algo-tab-hamburger"
+              onClick={() => setMobileTabOpen((o) => !o)}
+            >
+              ☰ {activeTab === "what" ? "Explanation" : "Pros & Cons"}
+            </button>
+            {mobileTabOpen && (
+              <div className="algo-tab-mobile-dropdown">
+                <button onClick={() => { setActiveTab("what"); setMobileTabOpen(false); }}>
+                  Explanation
+                </button>
+                <button onClick={() => { setActiveTab("proscons"); setMobileTabOpen(false); }}>
+                  Pros &amp; Cons
+                </button>
+              </div>
+            )}
+          </div>
+          <span className="algo-tab-title">
+            {config.name}
+            {algorithmRatings[slug] && (
+              <span className="algo-rating-badge">
+                ⓘ
+                <span className="algo-rating-tip">
+                  <span className="algo-rating-stars">
+                    {"★".repeat(algorithmRatings[slug].stars)}
+                    <span className="algo-rating-stars-empty">{"★".repeat(5 - algorithmRatings[slug].stars)}</span>
+                  </span>
+                  <span className="algo-rating-label">{ratingLabels[algorithmRatings[slug].stars]}</span>
+                  <span className="algo-rating-text">{algorithmRatings[slug].tooltip}</span>
+                </span>
+              </span>
+            )}
+          </span>
           <div className="algo-tab-right">
             {config.ytTutorial && (
               <a
@@ -305,23 +340,16 @@ export default function AlgorithmPage() {
           {activeTab === "what" && (
             <p className="algo-tab-text">{config.description}</p>
           )}
-          {activeTab === "usecase" && (
-            <p className="algo-tab-text">{config.usecase}</p>
-          )}
           {activeTab === "proscons" && (
             <div className="pros-cons-columns">
               <ul className="pros-list">
                 {config.pros.map((pro, i) => (
-                  <li key={i} className="pro-item">
-                    {pro}
-                  </li>
+                  <li key={i} className="pro-item">{pro}</li>
                 ))}
               </ul>
               <ul className="cons-list">
                 {config.cons.map((con, i) => (
-                  <li key={i} className="con-item">
-                    {con}
-                  </li>
+                  <li key={i} className="con-item">{con}</li>
                 ))}
               </ul>
             </div>

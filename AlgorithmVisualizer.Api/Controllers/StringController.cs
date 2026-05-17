@@ -44,8 +44,4 @@ public class StringController : ControllerBase
 
     [HttpPost("reversal")]
     public IActionResult Reversal([FromBody] StringRequest req) => Ok(_srv.Reversal(req.Text));
-
-    [HttpPost("run-length-encoding")]
-    public IActionResult RunLengthEncoding([FromBody] StringRequest req) =>
-        Ok(_srv.RunLengthEncoding(req.Text));
 }

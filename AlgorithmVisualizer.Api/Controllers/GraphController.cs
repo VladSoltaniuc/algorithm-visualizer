@@ -32,9 +32,6 @@ public class GraphController : ControllerBase
     public IActionResult CycleDetection([FromBody] GraphRequest req) =>
         Ok(_srv.CycleDetection(req));
 
-    [HttpPost("union-find")]
-    public IActionResult UnionFind([FromBody] GraphRequest req) => Ok(_srv.UnionFind(req));
-
     [HttpPost("kruskal")]
     public IActionResult Kruskal([FromBody] GraphRequest req) => Ok(_srv.Kruskal(req));
 

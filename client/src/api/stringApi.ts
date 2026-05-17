@@ -29,6 +29,4 @@ export const stringApi: Record<string, (...args: unknown[]) => Promise<Algorithm
     postJson(`${BASE}/anagram-detection`, { text, pattern: pattern ?? '' }),
   reversal: (text: unknown) =>
     postJson(`${BASE}/reversal`, { text, pattern: '' }),
-  runLengthEncoding: (text: unknown) =>
-    postJson(`${BASE}/run-length-encoding`, { text, pattern: '' }),
 };

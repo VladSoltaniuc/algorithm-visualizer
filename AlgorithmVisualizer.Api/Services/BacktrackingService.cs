@@ -1,95 +1,11 @@
-using AlgorithmVisualizer.Api.Models;
+﻿using AlgorithmVisualizer.Api.Models;
 
 namespace AlgorithmVisualizer.Api.Services;
 
 public class BacktrackingService
 {
-    // 1. N-Queens
-    // Time: O(n!)
-    // Space: O(n)
-    public List<AlgorithmStep> NQueens(int n)
-    {
-        if (n < 1)
-            throw new ArgumentException("n must be at least 1.");
-        var board = new int[n];
-        Array.Fill(board, -1);
-        var steps = new List<AlgorithmStep>();
-        int step = 0;
-        steps.Add(
-            new AlgorithmStep
-            {
-                StepNumber = step++,
-                Array = (int[])board.Clone(),
-                Description = $"N-Queens: placing {n} queens (-1 = empty)",
-            }
-        );
-        NQueensHelper(board, 0, n, steps, ref step);
-        return steps;
-    }
-
-    private static bool NQueensHelper(
-        int[] board,
-        int row,
-        int n,
-        List<AlgorithmStep> steps,
-        ref int step
-    )
-    {
-        if (row == n)
-        {
-            steps.Add(
-                new AlgorithmStep
-                {
-                    StepNumber = step++,
-                    Array = (int[])board.Clone(),
-                    Description =
-                        $"Solution found! Queens at columns: [{string.Join(", ", board)}]",
-                    SortedIndices = Enumerable.Range(0, n).ToArray(),
-                }
-            );
-            return true;
-        }
-        for (int col = 0; col < n; col++)
-        {
-            if (IsSafeQueen(board, row, col))
-            {
-                board[row] = col;
-                steps.Add(
-                    new AlgorithmStep
-                    {
-                        StepNumber = step++,
-                        Array = (int[])board.Clone(),
-                        Description = $"Place queen at row {row}, col {col}",
-                        HighlightIndices = [row],
-                    }
-                );
-                if (NQueensHelper(board, row + 1, n, steps, ref step))
-                    return true;
-                board[row] = -1;
-                steps.Add(
-                    new AlgorithmStep
-                    {
-                        StepNumber = step++,
-                        Array = (int[])board.Clone(),
-                        Description = $"Backtrack row {row}",
-                        HighlightIndices = [row],
-                    }
-                );
-            }
-        }
-        return false;
-    }
-
-    private static bool IsSafeQueen(int[] board, int row, int col)
-    {
-        for (int i = 0; i < row; i++)
-            if (board[i] == col || Math.Abs(board[i] - col) == Math.Abs(i - row))
-                return false;
-        return true;
-    }
-
     // 3. Generate All Permutations
-    // Time: O(n! · n)
+    // Time: O(n! Â· n)
     // Space: O(n)
     public List<AlgorithmStep> Permutations(int[] arr)
     {
@@ -279,7 +195,7 @@ public class BacktrackingService
     }
 
     // 9. Palindrome Partitioning
-    // Time: O(n · 2^n)
+    // Time: O(n Â· 2^n)
     // Space: O(n)
     public List<AlgorithmStep> PalindromePartitioning(string text)
     {

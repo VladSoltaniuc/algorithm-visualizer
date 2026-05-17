@@ -10,12 +10,6 @@ interface Props {
   inputControls?: React.ReactNode;
 }
 
-/**
- * Number Theory visualizer.
- *  - Sieve: large bitmap grid (index = number, 1 = prime, 0 = composite)
- *  - Small arrays (GCD): labeled value cards
- *  - Growing lists (PrimeFactorization): sequential cells
- */
 export default function NrTheoryVisualizer({
   steps,
   onRun,
@@ -36,18 +30,6 @@ export default function NrTheoryVisualizer({
         const hl = new Set(step.highlightIndices ?? []);
         const done = new Set(step.sortedIndices ?? []);
         const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;
-
-        // Sieve: large array where index = number
-        if (slug === "sieve") {
-          return (
-            <>
-              <SieveGrid arr={arr} hl={hl} done={done} />
-              <div className={`step-info${isFinal ? " final" : ""}`}>
-                {step.description}
-              </div>
-            </>
-          );
-        }
 
         // Bit Manipulation: show as bit-cards with binary representation
         if (slug === "bit-manipulation") {
@@ -105,36 +87,3 @@ export default function NrTheoryVisualizer({
   );
 }
 
-function SieveGrid({
-  arr,
-  hl,
-  done,
-}: {
-  arr: number[];
-  hl: Set<number>;
-  done: Set<number>;
-}) {
-  return (
-    <div className="nt-vis">
-      <div className="sieve-grid">
-        {arr.map((val, i) => {
-          if (i < 2)
-            return (
-              <div key={i} className="sieve-cell dim">
-                {i}
-              </div>
-            );
-          let cls = "sieve-cell";
-          if (done.has(i)) cls += " prime";
-          else if (hl.has(i)) cls += " crossing";
-          else if (val === 0) cls += " composite";
-          return (
-            <div key={i} className={cls}>
-              {i}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}

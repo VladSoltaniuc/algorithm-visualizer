@@ -40,10 +40,6 @@ export const graphApi: Record<string, (...args: unknown[]) => Promise<AlgorithmS
     const { nodeCount, edges } = parseGraphInput(graphStr as string);
     return postJson(`${BASE}/cycle-detection`, { nodeCount, edges, startNode: 0 });
   },
-  unionFind: (graphStr: unknown) => {
-    const { nodeCount, edges } = parseGraphInput(graphStr as string);
-    return postJson(`${BASE}/union-find`, { nodeCount, edges, startNode: 0 });
-  },
   kruskal: (graphStr: unknown) => {
     const { nodeCount, edges } = parseGraphInput(graphStr as string);
     return postJson(`${BASE}/kruskal`, { nodeCount, edges, startNode: 0 });

@@ -19,7 +19,6 @@ async function get(url: string): Promise<AlgorithmStep[]> {
 }
 
 export const backtrackingApi: Record<string, (...args: unknown[]) => Promise<AlgorithmStep[]>> = {
-  nQueens: (n: unknown) => get(`${BASE}/n-queens/${n}`),
   permutations: (arr: unknown) => post(`${BASE}/permutations`, arr),
   subsets: (arr: unknown) => post(`${BASE}/subsets`, arr),
   combinationSum: (arr: unknown, target?: unknown) =>
