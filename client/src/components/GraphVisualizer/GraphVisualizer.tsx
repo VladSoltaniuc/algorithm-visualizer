@@ -126,7 +126,7 @@ function GraphCanvas({
     });
   }, [n, cx, cy, r]);
 
-  // DFS state labels use fixed semantic colors — not the component palette
+  // DFS state labels use fixed semantic colors - not the component palette
   const DFS_STATE_COLORS: Record<string, string> = {
     unvisited: "#3a86ff",
     stack: "#f4a11d",
@@ -288,7 +288,7 @@ function GraphCanvas({
                   {subLabel}
                 </text>
               )}
-              {/* In-degree badge — shown outside the node when topo sort is active */}
+              {/* In-degree badge - shown outside the node when topo sort is active */}
               {badgeVal !== undefined && badgeVal !== "" && (
                 <g>
                   <circle
@@ -341,7 +341,7 @@ function TopoOrderStrip({
     <div className={`topo-strip${isFinal ? " final" : ""}`}>
       <span className="topo-strip-label">Topo order:</span>
       {orderedNodes.length === 0 ? (
-        <span className="topo-strip-empty">—</span>
+        <span className="topo-strip-empty">-</span>
       ) : (
         orderedNodes.map((node, idx) => (
           <span key={`topo-${idx}`} className="topo-strip-item">

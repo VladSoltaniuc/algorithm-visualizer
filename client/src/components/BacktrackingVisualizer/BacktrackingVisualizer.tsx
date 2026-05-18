@@ -14,7 +14,7 @@ export default function BacktrackingVisualizer({
   steps,
   onRun,
   disabled,
-  slug,
+  slug: _slug,
   inputControls,
 }: Props) {
   return (

@@ -437,7 +437,7 @@ public class DynamicProgService
                 )
                 .ToArray();
 
-        // Coin-denomination label row: "" = not reached, "âˆ…" = base, "âœ—" = unreachable, "+C" = coin C
+        // Coin-denomination label row: "" = not reached, "âˆ…" = base, "âœ-" = unreachable, "+C" = coin C
         string[] MakeCoinLabels(int upTo) =>
             Enumerable
                 .Range(0, amount + 1)
@@ -448,7 +448,7 @@ public class DynamicProgService
                     if (j == 0)
                         return "âˆ…";
                     if (dp[j] >= inf)
-                        return "âœ—";
+                        return "âœ-";
                     if (coinUsed[j] == 0)
                         return "";
                     return $"+{coinUsed[j]}";
@@ -492,7 +492,8 @@ public class DynamicProgService
                             Array = (int[])dp.Clone(),
                             Notes = MakeNotes(i),
                             Labels = MakeCoinLabels(i - 1),
-                            Description = $"Coin {coin}: dp[{lookupIdx}] = âˆž (unreachable) â€” skip.",
+                            Description =
+                                $"Coin {coin}: dp[{lookupIdx}] = âˆž (unreachable) â€” skip.",
                             HighlightIndices = [i],
                             PatternOffset = lookupIdx,
                             SortedIndices = finishedSoFar,

@@ -101,6 +101,10 @@ export default function AlgorithmPage() {
           setError("Please enter valid comma-separated numbers.");
           return;
         }
+        if (slug === "combination-sum" && numbers.some((n) => n <= 0)) {
+          setError("This implementation expects an all-positive array. Please enter only positive integers.");
+          return;
+        }
         parsedInput = numbers;
         break;
       }

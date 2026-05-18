@@ -300,7 +300,7 @@ public class TreeService
         var steps = new List<AlgorithmStep>();
         int step = 0;
 
-        // Build the BST silently — only show the search
+        // Build the BST silently - only show the search
         TreeNode? root = null;
         foreach (var v in values)
             root = Insert(root, v);
@@ -340,8 +340,8 @@ public class TreeService
                     Array = lo,
                     Description =
                         target < node.Value
-                            ? $"At node {node.Value}: {target} < {node.Value} — go left"
-                            : $"At node {node.Value}: {target} > {node.Value} — go right",
+                            ? $"At node {node.Value}: {target} < {node.Value} - go left"
+                            : $"At node {node.Value}: {target} > {node.Value} - go right",
                     HighlightIndices = idx >= 0 ? [idx] : [],
                 }
             );
@@ -608,7 +608,7 @@ public class TreeService
                     Array = postLo,
                     TreeLevelOrder = ToLevelOrderWithNulls(root),
                     Description =
-                        $"Node {node.Value}: swap done — left is now {newLeftLabel}, right is now {newRightLabel}.",
+                        $"Node {node.Value}: swap done - left is now {newLeftLabel}, right is now {newRightLabel}.",
                     HighlightIndices = newChildIndices.ToArray(),
                     SortedIndices = nodeIdx >= 0 ? [nodeIdx] : [],
                 }
@@ -879,7 +879,7 @@ public class TreeService
                 Description =
                     $"Original size: {originalBits} bits ({text.Length} chars × 8 bits). "
                     + $"Huffman size: {huffBits} bits. "
-                    + $"Saved {savedBits} bits — {(double)savedBits / originalBits:P1} smaller.",
+                    + $"Saved {savedBits} bits - {(double)savedBits / originalBits:P1} smaller.",
                 SortedIndices = [0, 1],
             }
         );

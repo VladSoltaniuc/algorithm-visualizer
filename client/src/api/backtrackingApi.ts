@@ -12,12 +12,6 @@ async function post(url: string, body: unknown): Promise<AlgorithmStep[]> {
   return res.json();
 }
 
-async function get(url: string): Promise<AlgorithmStep[]> {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error((await res.text()) || `Server error: ${res.status}`);
-  return res.json();
-}
-
 export const backtrackingApi: Record<string, (...args: unknown[]) => Promise<AlgorithmStep[]>> = {
   permutations: (arr: unknown) => post(`${BASE}/permutations`, arr),
   subsets: (arr: unknown) => post(`${BASE}/subsets`, arr),

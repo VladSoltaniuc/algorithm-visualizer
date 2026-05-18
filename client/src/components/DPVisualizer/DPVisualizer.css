@@ -71,7 +71,7 @@
   box-shadow: 0 2px 8px rgba(247, 183, 49, 0.45);
 }
 
-/* Container — horizontal scroll only on the table rows, not the formula */
+/* Container - horizontal scroll only on the table rows, not the formula */
 .cc-vis {
   overflow-x: visible;
 }
@@ -91,7 +91,7 @@
   letter-spacing: 0.03em;
 }
 
-/* Coin-used row — slightly shorter cells */
+/* Coin-used row - slightly shorter cells */
 .cc-coin-row {
   margin-bottom: 0;
 }

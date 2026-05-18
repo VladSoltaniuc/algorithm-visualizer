@@ -22,8 +22,11 @@ public class BacktrackingController : ControllerBase
     public IActionResult Subsets([FromBody] int[] input) => Ok(_srv.Subsets(input));
 
     [HttpPost("combination-sum/{target:int}")]
-    public IActionResult CombinationSum([FromBody] int[] input, int target) =>
-        Ok(_srv.CombinationSum(input, target));
+    public IActionResult CombinationSum([FromBody] int[] input, int target)
+    {
+        try { return Ok(_srv.CombinationSum(input, target)); }
+        catch (ArgumentException ex) { return BadRequest(ex.Message); }
+    }
 
     [HttpPost("palindrome-partitioning")]
     public IActionResult PalindromePartitioning([FromBody] StringRequest req) =>
