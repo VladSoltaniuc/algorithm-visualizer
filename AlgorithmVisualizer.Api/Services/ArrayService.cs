@@ -16,8 +16,7 @@ public class ArrayService
     // Best:    Time O(n)    Space O(1)
     // Average: Time O(n^2)  Space O(1)
     // Worst:   Time O(n^2)  Space O(1)
-    // Note: O(n) best case requires an early-exit flag (no swaps made in a pass)
-    //       TODO: This implementation omits the flag, so it always runs O(n²).
+    // Note: O(n) best case via early-exit flag — if no swaps in a pass, array is sorted.
     // Real world: Teaching/visualization purposes,
     //             nearly-sorted small datasets where simplicity is valued,
     //             detecting if a list is already sorted (via the O(n) best case)
@@ -40,6 +39,7 @@ public class ArrayService
 
         for (int i = 0; i < arr.Length - 1; i++)
         {
+            bool swapped = false;
             for (int j = 0; j < arr.Length - i - 1; j++)
             {
                 steps.Add(
@@ -55,6 +55,7 @@ public class ArrayService
                 if (arr[j] > arr[j + 1])
                 {
                     (arr[j], arr[j + 1]) = (arr[j + 1], arr[j]);
+                    swapped = true;
                     steps.Add(
                         new AlgorithmStep
                         {
@@ -66,6 +67,7 @@ public class ArrayService
                     );
                 }
             }
+            if (!swapped) break;
         }
 
         steps.Add(
