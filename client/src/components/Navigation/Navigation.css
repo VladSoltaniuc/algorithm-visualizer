@@ -25,6 +25,9 @@
 
 /* ── Category list ── */
 .nav-tabs {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: stretch;
   height: 100%;
@@ -94,7 +97,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   padding: 0.4rem 0;
   flex-direction: column;
-  z-index: 2000;
+  z-index: 2147483647;
 }
 
 .nav-tab-group:hover .nav-subtabs {
@@ -116,19 +119,12 @@
   gap: 0.75rem;
 }
 
-.nav-stars {
+.nav-subtab .rating-stars {
   flex-shrink: 0;
-  font-size: 1.3rem;
-  letter-spacing: -0.05em;
-  color: #f59e0b;
   opacity: 0.75;
 }
 
-.nav-stars-empty {
-  color: rgba(255, 255, 255, 0.2);
-}
-
-.nav-subtab.learned .nav-stars-empty {
+.nav-subtab.learned .rating-stars-empty {
   color: rgba(0, 0, 0, 0.15);
 }
 
@@ -207,7 +203,7 @@
   background: #16213e;
   border-top: 2px solid #e94560;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  z-index: 999;
+  z-index: 2147483647;
   max-height: calc(100vh - 45px);
   overflow-y: auto;
 }

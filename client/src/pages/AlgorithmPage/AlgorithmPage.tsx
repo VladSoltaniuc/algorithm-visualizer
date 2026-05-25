@@ -17,6 +17,7 @@ import BacktrackingVisualizer from "../../components/BacktrackingVisualizer/Back
 import NrTheoryVisualizer from "../../components/NrTheoryVisualizer/NrTheoryVisualizer";
 import TreeVisualizer from "../../components/TreeVisualizer/TreeVisualizer";
 import { algorithmRatings } from "../../config/ratings";
+import { algorithmPseudocode, algorithmShortcuts } from "../../config/CodeSnippets";
 import type { AlgorithmStep } from "../../types";
 import "./AlgorithmPage.css";
 
@@ -293,19 +294,38 @@ export default function AlgorithmPage() {
             )}
           </div>
           <span className="algo-tab-title">
-            {config.name}
+            {algorithmPseudocode[slug] && (
+              <>
+                <span className="algo-code-badge">{"</>"}</span>
+                <span className="algo-code-tip">
+                  {algorithmShortcuts[slug] && (
+                    <span className="algo-code-shortcut">
+                      <span className="algo-code-shortcut-label">Memory shortcut:</span>
+                      {" "}{algorithmShortcuts[slug]}
+                    </span>
+                  )}
+                  <pre className="algo-code-pre">{algorithmPseudocode[slug]}</pre>
+                </span>
+              </>
+            )}
+            <span className="algo-name">{config.name}</span>
             {algorithmRatings[slug] && (
-              <span className="algo-rating-badge">
-                ⓘ
+              <>
+                <span className="algo-rating-badge">
+                  {algorithmRatings[slug].stars}/5
+                </span>
                 <span className="algo-rating-tip">
-                  <span className="algo-rating-stars">
-                    {"★".repeat(algorithmRatings[slug].stars)}
-                    <span className="algo-rating-stars-empty">{"★".repeat(5 - algorithmRatings[slug].stars)}</span>
+                  <span className="algo-code-shortcut">
+                    <span className="algo-code-shortcut-label">Usability Rating:</span>
+                    {ratingLabels[algorithmRatings[slug].stars]}
+                    <span className="rating-stars">
+                      {"★".repeat(algorithmRatings[slug].stars)}
+                      <span className="rating-stars-empty">{"★".repeat(5 - algorithmRatings[slug].stars)}</span>
+                    </span>
                   </span>
-                  <span className="algo-rating-label">{ratingLabels[algorithmRatings[slug].stars]}</span>
                   <span className="algo-rating-text">{algorithmRatings[slug].tooltip}</span>
                 </span>
-              </span>
+              </>
             )}
           </span>
           <div className="algo-tab-right">

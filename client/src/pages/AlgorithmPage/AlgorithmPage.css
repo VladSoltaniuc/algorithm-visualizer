@@ -72,7 +72,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
-  z-index: 100;
+  z-index: 2147483647;
   min-width: 150px;
 }
 
@@ -143,7 +143,7 @@
   padding: 0.5rem 1.2rem;
   font-size: 1rem;
   font-weight: 600;
-  color: #888;
+  color: #4b5563;
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
@@ -155,11 +155,11 @@
 }
 
 .algo-tab-btn:hover {
-  color: #585858;
+  color: #374151;
 }
 
 .algo-tab-btn.active {
-  color: #585858;
+  color: #374151;
   border-bottom-color: #e94560;
   font-weight: 600;
 }
@@ -171,39 +171,64 @@
   justify-content: center;
   gap: 0.35rem;
   font-size: 1rem;
-  font-weight: 700;
-  color: #1a1a2e;
+  font-weight: 500;
+  color: #4b5563;
   pointer-events: none;
   white-space: nowrap;
   overflow: visible;
   padding: 0 0.5rem;
+  position: relative;
 }
 
-.algo-rating-badge {
-  pointer-events: auto;
-  position: relative;
+.algo-name {
+  font-weight: 700;
+  color: #374151;
+}
+
+/* ── shared star classes used in badge tooltip + navigation ── */
+.rating-stars {
   font-size: 1.3rem;
-  color: #e94560;
+  letter-spacing: -0.05em;
+  color: #f59e0b;
+}
+
+.rating-stars-empty {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* ── code badge (left of title) ── */
+.algo-code-badge {
+  pointer-events: auto;
+  font-size: 0.78rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  color: #4b5563;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
   cursor: help;
   flex-shrink: 0;
-  margin-left: 0.6rem;
-  transition: color 0.15s, transform 0.15s;
+  margin-right: 0.5rem;
+  transition: color 0.15s, background 0.15s, transform 0.15s;
   user-select: none;
-  padding-bottom: 0.15rem;
+  line-height: 1.6;
 }
 
-.algo-rating-badge:hover {
-  color: #c0364f;
-  transform: scale(1.15);
+.algo-code-badge:hover {
+  color: #1e40af;
+  background: #e0e7ff;
+  border-color: #a5b4fc;
+  transform: scale(1.05);
 }
 
-.algo-rating-tip {
+.algo-code-tip {
   display: none;
   position: absolute;
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  width: 260px;
+  width: 320px;
   background: #1a1a2e;
   color: #e2e2f0;
   font-size: 0.78rem;
@@ -215,40 +240,97 @@
   white-space: normal;
   text-align: left;
   pointer-events: none;
-  z-index: 500;
+  z-index: 2147483647;
 }
 
-.algo-rating-tip::after {
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-bottom-color: #1a1a2e;
+
+.algo-code-shortcut {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  color: #c8c8e0;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.algo-rating-stars {
-  display: block;
-  font-size: 1.3rem;
-  letter-spacing: -0.04em;
-  color: #f59e0b;
-  margin-bottom: 0.2rem;
-}
-
-.algo-rating-stars-empty {
-  color: rgba(255, 255, 255, 0.2);
-}
-
-.algo-rating-label {
-  display: block;
-  font-size: 0.72rem;
+.algo-code-shortcut-label {
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: #f59e0b;
   opacity: 0.85;
-  margin-bottom: 0.45rem;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.algo-code-pre {
+  margin: 0;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.73rem;
+  white-space: pre;
+  color: #c8c8e0;
+}
+
+.algo-tab-title:has(.algo-code-badge:hover) .algo-code-tip {
+  display: block;
+}
+
+/* ── rating badge (right of title) ── */
+.algo-rating-badge {
+  pointer-events: auto;
+  font-size: 0.92rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  color: #4b5563;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  cursor: help;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  transition: color 0.15s, background 0.15s, transform 0.15s;
+  user-select: none;
+  line-height: 1.6;
+}
+
+.algo-rating-badge:hover {
+  color: #1e40af;
+  background: #e0e7ff;
+  border-color: #a5b4fc;
+  transform: scale(1.05);
+}
+
+.algo-rating-tip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  background: #1a1a2e;
+  color: #e2e2f0;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.45;
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+  z-index: 2147483647;
+}
+
+
+.algo-rating-tip .rating-stars {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1rem;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-left: auto;
 }
 
 .algo-rating-text {
@@ -258,7 +340,7 @@
   line-height: 1.45;
 }
 
-.algo-rating-badge:hover .algo-rating-tip {
+.algo-tab-title:has(.algo-rating-badge:hover) .algo-rating-tip {
   display: block;
 }
 
@@ -275,6 +357,7 @@
   text-decoration: none;
   color: #888;
   border-left: 1px solid #e5e7eb;
+  font-weight: 600;
 }
 
 .algo-tab-yt:hover {

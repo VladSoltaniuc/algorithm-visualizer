@@ -15,9 +15,9 @@ import "./Navigation.css";
 
 function Stars({ n }: Readonly<{ n: number }>) {
   return (
-    <span className="nav-stars">
+    <span className="rating-stars">
       {"★".repeat(n)}
-      <span className="nav-stars-empty">{"★".repeat(5 - n)}</span>
+      <span className="rating-stars-empty">{"★".repeat(5 - n)}</span>
     </span>
   );
 }
