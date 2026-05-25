@@ -31,6 +31,15 @@ int Partition(int[] a, int lo, int hi) {
   var L = MergeSort(a[..mid]);
   var R = MergeSort(a[mid..]);
   return Merge(L, R);
+}
+int[] Merge(int[] L, int[] R) {
+  var res = new List<int>();
+  int i = 0, j = 0;
+  while (i < L.Length && j < R.Length)
+    res.Add(L[i] <= R[j] ? L[i++] : R[j++]);
+  while (i < L.Length) res.Add(L[i++]);
+  while (j < R.Length) res.Add(R[j++]);
+  return [..res];
 }`,
 
   "insertion-sort":
