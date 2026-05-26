@@ -51,13 +51,13 @@ export const algorithmRatings: Record<string, AlgorithmRating> = {
   "diameter":           { stars: 4, tooltip: "Longest path in a tree - used in network latency analysis and tree structure metrics." },
   "validate-bst":       { stars: 5, tooltip: "Ensures the BST invariant holds with min/max bounds - critical before using any BST-dependent algorithm." },
   "invert":             { stars: 5, tooltip: "Mirrors a binary tree recursively - tests tree manipulation; also appears in UI layout transformations." },
-  "huffman":            { stars: 2, tooltip: "Greedy prefix coding - the basis of compression algorithms like ZIP, JPEG, and MP3." },
+  "huffman":            { stars: 2, tooltip: "Greedy prefix coding - rarely relevant today: storage is cheap, decompression latency hurts, and ZIP already matches its speed using equivalent coding." },
 
   // String
   "linear-search":          { stars: 2, tooltip: "Naïve brute-force pattern scan - baseline for understanding why efficient string algorithms matter." },
   "kmp":                    { stars: 3, tooltip: "Efficient single-pattern search - avoids redundant comparisons using the failure function." },
   "boyer-moore":            { stars: 2, tooltip: "Fastest practical string search in many real-world scenarios; used in text editors and grep implementations." },
-  "rabin-karp":             { stars: 3, tooltip: "Rolling hash enables multi-pattern matching and plagiarism detection over large corpora." },
+  "rabin-karp":             { stars: 3, tooltip: "Rolling hash enables multi-pattern matching and plagiarism detection over large corpora. Value drops sharply if the surrounding pipeline has a heavier bottleneck - shaving 50ms off search means nothing when a virus scan upstream costs 700ms." },
   "longest-palindrome":     { stars: 5, tooltip: "Expand-around-center or Manacher's - used in substring analysis, symmetry detection, and string DP." },
   "anagram-detection":      { stars: 5, tooltip: "Frequency map comparison - appears in grouping, substring matching, and permutation-in-string checks." },
   "reversal":               { stars: 3, tooltip: "In-place string flip - foundational step in rotation, palindrome verification, and word-order problems." },
