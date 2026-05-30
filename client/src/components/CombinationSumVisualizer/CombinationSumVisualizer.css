@@ -1,0 +1,214 @@
+.cs-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 0 1rem;
+}
+
+.cs-section + .cs-section {
+  border-top: 1px solid #e9ecef;
+}
+
+/* ── Section title ── */
+.cs-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  margin: 0;
+}
+
+.cs-section-title--found { color: #059669; }
+.cs-section-title--final { color: #1a1a2e; }
+
+.cs-target {
+  color: #1a1a2e;
+  font-weight: 800;
+}
+
+/* ── Candidates row ── */
+.cs-candidates-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cs-candidate {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+/* ── Current path ── */
+.cs-path {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 52px;
+  align-items: center;
+}
+
+.cs-path-empty {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.05em;
+}
+
+/* ── Path cells ── */
+.cs-cell {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.cs-cell--used {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.cs-cell--active {
+  background: #e94560;
+  color: #fff;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(233, 69, 96, 0.35);
+}
+
+.cs-cell--found {
+  background: #06d6a0;
+  color: #064e3b;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(6, 214, 160, 0.35);
+}
+
+/* ── Sum / target indicator ── */
+.cs-sum-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+}
+
+.cs-sum-label {
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.cs-sum-val {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  font-variant-numeric: tabular-nums;
+  min-width: 24px;
+  text-align: center;
+}
+
+.cs-sum-val--found {
+  color: #059669;
+}
+
+.cs-sum-sep {
+  color: #cbd5e1;
+  font-weight: 400;
+}
+
+.cs-need {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #e94560;
+  background: #fef2f2;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+/* ── Step description ── */
+.cs-desc {
+  font-size: 0.82rem;
+  color: #64748b;
+  text-align: center;
+  margin: 0;
+}
+
+.cs-desc--found {
+  color: #047857;
+  font-weight: 700;
+}
+
+/* ── Found solutions grid ── */
+.cs-count {
+  color: #1a1a2e;
+  font-weight: 800;
+}
+
+.cs-found-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.cs-found-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cs-found-item--latest {
+  border-color: #06d6a0;
+  box-shadow: 0 0 0 2px rgba(6, 214, 160, 0.25);
+}
+
+.cs-found-numbers {
+  flex: 1;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #065f46;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.cs-found-eq {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #059669;
+  white-space: nowrap;
+}
+
+.cs-found-empty {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  font-style: italic;
+  margin: 0;
+}

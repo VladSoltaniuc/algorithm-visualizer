@@ -17,6 +17,7 @@ import GraphVisualizer from "../../components/GraphVisualizer/GraphVisualizer";
 import DPVisualizer from "../../components/DPVisualizer/DPVisualizer";
 import BacktrackingVisualizer from "../../components/BacktrackingVisualizer/BacktrackingVisualizer";
 import PermutationsVisualizer from "../../components/PermutationsVisualizer/PermutationsVisualizer";
+import CombinationSumVisualizer from "../../components/CombinationSumVisualizer/CombinationSumVisualizer";
 import BitManipulatorVisualizer from "../../components/BitManipulatorVisualizer/BitManipulatorVisualizer";
 import TreeVisualizer from "../../components/TreeVisualizer/TreeVisualizer";
 import { algorithmRatings } from "../../config/ratings";
@@ -212,6 +213,26 @@ export default function AlgorithmPage() {
           );
           return;
         }
+        if (slug === "permutations" && numbers.length > 4) {
+          setError(
+            "Permutations are limited to 4 numbers - with 4 elements there are already 24 permutations to visualize.",
+          );
+          return;
+        }
+        if (slug === "subsets" && numbers.length > 20) {
+          setError(
+            "Subsets are limited to 12 elements - 2^12 produce alkready 4,096 subsets.",
+          );
+          return;
+        }
+        if (slug === "lis" && numbers.length > 30) {
+          setError("LIS visualization is limited to 30 elements.");
+          return;
+        }
+        if (slug === "knapsack" && numbers.length > 20) {
+          setError("Knapsack is limited to 20 items.");
+          return;
+        }
         parsedInput = numbers;
         break;
       }
@@ -220,12 +241,36 @@ export default function AlgorithmPage() {
           setError("Please enter some text.");
           return;
         }
+        if (slug === "palindrome-partitioning" && input.trim().length > 15) {
+          setError(
+            "Palindrome partitioning is limited to 15 characters - the number of partitions grows exponentially.",
+          );
+          return;
+        }
+        if (slug === "lcs" && input.trim().length > 25) {
+          setError("LCS strings are each limited to 25 characters.");
+          return;
+        }
+        if (slug === "lcs" && pattern.length > 25) {
+          setError("LCS strings are each limited to 25 characters.");
+          return;
+        }
         parsedInput = input;
         break;
       case "number": {
         const num = parseInt(input.trim(), 10);
         if (isNaN(num)) {
           setError("Please enter a valid number.");
+          return;
+        }
+        if (slug === "fibonacci" && num > 100) {
+          setError(
+            "Fibonacci is limited to n ≤ 100 to keep the visualization manageable.",
+          );
+          return;
+        }
+        if (slug === "climbing-stairs" && num > 50) {
+          setError("Climbing stairs is limited to n ≤ 50.");
           return;
         }
         parsedInput = num;
@@ -238,6 +283,24 @@ export default function AlgorithmPage() {
         }
         parsedInput = input;
         break;
+    }
+
+    if (config.needsTarget) {
+      const t = parseInt(target, 10);
+      if (!isNaN(t)) {
+        if (slug === "coin-change" && t > 500) {
+          setError("Coin change amount is limited to 500.");
+          return;
+        }
+        if (slug === "knapsack" && t < 0) {
+          setError("Knapsack capacity must be non-negative.");
+          return;
+        }
+        if (slug === "knapsack" && t > 500) {
+          setError("Knapsack capacity is limited to 500.");
+          return;
+        }
+      }
     }
 
     setLoading(true);
@@ -619,23 +682,33 @@ export default function AlgorithmPage() {
           onComplete={() => setIsRunning(false)}
         />
       )}
-      {category === "backtracking" && slug !== "permutations" && (
-        <BacktrackingVisualizer
+      {category === "backtracking" && slug === "combination-sum" && (
+        <CombinationSumVisualizer
           steps={steps}
           onRun={handleRun}
           disabled={loading || spamPrevention}
-          slug={slug}
           inputControls={inputControls}
           speed={speed}
           isPaused={isPaused}
           onComplete={() => setIsRunning(false)}
         />
       )}
+      {category === "backtracking" &&
+        slug !== "permutations" &&
+        slug !== "combination-sum" && (
+          <BacktrackingVisualizer
+            steps={steps}
+            onRun={handleRun}
+            disabled={loading || spamPrevention}
+            slug={slug}
+            inputControls={inputControls}
+            speed={speed}
+            isPaused={isPaused}
+            onComplete={() => setIsRunning(false)}
+          />
+        )}
       {category === "misc" && slug === "bit-manipulation" && (
-        <BitManipulatorVisualizer
-          steps={steps}
-          inputControls={inputControls}
-        />
+        <BitManipulatorVisualizer steps={steps} inputControls={inputControls} />
       )}
       {category === "misc" && slug === "reversal" && (
         <StringVisualizer
@@ -687,9 +760,7 @@ export default function AlgorithmPage() {
         <div className="secret-overlay" onClick={() => setShowSecret(false)}>
           <canvas ref={secretCanvasRef} className="secret-canvas" aria-hidden />
           <div className="secret-card" onClick={(e) => e.stopPropagation()}>
-            <div className="secret-top-emoji">
-              ヾ(⌐■_■)ノ♪
-            </div>
+            <div className="secret-top-emoji">ヾ(⌐■_■)ノ♪</div>
             <h1 className="secret-title">ONE OF US!</h1>
             <p className="secret-chant">
               ONE OF US! &nbsp; ONE OF US! &nbsp; ONE OF US!

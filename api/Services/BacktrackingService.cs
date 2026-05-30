@@ -9,6 +9,8 @@ public class BacktrackingService
     {
         if (arr.Length == 0)
             throw new ArgumentException("Provide a non-empty array.");
+        if (arr.Length > 4)
+            throw new ArgumentException("Permutations are limited to 4 elements - 4! = 24 is already a lot to visualize, and larger inputs would generate thousands of steps.");
         var steps = new List<AlgorithmStep>();
         int step = 0;
         steps.Add(new AlgorithmStep
@@ -31,6 +33,8 @@ public class BacktrackingService
     {
         if (arr.Length == 0)
             throw new ArgumentException("Provide a non-empty array.");
+        if (arr.Length > 20)
+            throw new ArgumentException("Subsets are limited to 20 elements - 2^20 would produce over a million subsets.");
         var steps = new List<AlgorithmStep>();
         int step = 0;
         steps.Add(new AlgorithmStep
@@ -82,6 +86,8 @@ public class BacktrackingService
     {
         if (string.IsNullOrEmpty(text))
             throw new ArgumentException("Provide a non-empty string.");
+        if (text.Length > 15)
+            throw new ArgumentException("Palindrome partitioning is limited to 15 characters - the number of partitions grows exponentially with length.");
         var codes = text.Select(c => (int)c).ToArray();
         var steps = new List<AlgorithmStep>();
         int step = 0;

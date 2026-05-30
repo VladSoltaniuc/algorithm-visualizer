@@ -16,10 +16,18 @@ public class BacktrackingController : ControllerBase
     }
 
     [HttpPost("permutations")]
-    public IActionResult Permutations([FromBody] int[] input) => Ok(_srv.Permutations(input));
+    public IActionResult Permutations([FromBody] int[] input)
+    {
+        try { return Ok(_srv.Permutations(input)); }
+        catch (ArgumentException ex) { return BadRequest(ex.Message); }
+    }
 
     [HttpPost("subsets")]
-    public IActionResult Subsets([FromBody] int[] input) => Ok(_srv.Subsets(input));
+    public IActionResult Subsets([FromBody] int[] input)
+    {
+        try { return Ok(_srv.Subsets(input)); }
+        catch (ArgumentException ex) { return BadRequest(ex.Message); }
+    }
 
     [HttpPost("combination-sum/{target:int}")]
     public IActionResult CombinationSum([FromBody] int[] input, int target)
@@ -35,6 +43,9 @@ public class BacktrackingController : ControllerBase
     }
 
     [HttpPost("palindrome-partitioning")]
-    public IActionResult PalindromePartitioning([FromBody] StringRequest req) =>
-        Ok(_srv.PalindromePartitioning(req.Text));
+    public IActionResult PalindromePartitioning([FromBody] StringRequest req)
+    {
+        try { return Ok(_srv.PalindromePartitioning(req.Text)); }
+        catch (ArgumentException ex) { return BadRequest(ex.Message); }
+    }
 }

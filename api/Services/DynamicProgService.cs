@@ -12,6 +12,8 @@ public class DynamicProgService
     {
         if (n < 0)
             throw new ArgumentException("n must be non-negative.");
+        if (n > 100)
+            throw new ArgumentException("Fibonacci is limited to n ≤ 100 to keep the visualization manageable.");
         var steps = new List<AlgorithmStep>();
         var dp = new int[Math.Max(n + 1, 2)];
         dp[0] = 0;
@@ -59,6 +61,14 @@ public class DynamicProgService
     {
         if (weights.Length == 0)
             throw new ArgumentException("Provide non-empty weights.");
+        if (weights.Length > 20)
+            throw new ArgumentException("Knapsack is limited to 20 items.");
+        if (capacity < 0)
+            throw new ArgumentException("Capacity must be non-negative.");
+        if (capacity > 500)
+            throw new ArgumentException("Knapsack capacity is limited to 500.");
+        if (values.Length != weights.Length)
+            throw new ArgumentException($"Values array must have the same number of entries as weights ({weights.Length}).");
         int n = weights.Length;
         var dp = new int[n + 1, capacity + 1]; // dp[i][w] = max value, first i items, capacity w
 
@@ -156,6 +166,8 @@ public class DynamicProgService
     {
         if (string.IsNullOrEmpty(text1) || string.IsNullOrEmpty(text2))
             throw new ArgumentException("Provide non-empty strings.");
+        if (text1.Length > 25 || text2.Length > 25)
+            throw new ArgumentException("LCS strings are each limited to 25 characters - the DP matrix grows as m×n.");
         // Longest string on top (columns), shortest on the side (rows)
         if (text1.Length > text2.Length)
             (text1, text2) = (text2, text1);
@@ -267,6 +279,8 @@ public class DynamicProgService
     {
         if (arr.Length == 0)
             throw new ArgumentException("Provide a non-empty array.");
+        if (arr.Length > 30)
+            throw new ArgumentException("LIS is limited to 30 elements - the visualization matrix grows as n².");
         int n = arr.Length;
         var dp = new int[n];
         Array.Fill(dp, 1);
@@ -402,6 +416,8 @@ public class DynamicProgService
     {
         if (coins.Length == 0)
             throw new ArgumentException("Provide non-empty coins.");
+        if (amount > 500)
+            throw new ArgumentException("Coin change amount is limited to 500.");
 
         int inf = amount + 1; // sentinel for "unreachable"
         var dp = new int[amount + 1];
@@ -579,6 +595,8 @@ public class DynamicProgService
     {
         if (n < 1)
             throw new ArgumentException("n must be at least 1.");
+        if (n > 50)
+            throw new ArgumentException("Climbing stairs is limited to n ≤ 50.");
         var dp = new int[n + 1];
         dp[0] = 1;
         if (n >= 1)
