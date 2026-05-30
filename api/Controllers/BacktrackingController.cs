@@ -1,8 +1,8 @@
-using AlgorithmVisualizer.Api.Models;
-using AlgorithmVisualizer.Api.Services;
+using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlgorithmVisualizer.Api.Controllers;
+namespace api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -24,8 +24,14 @@ public class BacktrackingController : ControllerBase
     [HttpPost("combination-sum/{target:int}")]
     public IActionResult CombinationSum([FromBody] int[] input, int target)
     {
-        try { return Ok(_srv.CombinationSum(input, target)); }
-        catch (ArgumentException ex) { return BadRequest(ex.Message); }
+        try
+        {
+            return Ok(_srv.CombinationSum(input, target));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost("palindrome-partitioning")]

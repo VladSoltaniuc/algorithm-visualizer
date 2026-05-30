@@ -1,4 +1,4 @@
-namespace AlgorithmVisualizer.Api.Models;
+namespace api.Models;
 
 public class StringRequest
 {

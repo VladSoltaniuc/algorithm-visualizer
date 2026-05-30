@@ -1,0 +1,19 @@
+# Node
+client/node_modules/
+client/dist/
+
+# .NET build output
+api/bin/
+api/obj/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vs/
+.vscode/
+*.user
+
+# Misc
+**/*.md

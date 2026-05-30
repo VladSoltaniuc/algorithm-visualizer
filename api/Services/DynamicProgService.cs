@@ -1,6 +1,6 @@
-﻿using AlgorithmVisualizer.Api.Models;
+﻿using api.Models;
 
-namespace AlgorithmVisualizer.Api.Services;
+namespace api.Services;
 
 public class DynamicProgService
 {
@@ -430,10 +430,7 @@ public class DynamicProgService
         string[] MakeNotes(int upTo) =>
             Enumerable
                 .Range(0, amount + 1)
-                .Select(j =>
-                    j > upTo || dp[j] >= inf ? "?"
-                    : dp[j].ToString()
-                )
+                .Select(j => j > upTo || dp[j] >= inf ? "?" : dp[j].ToString())
                 .ToArray();
 
         // Coin-denomination label row: "" = not reached, "âˆ…" = base, "âœ-" = unreachable, "+C" = coin C

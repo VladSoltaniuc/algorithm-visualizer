@@ -1,4 +1,4 @@
-using AlgorithmVisualizer.Api.Services;
+using api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

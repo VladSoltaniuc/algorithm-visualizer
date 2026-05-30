@@ -1,6 +1,6 @@
-﻿using AlgorithmVisualizer.Api.Models;
+﻿using api.Models;
 
-namespace AlgorithmVisualizer.Api.Services;
+namespace api.Services;
 
 public class StringService
 {
@@ -917,5 +917,4 @@ public class StringService
         );
         return steps;
     }
-
 }

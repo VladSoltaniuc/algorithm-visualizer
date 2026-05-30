@@ -1,6 +1,6 @@
-﻿using AlgorithmVisualizer.Api.Models;
+﻿using api.Models;
 
-namespace AlgorithmVisualizer.Api.Services;
+namespace api.Services;
 
 public class GraphService
 {
@@ -440,7 +440,10 @@ public class GraphService
                 continue;
 
             steps.Add(
-                MakeStep($"Node {start} is not visited â€” start DFS from here.", highlight: [start])
+                MakeStep(
+                    $"Node {start} is not visited â€” start DFS from here.",
+                    highlight: [start]
+                )
             );
 
             // Iterative DFS with explicit stack â€” (node, neighborIndex) pairs
@@ -576,7 +579,6 @@ public class GraphService
             pathVisited.Select(v => v ? 1 : 0).ToArray(),
         ];
     }
-
 
     private static int Find(int[] parent, int x)
     {

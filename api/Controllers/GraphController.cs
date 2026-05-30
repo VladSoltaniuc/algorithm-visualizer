@@ -1,8 +1,8 @@
-using AlgorithmVisualizer.Api.Models;
-using AlgorithmVisualizer.Api.Services;
+using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlgorithmVisualizer.Api.Controllers;
+namespace api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

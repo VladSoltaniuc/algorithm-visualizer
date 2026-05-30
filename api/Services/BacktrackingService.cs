@@ -1,6 +1,6 @@
-﻿using AlgorithmVisualizer.Api.Models;
+﻿using api.Models;
 
-namespace AlgorithmVisualizer.Api.Services;
+namespace api.Services;
 
 public class BacktrackingService
 {
@@ -128,9 +128,13 @@ public class BacktrackingService
         if (candidates.Length == 0)
             throw new ArgumentException("Provide non-empty candidates.");
         if (candidates.Any(c => c < 0))
-            throw new ArgumentException("This implementation expects an all-positive array. Please enter only positive integers.");
+            throw new ArgumentException(
+                "This implementation expects an all-positive array. Please enter only positive integers."
+            );
         if (candidates.Any(c => c == 0))
-            throw new ArgumentException("This implementation expects an all-positive array. Please enter only positive integers (no zeros).");
+            throw new ArgumentException(
+                "This implementation expects an all-positive array. Please enter only positive integers (no zeros)."
+            );
         if (target <= 0)
             throw new ArgumentException("Target must be a positive integer.");
         Array.Sort(candidates);
@@ -185,7 +189,8 @@ public class BacktrackingService
         }
         for (int i = start; i < cands.Length && cands[i] <= remain; i++)
         {
-            if (steps.Count > 2000) return;
+            if (steps.Count > 2000)
+                return;
             current.Add(cands[i]);
             steps.Add(
                 new AlgorithmStep

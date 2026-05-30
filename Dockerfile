@@ -12,22 +12,21 @@ COPY client/ client/
 RUN cd client && npm run build
 
 # Build .NET
-COPY algorithm-visualizer.sln .
-COPY AlgorithmVisualizer.Api/AlgorithmVisualizer.Api.csproj AlgorithmVisualizer.Api/
-RUN dotnet restore AlgorithmVisualizer.Api/AlgorithmVisualizer.Api.csproj
+COPY api/api.csproj api/
+RUN dotnet restore api/api.csproj
 
-COPY AlgorithmVisualizer.Api/ AlgorithmVisualizer.Api/
+COPY api/ api/
 
 # Copy React output into wwwroot before publish
-RUN mkdir -p AlgorithmVisualizer.Api/wwwroot && \
-    cp -r client/dist/* AlgorithmVisualizer.Api/wwwroot/ && \
-    ls -la AlgorithmVisualizer.Api/wwwroot/
+RUN mkdir -p api/wwwroot && \
+    cp -r client/dist/* api/wwwroot/ && \
+    ls -la api/wwwroot/
 
-RUN dotnet publish AlgorithmVisualizer.Api/AlgorithmVisualizer.Api.csproj -c Release -o /app/publish --no-restore
+RUN dotnet publish api/api.csproj -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
-ENTRYPOINT ["dotnet", "AlgorithmVisualizer.Api.dll"]
+ENTRYPOINT ["dotnet", "api.dll"]

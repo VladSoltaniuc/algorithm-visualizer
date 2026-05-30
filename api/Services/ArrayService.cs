@@ -1,6 +1,6 @@
-using AlgorithmVisualizer.Api.Models;
+using api.Models;
 
-namespace AlgorithmVisualizer.Api.Services;
+namespace api.Services;
 
 // TODO: Separate code in smaller services for better code readability
 // TODO: Get rid of regions
@@ -67,7 +67,8 @@ public class ArrayService
                     );
                 }
             }
-            if (!swapped) break;
+            if (!swapped)
+                break;
         }
 
         steps.Add(
