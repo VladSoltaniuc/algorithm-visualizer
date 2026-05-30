@@ -63,7 +63,6 @@ const tabs: Tab[] = [
     basePath: "/find",
     items: from([
       "binary-search",
-      "longest-palindrome",
       "sliding-window",
       "two-pointers",
       "kadane",
@@ -72,12 +71,7 @@ const tabs: Tab[] = [
   {
     label: "Patterns",
     basePath: "/patterns",
-    items: from(["kmp", "boyer-moore", "rabin-karp", "anagram-detection"]),
-  },
-  {
-    label: "Transform",
-    basePath: "/transform",
-    items: from(["reversal", "huffman"]),
+    items: from(["kmp", "boyer-moore", "rabin-karp", "anagram-detection", "longest-palindrome"]),
   },
   {
     label: "Trees",
@@ -120,9 +114,9 @@ const tabs: Tab[] = [
     items: from(["combination-sum", "permutations"]),
   },
   {
-    label: "Nr. Theory",
-    basePath: "/number-theory",
-    items: from(["bit-manipulation"]),
+    label: "Misc",
+    basePath: "/misc",
+    items: from(["reversal", "huffman", "bit-manipulation"]),
   },
 ];
 

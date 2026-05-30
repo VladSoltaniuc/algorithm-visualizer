@@ -58,7 +58,7 @@ export const algorithmRatings: Record<string, AlgorithmRating> = {
   "kmp":                    { stars: 3, tooltip: "Efficient single-pattern search - avoids redundant comparisons using the failure function." },
   "boyer-moore":            { stars: 2, tooltip: "Fastest practical string search in many real-world scenarios; used in text editors and grep implementations." },
   "rabin-karp":             { stars: 3, tooltip: "Rolling hash enables multi-pattern matching and plagiarism detection over large corpora. Value drops sharply if the surrounding pipeline has a heavier bottleneck - shaving 50ms off search means nothing when a virus scan upstream costs 700ms." },
-  "longest-palindrome":     { stars: 5, tooltip: "Expand-around-center or Manacher's - used in substring analysis, symmetry detection, and string DP." },
+  "longest-palindrome":     { stars: 5, tooltip: "Used in substring analysis, symmetry detection, and string DP. This being the Manacher's variant which is harder, but extremely efficient. The other way of doing this is to use expand-around-center approach which is simpler but less efficient (still good to know)." },
   "anagram-detection":      { stars: 5, tooltip: "Frequency map comparison - appears in grouping, substring matching, and permutation-in-string checks." },
   "reversal":               { stars: 3, tooltip: "In-place string flip - foundational step in rotation, palindrome verification, and word-order problems." },
 };
