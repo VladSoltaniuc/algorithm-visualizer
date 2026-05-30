@@ -8,18 +8,25 @@ interface Props {
   onRun: () => void;
   disabled?: boolean;
   inputControls?: React.ReactNode;
+  speed: number;
+  isPaused?: boolean;
+  onComplete?: () => void;
 }
 
 export default function ArrayVisualizer({
   steps,
-  onRun,
-  disabled,
+  onRun: _onRun,
+  disabled: _disabled,
   inputControls,
+  speed,
+  isPaused = false,
+  onComplete,
 }: Props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(500);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   const step = steps[currentStep];
 
@@ -29,13 +36,14 @@ export default function ArrayVisualizer({
   }, [steps]);
 
   useEffect(() => {
-    if (!isPlaying) {
+    if (!isPlaying || isPaused) {
       if (timerRef.current) clearTimeout(timerRef.current);
       return;
     }
 
     if (currentStep >= steps.length - 1) {
       setIsPlaying(false);
+      onCompleteRef.current?.();
       return;
     }
 
@@ -46,33 +54,17 @@ export default function ArrayVisualizer({
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [isPlaying, currentStep, steps.length, speed]);
+  }, [isPlaying, currentStep, steps.length, speed, isPaused]);
 
   const maxVal = step ? Math.max(...step.array.map(Math.abs), 1) : 1;
 
   return (
     <div className="visualizer">
-      <div className="vis-controls">
-        {inputControls}
-        <label className="speed-control">
-          Speed
-          <input
-            type="range"
-            min={50}
-            max={1500}
-            step={50}
-            value={1550 - speed}
-            onChange={(e) => setSpeed(1550 - Number(e.target.value))}
-          />
-        </label>
-        <button
-          className="run-btn"
-          onClick={onRun}
-          disabled={disabled || isPlaying}
-        >
-          ▶︎
-        </button>
-      </div>
+      {inputControls && (
+        <div className="vis-controls">
+          {inputControls}
+        </div>
+      )}
 
       {step && (
         <>
@@ -80,7 +72,7 @@ export default function ArrayVisualizer({
             {step.array.map((value, idx) => {
               const isHighlighted = step.highlightIndices?.includes(idx);
               const isSorted = step.sortedIndices?.includes(idx);
-              const height = Math.max(40, (Math.abs(value) / maxVal) * 300);
+              const height = Math.max(40, (Math.abs(value) / maxVal) * 220);
 
               let className = "square";
               if (isSorted) className += " sorted";

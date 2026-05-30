@@ -4,47 +4,34 @@ import "./VisControls.css";
 
 interface Props {
   steps: AlgorithmStep[];
-  onRun: () => void;
   disabled?: boolean;
   hideDescription?: boolean;
   inputControls?: React.ReactNode;
+  speed: number;
+  isPaused?: boolean;
+  onComplete?: () => void;
   children: (step: AlgorithmStep) => React.ReactNode;
 }
 
 export default function VisControls({
   steps,
-  onRun,
-  disabled,
+  disabled: _disabled,
   hideDescription,
   inputControls,
+  speed,
+  isPaused = false,
+  onComplete,
   children,
 }: Readonly<Props>) {
-  const { step, currentStep, speed, setSpeed, isPlaying, total } =
-    useStepPlayer(steps);
+  const { step, currentStep, isPlaying: _isPlaying, total } = useStepPlayer(steps, speed, isPaused, onComplete);
 
   return (
     <div className="visualizer">
-      <div className="vis-controls">
-        {inputControls}
-        <label className="speed-control">
-          {"Speed"}
-          <input
-            type="range"
-            min={50}
-            max={1500}
-            step={50}
-            value={1550 - speed}
-            onChange={(e) => setSpeed(1550 - Number(e.target.value))}
-          />
-        </label>
-        <button
-          className="run-btn"
-          onClick={onRun}
-          disabled={disabled || isPlaying}
-        >
-          ▶︎
-        </button>
-      </div>
+      {inputControls && (
+        <div className="vis-controls">
+          {inputControls}
+        </div>
+      )}
 
       {step && (
         <>

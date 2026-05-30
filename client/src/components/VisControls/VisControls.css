@@ -69,10 +69,15 @@
   transition: background 0.3s, border-color 0.3s, color 0.3s;
 }
 
+@keyframes textToGreen {
+  from {
+    color: #fff;
+  }
+  to {
+    color: #06d6a0;
+  }
+}
+
 .step-info.final {
-  background: #fffbe6;
-  border-color: #f7b731;
-  color: #6b4f00;
-  font-weight: 600;
-  transition: background 0.3s, border-color 0.3s, color 0.3s;
+  animation: textToGreen 3s ease forwards;
 }

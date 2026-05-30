@@ -1,0 +1,188 @@
+/* ── Section panels ── */
+.perm-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0 1rem;
+}
+
+.perm-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Array display ── */
+.perm-array-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  overflow-x: auto;
+}
+
+.perm-row {
+  display: flex;
+  gap: 6px;
+}
+
+.perm-pos-row {
+  margin-bottom: 2px;
+}
+
+.perm-pos {
+  width: 64px;
+  text-align: center;
+  font-size: 0.65rem;
+  color: #cbd5e1;
+  font-family: 'Courier New', monospace;
+}
+
+/* ── Value cells ── */
+.perm-cell {
+  width: 64px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  border-radius: 10px;
+  transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.perm-cell--open     { background: #f1f5f9; color: #94a3b8; }
+.perm-cell--locked   { background: #d1fae5; color: #065f46; }
+.perm-cell--placing  {
+  background: #3b82f6; color: #fff;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(59,130,246,0.35);
+}
+.perm-cell--swap     {
+  background: #fde68a; color: #92400e;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+}
+.perm-cell--backtrack {
+  background: #fecaca; color: #991b1b;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(239,68,68,0.25);
+}
+.perm-cell--done {
+  background: #06d6a0; color: #064e3b;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(6,214,160,0.35);
+}
+
+/* ── State labels under cells ── */
+.perm-state-row { margin-top: 2px; }
+
+.perm-state-label {
+  width: 64px;
+  text-align: center;
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 4px;
+  padding: 2px 0;
+}
+
+.perm-state--open      { color: #cbd5e1; }
+.perm-state--locked    { color: #059669; }
+.perm-state--placing   { color: #2563eb; }
+.perm-state--swap      { color: #d97706; }
+.perm-state--backtrack { color: #dc2626; }
+.perm-state--done      { color: #047857; }
+
+/* ── Depth progress bar ── */
+.perm-depth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.perm-depth-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.perm-depth-track {
+  display: flex;
+  gap: 4px;
+}
+
+.perm-depth-pip {
+  width: 20px;
+  height: 6px;
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+.perm-depth-pip--done   { background: #06d6a0; }
+.perm-depth-pip--active { background: #3b82f6; }
+.perm-depth-pip--open   { background: #e2e8f0; }
+
+/* ── Step description ── */
+.perm-desc {
+  font-size: 0.82rem;
+  color: #64748b;
+  text-align: center;
+  margin: 0;
+}
+
+.perm-desc--found { color: #047857; font-weight: 700; }
+.perm-desc--back  { color: #dc2626; }
+
+/* ── Found permutations grid ── */
+.perm-count {
+  font-variant-numeric: tabular-nums;
+  color: #1a1a2e;
+  font-weight: 800;
+}
+
+.perm-found-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  max-width: 600px;
+  padding: 0 0.5rem;
+}
+
+.perm-found-item {
+  display: flex;
+  gap: 3px;
+  padding: 5px 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.perm-found-item--latest {
+  border-color: #06d6a0;
+  box-shadow: 0 0 0 2px rgba(6,214,160,0.25);
+}
+
+.perm-found-val {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #065f46;
+  min-width: 16px;
+  text-align: center;
+}
+
+.perm-found-empty {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  font-style: italic;
+  margin: 0;
+}

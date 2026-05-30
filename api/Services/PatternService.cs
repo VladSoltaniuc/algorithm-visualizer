@@ -131,19 +131,19 @@ public class PatternService
         long pHash = 0, tHash = 0;
         for (int k = 0; k < m; k++) { pHash = (d * pHash + pattern[k]) % q; tHash = (d * tHash + text[k]) % q; }
 
-        steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = $"Initial hashes — pattern hash={pHash}, window[0..{m - 1}] hash={tHash}", HighlightIndices = Enumerable.Range(0, m).ToArray(), PatternArray = patternCodes, PatternOffset = 0, TextHash = tHash, PatternHash = pHash });
+        steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = $"Initial hashes - pattern hash={pHash}, window[0..{m - 1}] hash={tHash}", HighlightIndices = Enumerable.Range(0, m).ToArray(), PatternArray = patternCodes, PatternOffset = 0, TextHash = tHash, PatternHash = pHash });
 
         var found = new List<int>();
         for (int i = 0; i <= n - m; i++)
         {
             bool hashMatch = pHash == tHash;
             string window = text.Substring(i, m);
-            steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = hashMatch ? $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} == pattern hash={pHash} — verifying…" : $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} ≠ pattern hash={pHash} — skip", HighlightIndices = Enumerable.Range(i, m).ToArray(), PatternArray = patternCodes, PatternOffset = i, TextHash = tHash, PatternHash = pHash });
+            steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = hashMatch ? $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} == pattern hash={pHash} - verifying…" : $"Window \"{window}\" [{i}..{i + m - 1}]: hash={tHash} ≠ pattern hash={pHash} - skip", HighlightIndices = Enumerable.Range(i, m).ToArray(), PatternArray = patternCodes, PatternOffset = i, TextHash = tHash, PatternHash = pHash });
 
             if (hashMatch)
             {
                 if (window == pattern) { found.Add(i); steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = $"Characters match! Pattern found at index {i}", SortedIndices = Enumerable.Range(i, m).ToArray(), PatternArray = patternCodes, PatternOffset = i, TextHash = tHash, PatternHash = pHash }); }
-                else steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = $"Hash collision! \"{window}\" ≠ \"{pattern}\" — spurious hit", HighlightIndices = Enumerable.Range(i, m).ToArray(), PatternArray = patternCodes, PatternOffset = i, TextHash = tHash, PatternHash = pHash });
+                else steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = $"Hash collision! \"{window}\" ≠ \"{pattern}\" - spurious hit", HighlightIndices = Enumerable.Range(i, m).ToArray(), PatternArray = patternCodes, PatternOffset = i, TextHash = tHash, PatternHash = pHash });
             }
 
             if (i < n - m)
@@ -188,7 +188,7 @@ public class PatternService
             bool updatedCR = i + P[i] > R;
             if (updatedCR) { C = i; R = i + P[i]; }
 
-            string desc = $"i={i} '{T[i]}': {rule} — {outcome}";
+            string desc = $"i={i} '{T[i]}': {rule} - {outcome}";
             if (updatedCR) desc += $"  [C←{C}, R←{R}]";
 
             if (P[i] >= 2)
@@ -217,7 +217,7 @@ public class PatternService
         int step = 0, m = pattern.Length, n = text.Length;
         steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = $"Finding anagrams of \"{pattern}\" in \"{text}\"" });
 
-        if (m > n) { steps.Add(new AlgorithmStep { StepNumber = step, Array = (int[])codes.Clone(), Description = "Pattern longer than text — no anagrams" }); return steps; }
+        if (m > n) { steps.Add(new AlgorithmStep { StepNumber = step, Array = (int[])codes.Clone(), Description = "Pattern longer than text - no anagrams" }); return steps; }
 
         var pCount = new int[256]; var wCount = new int[256];
         foreach (char c in pattern) pCount[c]++;
@@ -231,7 +231,7 @@ public class PatternService
             {
                 bool match = pCount.SequenceEqual(wCount);
                 int ws = i - m + 1;
-                steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = match ? $"Anagram found at index {ws}: \"{text.Substring(ws, m)}\"" : $"Window [{ws}..{i}]: \"{text.Substring(ws, m)}\" — not anagram", HighlightIndices = Enumerable.Range(ws, m).ToArray(), SortedIndices = match ? Enumerable.Range(ws, m).ToArray() : [] });
+                steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])codes.Clone(), Description = match ? $"Anagram found at index {ws}: \"{text.Substring(ws, m)}\"" : $"Window [{ws}..{i}]: \"{text.Substring(ws, m)}\" - not anagram", HighlightIndices = Enumerable.Range(ws, m).ToArray(), SortedIndices = match ? Enumerable.Range(ws, m).ToArray() : [] });
                 if (match) found.Add(ws);
             }
         }

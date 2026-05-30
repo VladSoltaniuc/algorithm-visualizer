@@ -1,4 +1,4 @@
-import VisControls from "../VisControls/VisControls";
+﻿import VisControls from "../VisControls/VisControls";
 import type { AlgorithmStep } from "../../types";
 import "./StringVisualizer.css";
 
@@ -7,21 +7,28 @@ interface Props {
   onRun: () => void;
   disabled?: boolean;
   inputControls?: React.ReactNode;
+  speed: number;
+  isPaused?: boolean;
+  onComplete?: () => void;
 }
 
 export default function StringVisualizer({
   steps,
-  onRun,
-  disabled,
+  onRun: _onRun,
+  disabled: _disabled,
   inputControls,
+  speed,
+  isPaused,
+  onComplete,
 }: Props) {
   return (
     <VisControls
       steps={steps}
-      onRun={onRun}
-      disabled={disabled}
       hideDescription
       inputControls={inputControls}
+      speed={speed}
+      isPaused={isPaused}
+      onComplete={onComplete}
     >
       {(step: AlgorithmStep) => {
         const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;

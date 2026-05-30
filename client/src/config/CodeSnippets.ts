@@ -1,13 +1,15 @@
 export const algorithmPseudocode: Record<string, string> = {
   "bubble-sort":
-`for (int i = 0; i < n-1; i++) {
-  bool swapped = false;
-  for (int j = 0; j < n-i-1; j++)
-    if (arr[j] > arr[j+1]) {
-      (arr[j], arr[j+1]) = (arr[j+1], arr[j]);
-      swapped = true;
-    }
-  if (!swapped) break;
+`void BubbleSort(int[] arr, int n) {
+  for (int i = 0; i < n-1; i++) {
+    bool swapped = false;
+    for (int j = 0; j < n-i-1; j++)
+      if (arr[j] > arr[j+1]) {
+        (arr[j], arr[j+1]) = (arr[j+1], arr[j]);
+        swapped = true;
+      }
+    if (!swapped) break;
+  }
 }`,
 
   "quick-sort":
@@ -43,63 +45,79 @@ int[] Merge(int[] L, int[] R) {
 }`,
 
   "insertion-sort":
-`for (int i = 1; i < n; i++) {
-  int key = arr[i], j = i-1;
-  while (j >= 0 && arr[j] > key)
-    arr[j+1] = arr[j--];
-  arr[j+1] = key;
+`void InsertionSort(int[] arr, int n) {
+  for (int i = 1; i < n; i++) {
+    int key = arr[i], j = i-1;
+    while (j >= 0 && arr[j] > key)
+      arr[j+1] = arr[j--];
+    arr[j+1] = key;
+  }
 }`,
 
   "selection-sort":
-`for (int i = 0; i < n-1; i++) {
-  int min = i;
-  for (int j = i+1; j < n; j++)
-    if (arr[j] < arr[min]) min = j;
-  (arr[i], arr[min]) = (arr[min], arr[i]);
+`void SelectionSort(int[] arr, int n) {
+  for (int i = 0; i < n-1; i++) {
+    int min = i;
+    for (int j = i+1; j < n; j++)
+      if (arr[j] < arr[min]) min = j;
+    (arr[i], arr[min]) = (arr[min], arr[i]);
+  }
 }`,
 
   "binary-search":
-`int lo = 0, hi = n-1;
-while (lo <= hi) {
-  int mid = (lo + hi) / 2;
-  if (arr[mid] == target) return mid;
-  if (arr[mid] < target)  lo = mid+1;
-  else                    hi = mid-1;
-}
-return -1;`,
+`int BinarySearch(int[] arr, int n, int target) {
+  int lo = 0, hi = n-1;
+  while (lo <= hi) {
+    int mid = (lo + hi) / 2;
+    if (arr[mid] == target) return mid;
+    if (arr[mid] < target)  lo = mid+1;
+    else                    hi = mid-1;
+  }
+  return -1;
+}`,
 
   "two-pointers":
-`int l = 0, r = n-1;
-while (l < r) {
-  int sum = arr[l] + arr[r];
-  if (sum == target) { Record(l, r); l++; r--; }
-  else if (sum < target) l++;
-  else r--;
+`List<(int,int)> TwoPointers(int[] arr, int n, int target) {
+  var result = new List<(int,int)>();
+  int l = 0, r = n-1;
+  while (l < r) {
+    int sum = arr[l] + arr[r];
+    if (sum == target) { result.Add((l,r)); l++; r--; }
+    else if (sum < target) l++;
+    else r--;
+  }
+  return result;
 }`,
 
   "sliding-window":
-`int window = arr[..k].Sum(), max = window;
-for (int i = k; i < n; i++) {
-  window += arr[i] - arr[i-k];
-  max = Math.Max(max, window);
-}
-return max;`,
+`int SlidingWindow(int[] arr, int n, int k) {
+  int window = arr[..k].Sum(), max = window;
+  for (int i = k; i < n; i++) {
+    window += arr[i] - arr[i-k];
+    max = Math.Max(max, window);
+  }
+  return max;
+}`,
 
   "kadane":
-`int here = arr[0], best = arr[0];
-for (int i = 1; i < n; i++) {
-  here = Math.Max(arr[i], here + arr[i]);
-  best = Math.Max(best, here);
-}
-return best;`,
+`int Kadane(int[] arr, int n) {
+  int here = arr[0], best = arr[0];
+  for (int i = 1; i < n; i++) {
+    here = Math.Max(arr[i], here + arr[i]);
+    best = Math.Max(best, here);
+  }
+  return best;
+}`,
 
   "bfs":
-`var q = new Queue<int>(); q.Enqueue(start);
-var seen = new HashSet<int> { start };
-while (q.Count > 0) {
-  int node = q.Dequeue();
-  foreach (int nbr in graph[node])
-    if (seen.Add(nbr)) q.Enqueue(nbr);
+`void Bfs(List<int>[] graph, int start) {
+  var q = new Queue<int>(); q.Enqueue(start);
+  var seen = new HashSet<int> { start };
+  while (q.Count > 0) {
+    int node = q.Dequeue();
+    foreach (int nbr in graph[node])
+      if (seen.Add(nbr)) q.Enqueue(nbr);
+  }
 }`,
 
   "dfs":
@@ -112,55 +130,82 @@ while (q.Count > 0) {
 }`,
 
   "dijkstra":
-`var dist = new int[n]; Array.Fill(dist, int.MaxValue);
-dist[src] = 0;
-var pq = new PriorityQueue<int,int>(); pq.Enqueue(src, 0);
-while (pq.Count > 0) {
-  int u = pq.Dequeue();
-  foreach ((int v, int w) in graph[u])
-    if (dist[u]+w < dist[v]) {
-      dist[v] = dist[u]+w; pq.Enqueue(v, dist[v]);
-    }
+`int[] Dijkstra(List<(int v, int w)>[] graph, int n, int src) {
+  var dist = new int[n]; Array.Fill(dist, int.MaxValue);
+  dist[src] = 0;
+  var pq = new PriorityQueue<int,int>(); pq.Enqueue(src, 0);
+  while (pq.Count > 0) {
+    int u = pq.Dequeue();
+    foreach ((int v, int w) in graph[u])
+      if (dist[u]+w < dist[v]) {
+        dist[v] = dist[u]+w; pq.Enqueue(v, dist[v]);
+      }
+  }
+  return dist;
 }`,
 
   "topological-sort":
-`int[] inDeg = CountIncoming();
-var q = new Queue<int>(
-  Enumerable.Range(0,n).Where(v => inDeg[v]==0));
-var order = new List<int>();
-while (q.Count > 0) {
-  int u = q.Dequeue(); order.Add(u);
-  foreach (int v in graph[u])
-    if (--inDeg[v] == 0) q.Enqueue(v);
+`List<int> TopologicalSort(List<int>[] graph, int n) {
+  int[] inDeg = new int[n];
+  foreach (var nbrs in graph)
+    foreach (int v in nbrs) inDeg[v]++;
+  var q = new Queue<int>(
+    Enumerable.Range(0,n).Where(v => inDeg[v]==0));
+  var order = new List<int>();
+  while (q.Count > 0) {
+    int u = q.Dequeue(); order.Add(u);
+    foreach (int v in graph[u])
+      if (--inDeg[v] == 0) q.Enqueue(v);
+  }
+  return order;
 }`,
 
   "cycle-detection":
-`int[] color = new int[n]; // 0 WHITE 1 GRAY 2 BLACK
-bool Dfs(int v) {
-  color[v] = 1;
-  foreach (int nbr in graph[v]) {
-    if (color[nbr] == 1) return true;
-    if (color[nbr] == 0 && Dfs(nbr)) return true;
+`bool HasCycle(List<int>[] graph, int n) {
+  int[] color = new int[n]; // 0 WHITE 1 GRAY 2 BLACK
+  bool Dfs(int v) {
+    color[v] = 1;
+    foreach (int nbr in graph[v]) {
+      if (color[nbr] == 1) return true;
+      if (color[nbr] == 0 && Dfs(nbr)) return true;
+    }
+    color[v] = 2; return false;
   }
-  color[v] = 2; return false;
+  for (int i = 0; i < n; i++)
+    if (color[i] == 0 && Dfs(i)) return true;
+  return false;
 }`,
 
   "kruskal":
-`edges.Sort((a,b) => a.W - b.W);
-var uf = new UnionFind(n);
-var mst = new List<Edge>();
-foreach (var (u,v,w) in edges)
-  if (uf.Find(u) != uf.Find(v)) {
-    uf.Union(u,v); mst.Add((u,v,w));
-  }`,
+`List<(int u,int v,int w)> Kruskal(
+    List<(int u,int v,int w)> edges, int n) {
+  int[] par = Enumerable.Range(0, n).ToArray();
+  int Find(int x) =>
+    par[x] == x ? x : par[x] = Find(par[x]);
+  void Union(int a, int b) =>
+    par[Find(a)] = Find(b);
+  edges.Sort((a, b) => a.w - b.w);
+  var mst = new List<(int u,int v,int w)>();
+  foreach (var (u, v, w) in edges)
+    if (Find(u) != Find(v)) {
+      Union(u, v); mst.Add((u, v, w));
+    }
+  return mst;
+}`,
 
   "prim":
-`int[] key = new int[n]; Array.Fill(key, int.MaxValue);
-bool[] inMst = new bool[n]; key[src] = 0;
-for (int _ = 0; _ < n; _++) {
-  int u = MinKey(key, inMst); inMst[u] = true;
-  foreach ((int v, int w) in graph[u])
-    if (!inMst[v] && w < key[v]) key[v] = w;
+`int[] Prim(List<(int v,int w)>[] graph, int n, int src) {
+  int[] key = new int[n]; Array.Fill(key, int.MaxValue);
+  bool[] inMst = new bool[n]; key[src] = 0;
+  for (int _ = 0; _ < n; _++) {
+    int u = -1;
+    for (int v = 0; v < n; v++)
+      if (!inMst[v] && (u==-1 || key[v] < key[u])) u = v;
+    inMst[u] = true;
+    foreach ((int v, int w) in graph[u])
+      if (!inMst[v] && w < key[v]) key[v] = w;
+  }
+  return key; // key[v] = MST edge weight connecting v
 }`,
 
   "bst-insert-search":
@@ -202,33 +247,40 @@ Node Search(Node root, int val) {
 }`,
 
   "level-order":
-`var q = new Queue<Node>(); q.Enqueue(root);
-while (q.Count > 0) {
-  Node node = q.Dequeue();
-  Visit(node);
-  if (node.left  != null) q.Enqueue(node.left);
-  if (node.right != null) q.Enqueue(node.right);
+`List<int> LevelOrder(Node root) {
+  var result = new List<int>();
+  var q = new Queue<Node>(); q.Enqueue(root);
+  while (q.Count > 0) {
+    Node node = q.Dequeue();
+    result.Add(node.val);
+    if (node.left  != null) q.Enqueue(node.left);
+    if (node.right != null) q.Enqueue(node.right);
+  }
+  return result;
 }`,
 
   "lca":
-`Node Lca(Node root, Node p, Node q) {
-  if (root == null || root == p || root == q)
-    return root;
-  Node left  = Lca(root.left,  p, q);
-  Node right = Lca(root.right, p, q);
-  if (left != null && right != null) return root;
-  return left ?? right;
+`Node Lca(Node root, int p, int q) {
+  if (root == null) return null;
+  if (root.val > p && root.val > q)
+    return Lca(root.left, p, q);
+  if (root.val < p && root.val < q)
+    return Lca(root.right, p, q);
+  return root; // split point: root is the LCA
 }`,
 
   "diameter":
-`int best = 0;
-int Dfs(Node node) {
-  if (node == null) return 0;
-  int L = Dfs(node.left), R = Dfs(node.right);
-  best = Math.Max(best, L + R);
-  return 1 + Math.Max(L, R);
-}
-Dfs(root); return best;`,
+`int Diameter(Node root) {
+  int best = 0;
+  int Dfs(Node node) {
+    if (node == null) return 0;
+    int L = Dfs(node.left), R = Dfs(node.right);
+    best = Math.Max(best, L + R);
+    return 1 + Math.Max(L, R);
+  }
+  Dfs(root);
+  return best;
+}`,
 
   "validate-bst":
 `bool IsValid(Node node,
@@ -251,203 +303,283 @@ Dfs(root); return best;`,
 }`,
 
   "huffman":
-`var pq = new PriorityQueue<Node,int>();
-foreach (var (ch, freq) in freqs)
-  pq.Enqueue(new Node(ch), freq);
-while (pq.Count > 1) {
-  pq.TryDequeue(out var l, out int lf);
-  pq.TryDequeue(out var r, out int rf);
-  pq.Enqueue(new Node(l, r), lf + rf);
-}
-Node root = pq.Peek();`,
+`Node BuildHuffman(Dictionary<char,int> freqs) {
+  var pq = new PriorityQueue<Node,int>();
+  foreach (var (ch, freq) in freqs)
+    pq.Enqueue(new Node(ch), freq);
+  while (pq.Count > 1) {
+    pq.TryDequeue(out var l, out int lf);
+    pq.TryDequeue(out var r, out int rf);
+    pq.Enqueue(new Node(l, r), lf + rf);
+  }
+  return pq.Peek();
+}`,
 
   "fibonacci":
-`int[] dp = new int[n+1];
-dp[0] = 0; dp[1] = 1;
-for (int i = 2; i <= n; i++)
-  dp[i] = dp[i-1] + dp[i-2];
-return dp[n];`,
+`int Fibonacci(int n) {
+  int[] dp = new int[n+1];
+  dp[0] = 0; dp[1] = 1;
+  for (int i = 2; i <= n; i++)
+    dp[i] = dp[i-1] + dp[i-2];
+  return dp[n];
+}`,
 
   "knapsack":
-`int[,] dp = new int[n+1, W+1];
-for (int i = 1; i <= n; i++)
-  for (int w = 0; w <= W; w++) {
-    dp[i,w] = dp[i-1,w];
-    if (weights[i-1] <= w)
-      dp[i,w] = Math.Max(dp[i,w],
-        dp[i-1, w-weights[i-1]] + values[i-1]);
-  }`,
+`int Knapsack(int[] weights, int[] values, int n, int W) {
+  int[,] dp = new int[n+1, W+1];
+  for (int i = 1; i <= n; i++)
+    for (int w = 0; w <= W; w++) {
+      dp[i,w] = dp[i-1,w];
+      if (weights[i-1] <= w)
+        dp[i,w] = Math.Max(dp[i,w],
+          dp[i-1, w-weights[i-1]] + values[i-1]);
+    }
+  return dp[n,W];
+}`,
 
   "lcs":
-`int[,] dp = new int[n+1, m+1];
-for (int i = 1; i <= n; i++)
-  for (int j = 1; j <= m; j++)
-    dp[i,j] = s1[i-1] == s2[j-1]
-      ? dp[i-1,j-1] + 1
-      : Math.Max(dp[i-1,j], dp[i,j-1]);`,
+`int Lcs(string s1, string s2, int n, int m) {
+  int[,] dp = new int[n+1, m+1];
+  for (int i = 1; i <= n; i++)
+    for (int j = 1; j <= m; j++)
+      dp[i,j] = s1[i-1] == s2[j-1]
+        ? dp[i-1,j-1] + 1
+        : Math.Max(dp[i-1,j], dp[i,j-1]);
+  return dp[n,m];
+}`,
 
   "lis":
-`int[] dp = new int[n]; Array.Fill(dp, 1);
-for (int i = 1; i < n; i++)
-  for (int j = 0; j < i; j++)
-    if (arr[j] < arr[i])
-      dp[i] = Math.Max(dp[i], dp[j]+1);
-return dp.Max();`,
+`int Lis(int[] arr, int n) {
+  int[] dp = new int[n]; Array.Fill(dp, 1);
+  for (int i = 1; i < n; i++)
+    for (int j = 0; j < i; j++)
+      if (arr[j] < arr[i])
+        dp[i] = Math.Max(dp[i], dp[j]+1);
+  return dp.Max();
+}`,
 
   "coin-change":
-`int[] dp = new int[amount+1];
-Array.Fill(dp, int.MaxValue); dp[0] = 0;
-foreach (int c in coins)
-  for (int i = c; i <= amount; i++)
-    if (dp[i-c] != int.MaxValue)
-      dp[i] = Math.Min(dp[i], dp[i-c]+1);
-return dp[amount] == int.MaxValue ? -1 : dp[amount];`,
+`int CoinChange(int[] coins, int amount) {
+  int[] dp = new int[amount+1];
+  Array.Fill(dp, int.MaxValue); dp[0] = 0;
+  foreach (int c in coins)
+    for (int i = c; i <= amount; i++)
+      if (dp[i-c] != int.MaxValue)
+        dp[i] = Math.Min(dp[i], dp[i-c]+1);
+  return dp[amount] == int.MaxValue ? -1 : dp[amount];
+}`,
 
   "climbing-stairs":
-`int[] dp = new int[n+1];
-dp[0] = 1; dp[1] = 1;
-for (int i = 2; i <= n; i++)
-  dp[i] = dp[i-1] + dp[i-2];
-return dp[n];`,
+`int ClimbingStairs(int n) {
+  int[] dp = new int[n+1];
+  dp[0] = 1; dp[1] = 1;
+  for (int i = 2; i <= n; i++)
+    dp[i] = dp[i-1] + dp[i-2];
+  return dp[n];
+}`,
 
   "permutations":
-`void Backtrack(List<int> path, bool[] used) {
-  if (path.Count == n) { results.Add([..path]); return; }
-  for (int i = 0; i < n; i++) {
-    if (used[i]) continue;
-    used[i] = true; path.Add(nums[i]);
-    Backtrack(path, used);
-    used[i] = false; path.RemoveAt(path.Count-1);
+`List<List<int>> Permutations(int[] nums, int n) {
+  var results = new List<List<int>>();
+  void Backtrack(List<int> path, bool[] used) {
+    if (path.Count == n) { results.Add([..path]); return; }
+    for (int i = 0; i < n; i++) {
+      if (used[i]) continue;
+      used[i] = true; path.Add(nums[i]);
+      Backtrack(path, used);
+      used[i] = false; path.RemoveAt(path.Count-1);
+    }
   }
+  Backtrack(new List<int>(), new bool[n]);
+  return results;
 }`,
 
   "subsets":
-`void Backtrack(int start, List<int> path) {
-  results.Add([..path]);
-  for (int i = start; i < n; i++) {
-    path.Add(nums[i]);
-    Backtrack(i+1, path);
-    path.RemoveAt(path.Count-1);
-  }
-}`,
-
-  "combination-sum":
-`void Backtrack(int start, List<int> path, int rem) {
-  if (rem == 0) { results.Add([..path]); return; }
-  for (int i = start; i < n; i++) {
-    if (candidates[i] > rem) break;
-    path.Add(candidates[i]);
-    Backtrack(i, path, rem - candidates[i]);
-    path.RemoveAt(path.Count-1);
-  }
-}`,
-
-  "palindrome-partitioning":
-`void Backtrack(int start, List<string> path) {
-  if (start == s.Length) { results.Add([..path]); return; }
-  for (int end = start+1; end <= s.Length; end++) {
-    string sub = s[start..end];
-    if (IsPalindrome(sub)) {
-      path.Add(sub); Backtrack(end, path);
+`List<List<int>> Subsets(int[] nums, int n) {
+  var results = new List<List<int>>();
+  void Backtrack(int start, List<int> path) {
+    results.Add([..path]);
+    for (int i = start; i < n; i++) {
+      path.Add(nums[i]);
+      Backtrack(i+1, path);
       path.RemoveAt(path.Count-1);
     }
   }
+  Backtrack(0, new List<int>());
+  return results;
+}`,
+
+  "combination-sum":
+`List<List<int>> CombinationSum(int[] candidates, int target) {
+  int n = candidates.Length;
+  Array.Sort(candidates); // required for the break to work
+  var results = new List<List<int>>();
+  void Backtrack(int start, List<int> path, int rem) {
+    if (rem == 0) { results.Add([..path]); return; }
+    for (int i = start; i < n; i++) {
+      if (candidates[i] > rem) break;
+      path.Add(candidates[i]);
+      Backtrack(i, path, rem - candidates[i]);
+      path.RemoveAt(path.Count-1);
+    }
+  }
+  Backtrack(0, new List<int>(), target);
+  return results;
+}`,
+
+  "palindrome-partitioning":
+`List<List<string>> PalindromePartition(string s) {
+  var results = new List<List<string>>();
+  bool IsPalindrome(string t) {
+    int l = 0, r = t.Length-1;
+    while (l < r) if (t[l++] != t[r--]) return false;
+    return true;
+  }
+  void Backtrack(int start, List<string> path) {
+    if (start == s.Length) { results.Add([..path]); return; }
+    for (int end = start+1; end <= s.Length; end++) {
+      string sub = s[start..end];
+      if (IsPalindrome(sub)) {
+        path.Add(sub); Backtrack(end, path);
+        path.RemoveAt(path.Count-1);
+      }
+    }
+  }
+  Backtrack(0, new List<string>());
+  return results;
 }`,
 
   "bit-manipulation":
-`bool check = (n & (1 << k)) != 0;
-int  set    =  n | (1 << k);
-int  clear  =  n & ~(1 << k);
-int  toggle =  n ^ (1 << k);
-int  count  =  BitOperations.PopCount((uint)n);
-bool pow2   = (n & (n-1)) == 0;`,
+`void BitTricks(int n, int k) {
+  bool check = (n & (1 << k)) != 0;  // is bit k set?
+  int  set    =  n | (1 << k);        // set bit k
+  int  clear  =  n & ~(1 << k);       // clear bit k
+  int  toggle =  n ^ (1 << k);        // toggle bit k
+  int  count  =  BitOperations.PopCount((uint)n); // popcount
+  bool pow2   = (n & (n-1)) == 0;     // is n power of 2?
+}`,
 
   "linear-search":
-`for (int i = 0; i <= n-m; i++)
-  if (text[i..(i+m)] == pattern)
-    matches.Add(i);`,
+`List<int> NaiveSearch(string text, string pattern, int n, int m) {
+  var matches = new List<int>();
+  for (int i = 0; i <= n-m; i++)
+    if (text[i..(i+m)] == pattern)
+      matches.Add(i);
+  return matches;
+}`,
 
   "kmp":
-`// build lps[] failure function first
-int i = 0, j = 0;
-while (i < n) {
-  if (text[i] == pattern[j]) { i++; j++; }
-  if (j == m) { matches.Add(i-j); j = lps[j-1]; }
-  else if (text[i] != pattern[j]) {
-    if (j > 0) j = lps[j-1]; else i++;
+`List<int> Kmp(string text, string pattern, int n, int m) {
+  var matches = new List<int>();
+  // Build lps[] (failure / prefix) table
+  int[] lps = new int[m];
+  for (int len = 0, k = 1; k < m; ) {
+    if (pattern[k] == pattern[len]) lps[k++] = ++len;
+    else if (len > 0) len = lps[len-1];
+    else lps[k++] = 0;
   }
+  // Search
+  int i = 0, j = 0;
+  while (i < n) {
+    if (text[i] == pattern[j]) { i++; j++; }
+    if (j == m) { matches.Add(i-j); j = lps[j-1]; }
+    else if (i < n && text[i] != pattern[j]) {
+      if (j > 0) j = lps[j-1]; else i++;
+    }
+  }
+  return matches;
 }`,
 
   "boyer-moore":
-`// build badChar & goodSuffix tables first
-int s = 0;
-while (s <= n-m) {
-  int j = m-1;
-  while (j >= 0 && pattern[j] == text[s+j]) j--;
-  if (j < 0) { matches.Add(s); s += goodSuffix[0]; }
-  else s += Math.Max(goodSuffix[j],
-                     j - badChar[text[s+j]]);
+`List<int> BoyerMoore(string text, string pattern, int n, int m) {
+  var matches = new List<int>();
+  // Bad-character table
+  int[] bad = new int[256];
+  Array.Fill(bad, -1);
+  for (int i = 0; i < m; i++) bad[pattern[i]] = i;
+  // Good-suffix table
+  int[] gs = new int[m+1]; Array.Fill(gs, m);
+  int[] border = new int[m+1]; border[m] = m+1;
+  for (int i = m-1, j = m+1; i >= 0; i--, j--) {
+    while (j <= m && pattern[i] != pattern[j-1])
+      { if (gs[j] == m) gs[j] = j-i; j = border[j]; }
+    border[i] = j;
+  }
+  for (int i = 0; i <= m; i++)
+    if (gs[border[i]] == m) gs[border[i]] = i;
+  // Search
+  int s = 0;
+  while (s <= n-m) {
+    int j = m-1;
+    while (j >= 0 && pattern[j] == text[s+j]) j--;
+    if (j < 0) { matches.Add(s); s += gs[0]; }
+    else s += Math.Max(gs[j+1], j - bad[text[s+j]]);
+  }
+  return matches;
 }`,
 
   "rabin-karp":
-`def rabin_karp(text, pattern, b=256, mod=101):
-    n, m = len(text), len(pattern)
-    if m > n:
-        return []
-    pattern_hash = 0
-    window_hash = 0
-    h = 1
-    for i in range(m - 1):
-        h = (h * b) % mod
-    for i in range(m):
-        pattern_hash = (b * pattern_hash + ord(pattern[i])) % mod
-        window_hash = (b * window_hash + ord(text[i])) % mod
-    results = []
-    for i in range(n - m + 1):
-        if pattern_hash == window_hash:
-            if text[i:i+m] == pattern:
-                results.append(i)
-        if i < n - m:
-            window_hash = (b * (window_hash - ord(text[i]) * h) + ord(text[i + m])) % mod
-            if window_hash < 0:
-                window_hash += mod
-    return results`,
+`List<int> RabinKarp(string text, string pattern, int n, int m) {
+  var matches = new List<int>();
+  const int B = 256, MOD = 101;
+  int h = 1;
+  for (int i = 0; i < m-1; i++) h = h*B % MOD;
+  int ph = 0, wh = 0;
+  for (int i = 0; i < m; i++) {
+    ph = (B*ph + pattern[i]) % MOD;
+    wh = (B*wh + text[i])    % MOD;
+  }
+  for (int i = 0; i <= n-m; i++) {
+    if (ph == wh && text[i..(i+m)] == pattern)
+      matches.Add(i);
+    if (i < n-m) {
+      wh = (B*(wh - text[i]*h) + text[i+m]) % MOD;
+      if (wh < 0) wh += MOD;
+    }
+  }
+  return matches;
+}`,
 
   "longest-palindrome":
-`string t = "^#" + string.Join("#", s.ToCharArray()) + "#$";
-int n = t.Length;
-int[] p = new int[n];
-int c = 0, r = 0;
-
-for (int i = 1; i < n - 1; i++) {
-  int mirror = 2 * c - i;
-  if (i < r) p[i] = Math.Min(r - i, p[mirror]);
-  while (t[i + p[i] + 1] == t[i - p[i] - 1]) p[i]++;
-  if (i + p[i] > r) { c = i; r = i + p[i]; }
-}
-
-int maxLen = 0, centerIdx = 0;
-for (int i = 1; i < n - 1; i++)
-  if (p[i] > maxLen) { maxLen = p[i]; centerIdx = i; }
-
-int start = (centerIdx - maxLen) / 2;
-return s.Substring(start, maxLen);`,
+`string LongestPalindrome(string s) {
+  string t = "^#" + string.Join("#", s.ToCharArray()) + "#$";
+  int n = t.Length;
+  int[] p = new int[n];
+  int c = 0, r = 0;
+  for (int i = 1; i < n-1; i++) {
+    int mirror = 2*c - i;
+    if (i < r) p[i] = Math.Min(r-i, p[mirror]);
+    while (t[i+p[i]+1] == t[i-p[i]-1]) p[i]++;
+    if (i+p[i] > r) { c = i; r = i+p[i]; }
+  }
+  int maxLen = 0, centerIdx = 0;
+  for (int i = 1; i < n-1; i++)
+    if (p[i] > maxLen) { maxLen = p[i]; centerIdx = i; }
+  int start = (centerIdx - maxLen) / 2;
+  return s.Substring(start, maxLen);
+}`,
 
   "anagram-detection":
-`int[] pCount = new int[256], wCount = new int[256];
-foreach (char c in pattern) pCount[c]++;
-for (int i = 0; i < text.Length; i++) {
-  wCount[text[i]]++;
-  if (i >= pattern.Length) wCount[text[i - pattern.Length]]--;
-  if (i >= pattern.Length - 1 && pCount.SequenceEqual(wCount))
-    result.Add(i - pattern.Length + 1);
+`List<int> AnagramDetection(string text, string pattern) {
+  var result = new List<int>();
+  int[] pCount = new int[256], wCount = new int[256];
+  foreach (char c in pattern) pCount[c]++;
+  for (int i = 0; i < text.Length; i++) {
+    wCount[text[i]]++;
+    if (i >= pattern.Length) wCount[text[i - pattern.Length]]--;
+    if (i >= pattern.Length-1 && pCount.SequenceEqual(wCount))
+      result.Add(i - pattern.Length + 1);
+  }
+  return result;
 }`,
 
   "reversal":
-`char[] arr = s.ToCharArray();
-for (int l = 0, r = arr.Length-1; l < r; l++, r--)
-  (arr[l], arr[r]) = (arr[r], arr[l]);
-return new string(arr);`,
+`string Reverse(string s) {
+  char[] arr = s.ToCharArray();
+  for (int l = 0, r = arr.Length-1; l < r; l++, r--)
+    (arr[l], arr[r]) = (arr[r], arr[l]);
+  return new string(arr);
+}`,
 };
 
 // To add a shortcut: find the slug and replace its ##SHORTCUT_PLACEHOLDER## value

@@ -1,4 +1,4 @@
-import VisControls from "../VisControls/VisControls";
+﻿import VisControls from "../VisControls/VisControls";
 import type { AlgorithmStep } from "../../types";
 import "./NrTheoryVisualizer.css";
 
@@ -8,22 +8,29 @@ interface Props {
   disabled?: boolean;
   slug?: string;
   inputControls?: React.ReactNode;
+  speed: number;
+  isPaused?: boolean;
+  onComplete?: () => void;
 }
 
 export default function NrTheoryVisualizer({
   steps,
-  onRun,
-  disabled,
+  onRun: _onRun,
+  disabled: _disabled,
   slug,
   inputControls,
+  speed,
+  isPaused,
+  onComplete,
 }: Props) {
   return (
     <VisControls
       steps={steps}
-      onRun={onRun}
-      disabled={disabled}
       hideDescription
       inputControls={inputControls}
+      speed={speed}
+      isPaused={isPaused}
+      onComplete={onComplete}
     >
       {(step: AlgorithmStep) => {
         const arr = step.array;
@@ -40,21 +47,38 @@ export default function NrTheoryVisualizer({
 
           const toBits = (val: number): number[] => {
             const safe = val < 0 ? (val >>> 0) & ((1 << bitWidth) - 1) : val;
-            return safe.toString(2).padStart(bitWidth, "0").split("").map(Number);
+            return safe
+              .toString(2)
+              .padStart(bitWidth, "0")
+              .split("")
+              .map(Number);
           };
 
-          const bitCls = (bit: number, i: number, hlSet?: Set<number>, rowCls?: string): string => {
+          const bitCls = (
+            bit: number,
+            i: number,
+            hlSet?: Set<number>,
+            rowCls?: string,
+          ): string => {
             if (rowCls) return `bm-bit bm-${rowCls}`;
             if (hlSet?.has(i)) return "bm-bit bm-active";
             return bit === 1 ? "bm-bit bm-one" : "bm-bit bm-zero";
           };
 
-          const renderBitRow = (label: string, bits: number[], decimal: number, hlSet?: Set<number>, rowCls?: string) => (
+          const renderBitRow = (
+            label: string,
+            bits: number[],
+            decimal: number,
+            hlSet?: Set<number>,
+            rowCls?: string,
+          ) => (
             <div className="bm-row">
               <span className="bm-label">{label}</span>
               <div className="bm-bits">
                 {bits.map((bit, i) => (
-                  <div key={i} className={bitCls(bit, i, hlSet, rowCls)}>{bit}</div>
+                  <div key={i} className={bitCls(bit, i, hlSet, rowCls)}>
+                    {bit}
+                  </div>
                 ))}
               </div>
               <span className="bm-decimal">= {decimal}</span>
@@ -66,7 +90,9 @@ export default function NrTheoryVisualizer({
               <span className="bm-label" />
               <div className="bm-bits">
                 {Array.from({ length: bitWidth }, (_, i) => (
-                  <div key={i} className="bm-pos">{bitWidth - 1 - i}</div>
+                  <div key={i} className="bm-pos">
+                    {bitWidth - 1 - i}
+                  </div>
                 ))}
               </div>
               <span className="bm-decimal" />
@@ -79,13 +105,15 @@ export default function NrTheoryVisualizer({
             </div>
           );
 
-          const isAnd   = desc.includes("& (n-1)");
-          const isXor   = desc.includes("XOR");
-          const isNot   = desc.includes("NOT n");
+          const isAnd = desc.includes("& (n-1)");
+          const isXor = desc.includes("XOR");
+          const isNot = desc.includes("NOT n");
           const isCount = desc.includes("Set bits");
 
           if (isAnd) {
-            const valN = arr[0], valNm1 = arr[1], valResult = arr[2];
+            const valN = arr[0],
+              valNm1 = arr[1],
+              valResult = arr[2];
             const isPow2 = valResult === 0 && valN > 0;
             return (
               <>
@@ -93,20 +121,31 @@ export default function NrTheoryVisualizer({
                   {renderPosRow()}
                   {renderBitRow("n", toBits(valN), valN)}
                   {renderOp("&")}
-                  {renderBitRow("n − 1", toBits(valNm1), valNm1)}
+                  {renderBitRow("n - 1", toBits(valNm1), valNm1)}
                   <div className="bm-divider" />
-                  {renderBitRow("result", toBits(valResult), valResult, undefined, isPow2 ? "done" : "active")}
+                  {renderBitRow(
+                    "result",
+                    toBits(valResult),
+                    valResult,
+                    undefined,
+                    isPow2 ? "done" : "active",
+                  )}
                   <div className={`bm-verdict ${isPow2 ? "bm-yes" : "bm-no"}`}>
-                    {isPow2 ? `✓ ${n} is a power of 2` : `✗ ${n} is not a power of 2`}
+                    {isPow2
+                      ? `✓ ${n} is a power of 2`
+                      : `✗ ${n} is not a power of 2`}
                   </div>
                 </div>
-                <div className={`step-info${isFinal ? " final" : ""}`}>{desc}</div>
+                <div className={`step-info${isFinal ? " final" : ""}`}>
+                  {desc}
+                </div>
               </>
             );
           }
 
           if (isXor) {
-            const valA = arr[0], valResult = arr[2];
+            const valA = arr[0],
+              valResult = arr[2];
             return (
               <>
                 <div className="bm-vis">
@@ -115,7 +154,13 @@ export default function NrTheoryVisualizer({
                   {renderOp("⊕")}
                   {renderBitRow("n", toBits(valA), valA)}
                   <div className="bm-divider" />
-                  {renderBitRow("result", toBits(valResult), valResult, undefined, "done")}
+                  {renderBitRow(
+                    "result",
+                    toBits(valResult),
+                    valResult,
+                    undefined,
+                    "done",
+                  )}
                 </div>
                 <div className={`step-info${isFinal ? " final" : ""}`}>
                   Any value XOR'd with itself always cancels to 0
@@ -134,7 +179,9 @@ export default function NrTheoryVisualizer({
                   {renderOp("~")}
                   {renderBitRow("~n", arr, flippedVal, undefined, "done")}
                 </div>
-                <div className={`step-info${isFinal ? " final" : ""}`}>{desc}</div>
+                <div className={`step-info${isFinal ? " final" : ""}`}>
+                  {desc}
+                </div>
               </>
             );
           }
@@ -148,11 +195,14 @@ export default function NrTheoryVisualizer({
                 {renderBitRow("n", arr, decimal, isCount ? hl : undefined)}
                 {isCount && (
                   <div className="bm-badge">
-                    {arr.filter(b => b === 1).length} set bit{arr.filter(b => b === 1).length !== 1 ? "s" : ""}
+                    {arr.filter((b) => b === 1).length} set bit
+                    {arr.filter((b) => b === 1).length !== 1 ? "s" : ""}
                   </div>
                 )}
               </div>
-              <div className={`step-info${isFinal ? " final" : ""}`}>{desc}</div>
+              <div className={`step-info${isFinal ? " final" : ""}`}>
+                {desc}
+              </div>
             </>
           );
         }
@@ -184,4 +234,3 @@ export default function NrTheoryVisualizer({
     </VisControls>
   );
 }
-

@@ -1,4 +1,4 @@
-import VisControls from "../VisControls/VisControls";
+﻿import VisControls from "../VisControls/VisControls";
 import type { AlgorithmStep } from "../../types";
 import "./DPVisualizer.css";
 
@@ -7,6 +7,9 @@ interface Props {
   onRun: () => void;
   disabled?: boolean;
   inputControls?: React.ReactNode;
+  speed: number;
+  isPaused?: boolean;
+  onComplete?: () => void;
 }
 
 /**
@@ -15,17 +18,21 @@ interface Props {
  */
 export default function DPVisualizer({
   steps,
-  onRun,
-  disabled,
+  onRun: _onRun,
+  disabled: _disabled,
   inputControls,
+  speed,
+  isPaused,
+  onComplete,
 }: Props) {
   return (
     <VisControls
       steps={steps}
-      onRun={onRun}
-      disabled={disabled}
       hideDescription
       inputControls={inputControls}
+      speed={speed}
+      isPaused={isPaused}
+      onComplete={onComplete}
     >
       {(step: AlgorithmStep) => {
         const arr = step.array;

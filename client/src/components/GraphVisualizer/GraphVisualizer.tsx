@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
 import VisControls from "../VisControls/VisControls";
 import type { AlgorithmStep } from "../../types";
 import "./GraphVisualizer.css";
@@ -11,6 +11,9 @@ interface Props {
   nodeCount: number;
   directed?: boolean;
   inputControls?: React.ReactNode;
+  speed: number;
+  isPaused?: boolean;
+  onComplete?: () => void;
 }
 
 /**
@@ -19,20 +22,24 @@ interface Props {
  */
 export default function GraphVisualizer({
   steps,
-  onRun,
-  disabled,
+  onRun: _onRun,
+  disabled: _disabled,
   edges,
   nodeCount,
   directed,
   inputControls,
+  speed,
+  isPaused,
+  onComplete,
 }: Props) {
   return (
     <VisControls
       steps={steps}
-      onRun={onRun}
-      disabled={disabled}
       hideDescription
       inputControls={inputControls}
+      speed={speed}
+      isPaused={isPaused}
+      onComplete={onComplete}
     >
       {(step: AlgorithmStep) => {
         const n = step.array.length || nodeCount;

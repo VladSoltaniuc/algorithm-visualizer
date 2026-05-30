@@ -1,0 +1,167 @@
+.bmv-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.5rem 0 1.5rem;
+}
+
+.bmv-top-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.bmv-empty {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  padding: 3rem 1rem;
+}
+
+/* ── Section panels ── */
+.bmv-section {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1rem 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.bmv-section--wide {
+  width: 100%;
+}
+
+.bmv-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  margin: 0 0 0.25rem;
+}
+
+/* ── Responsive grid for operation panels ── */
+.bmv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* ── Bit visualization rows ── */
+.bmv-vis {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.bmv-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bmv-pos-row {
+  margin-bottom: 1px;
+}
+
+.bmv-label {
+  width: 52px;
+  text-align: right;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #64748b;
+  font-family: 'Courier New', monospace;
+  flex-shrink: 0;
+}
+
+.bmv-bits {
+  display: flex;
+  gap: 3px;
+}
+
+.bmv-bit {
+  width: 32px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  transition: background 0.2s, color 0.2s;
+}
+
+.bmv-zero   { background: #f1f5f9; color: #94a3b8; }
+.bmv-one    { background: #dbeafe; color: #1e40af; }
+.bmv-active { background: #e94560; color: #fff; }
+.bmv-done   { background: #06d6a0; color: #064e3b; }
+
+.bmv-pos {
+  width: 32px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.58rem;
+  color: #cbd5e1;
+  font-family: 'Courier New', monospace;
+}
+
+.bmv-decimal {
+  width: 52px;
+  font-size: 0.78rem;
+  color: #64748b;
+  font-family: 'Courier New', monospace;
+  flex-shrink: 0;
+}
+
+.bmv-op-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 18px;
+}
+
+.bmv-divider {
+  height: 2px;
+  width: 100%;
+  max-width: 360px;
+  background: #e2e8f0;
+  border-radius: 1px;
+  margin: 2px 0;
+}
+
+/* ── Badges / verdicts / hints ── */
+.bmv-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  background: #e94560;
+  color: #fff;
+  border-radius: 20px;
+}
+
+.bmv-verdict {
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.bmv-yes { background: #d1fae5; color: #065f46; }
+.bmv-no  { background: #fee2e2; color: #991b1b; }
+
+.bmv-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+}

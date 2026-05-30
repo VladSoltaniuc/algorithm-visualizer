@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   sortConfig,
   findConfig,
@@ -43,7 +43,11 @@ function from(slugs: string[]) {
   return slugs
     .map((slug) => {
       const a = all.find((c) => c.slug === slug)!;
-      return { name: a.name, path: `/${a.category}/${a.slug}`, rating: algorithmRatings[slug]?.stars ?? 0 };
+      return {
+        name: a.name,
+        path: `/${a.category}/${a.slug}`,
+        rating: algorithmRatings[slug]?.stars ?? 0,
+      };
     })
     .sort((a, b) => b.rating - a.rating);
 }
@@ -63,17 +67,18 @@ const tabs: Tab[] = [
   {
     label: "Find",
     basePath: "/find",
-    items: from([
-      "binary-search",
-      "sliding-window",
-      "two-pointers",
-      "kadane",
-    ]),
+    items: from(["binary-search", "sliding-window", "two-pointers", "kadane"]),
   },
   {
     label: "Patterns",
     basePath: "/patterns",
-    items: from(["kmp", "boyer-moore", "rabin-karp", "anagram-detection", "longest-palindrome"]),
+    items: from([
+      "kmp",
+      "boyer-moore",
+      "rabin-karp",
+      "anagram-detection",
+      "longest-palindrome",
+    ]),
   },
   {
     label: "Trees",
@@ -102,13 +107,7 @@ const tabs: Tab[] = [
   {
     label: "Dynamic Prog.",
     basePath: "/dp",
-    items: from([
-      "fibonacci",
-      "coin-change",
-      "lcs",
-      "knapsack",
-      "lis",
-    ]),
+    items: from(["fibonacci", "coin-change", "lcs", "knapsack", "lis"]),
   },
   {
     label: "Backtracking",
@@ -126,6 +125,69 @@ export default function Navigation() {
   const { isLearned } = useLearned();
   const [menuOpen, setMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const { pathname } = useLocation();
+  const pathParts = pathname.split("/").filter(Boolean);
+  const categoryFromPath = pathParts[0] ?? null;
+  const slugFromPath = pathParts[1] ?? null;
+  const currentAlgo = slugFromPath
+    ? ([
+        ...sortConfig,
+        ...findConfig,
+        ...patternConfig,
+        ...miscConfig,
+        ...treeConfig,
+        ...graphConfig,
+        ...dpConfig,
+        ...backtrackingConfig,
+      ].find((a) => a.slug === slugFromPath)?.name ?? null)
+    : null;
+  const currentAlgoLearned =
+    categoryFromPath && slugFromPath
+      ? isLearned(`${categoryFromPath}/${slugFromPath}`)
+      : false;
+
+  const navItems = tabs.flatMap((tab) => tab.items);
+  const totalCount = navItems.length; // 36 - intentionally excludes hidden algorithms
+  const learnedCount = navItems.filter((item) =>
+    isLearned(item.path.slice(1)),
+  ).length;
+
+  const prevLearnedCount = useRef(learnedCount);
+  const [shimmer, setShimmer] = useState(false);
+
+  useEffect(() => {
+    if (learnedCount > prevLearnedCount.current) {
+      setShimmer(false);
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => setShimmer(true)),
+      );
+      const t = setTimeout(() => setShimmer(false), 800);
+      return () => clearTimeout(t);
+    }
+    prevLearnedCount.current = learnedCount;
+  }, [learnedCount]);
+
+  const allLearnedKey = tabs
+    .map((tab) =>
+      tab.items.every((item) => isLearned(item.path.slice(1))) ? "1" : "0",
+    )
+    .join("");
+  const prevAllLearnedKey = useRef(allLearnedKey);
+  const [shimmerTabs, setShimmerTabs] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const newShimmers: string[] = [];
+    tabs.forEach((tab, i) => {
+      if (allLearnedKey[i] === "1" && prevAllLearnedKey.current[i] === "0") {
+        newShimmers.push(tab.label);
+      }
+    });
+    prevAllLearnedKey.current = allLearnedKey;
+    if (newShimmers.length === 0) return;
+    setShimmerTabs(new Set(newShimmers));
+    const t = setTimeout(() => setShimmerTabs(new Set()), 800);
+    return () => clearTimeout(t);
+  }, [allLearnedKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -134,12 +196,16 @@ export default function Navigation() {
 
   return (
     <nav className="nav">
-      <div className="nav-brand">Algorithm Visualizer</div>
+      <div
+        className={`nav-brand${currentAlgoLearned ? " nav-brand--learned" : ""}`}
+      >
+        {currentAlgo ?? "Algorithm Visualizer"}
+      </div>
       <div className="nav-tabs">
         {tabs.map((tab) => (
           <div key={tab.label} className="nav-tab-group">
             <span
-              className={`nav-tab-label${tab.items.every((item) => isLearned(item.path.slice(1))) ? " all-learned" : ""}`}
+              className={`nav-tab-label${tab.items.every((item) => isLearned(item.path.slice(1))) ? " all-learned" : ""}${shimmerTabs.has(tab.label) ? " shimmer" : ""}`}
             >
               {tab.label}
             </span>
@@ -155,7 +221,10 @@ export default function Navigation() {
                       `nav-subtab${isActive ? " active" : ""}${learned ? " learned" : ""}`
                     }
                   >
-                    <span>{learned ? "✅ " : ""}{item.name}</span>
+                    <span>
+                      {learned ? "✅ " : ""}
+                      {item.name}
+                    </span>
                     <Stars n={item.rating} />
                   </NavLink>
                 );
@@ -163,6 +232,17 @@ export default function Navigation() {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className={`nav-learned-counter${shimmer ? " shimmer" : ""}`}>
+        <span
+          className={
+            learnedCount > 0 ? "nav-learned-count" : "nav-learned-total"
+          }
+        >
+          {learnedCount}
+        </span>
+        <span className="nav-learned-total">/{totalCount}</span>
       </div>
 
       <button
@@ -202,7 +282,10 @@ export default function Navigation() {
                           `nav-mobile-item${isActive ? " active" : ""}${learned ? " learned" : ""}`
                         }
                       >
-                        <span>{learned ? "✅ " : ""}{item.name}</span>
+                        <span>
+                          {learned ? "✅ " : ""}
+                          {item.name}
+                        </span>
                         <Stars n={item.rating} />
                       </NavLink>
                     );

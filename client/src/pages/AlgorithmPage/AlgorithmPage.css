@@ -3,232 +3,77 @@
   margin: 0.5rem auto;
   padding: 0 1.5rem;
   text-align: center;
-}
-
-.algo-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 0.25rem;
-}
-
-.algorithm-page h2 {
-  margin: 0;
-  color: #1a1a2e;
-  text-align: left;
-  flex: 1;
-}
-
-.learned-toggle {
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-  gap: 0.4rem;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-  padding: 0.5rem 0.8rem;
-  border-left: 1px solid #e5e7eb;
-  color: #888;
-  border-right: 1px solid #e5e7eb;
-}
-
-.learned-toggle input[type="checkbox"] {
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-  accent-color: #24a152;
-}
-
-.algo-tab-mobile-menu {
-  display: none;
-  position: relative;
-}
-
-.algo-tab-hamburger {
-  padding: 0.5rem 0.9rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #888;
-  background: none;
-  border: none;
-  border-left: 1px solid #e5e7eb;
-  border-right: 1px solid #e5e7eb;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.algo-tab-hamburger:hover {
-  color: #585858;
-}
-
-.algo-tab-mobile-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
-  z-index: 2147483647;
-  min-width: 150px;
+  align-items: center;
 }
 
-.algo-tab-mobile-dropdown button {
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #555;
-  background: none;
-  border: none;
-  text-align: left;
-  cursor: pointer;
+.algorithm-page > * {
+  width: 100%;
 }
 
-.algo-tab-mobile-dropdown button:hover {
-  background: #f5f5f5;
-  color: #1a1a2e;
-}
-
-.algo-tab-mobile-dropdown button:first-child {
-  border-radius: 6px 6px 0 0;
-}
-
-.algo-tab-mobile-dropdown button:last-child {
-  border-radius: 0 0 6px 6px;
-}
-
-@media (max-width: 700px) {
-  .learned-label {
-    display: none;
-  }
-
-  .yt-label {
-    display: none;
-  }
-
-  .algo-tab-btn {
-    display: none;
-  }
-
-  .algo-tab-mobile-menu {
-    display: block;
-  }
-}
-
-.algo-description {
-  color: #666;
-  margin: 0 0 1.5rem;
-  text-align: center;
-  white-space: pre-line;
-}
-
-/* ── Info tabs (What is it?, Usecase?, Pros & Cons) ── */
+/* ── Main bar ── */
 .algo-tabs {
   text-align: left;
   margin-bottom: 0;
-  position: relative;
 }
 
-.algo-tab-bar {
+.algo-bar {
   display: flex;
-  gap: 0;
-  border-bottom: 2px solid #e5e7eb;
-  margin-bottom: 0;
+  align-items: end;
+  justify-content: center;
+  gap: 1rem;
+  border-bottom: 2px transparent #e5e7eb;
+  padding: 0.35rem 0;
 }
 
-.algo-tab-btn {
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #4b5563;
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-  border-left: 1px solid #e5e7eb;
-  border-right: 1px solid #e5e7eb;
+/* ── Segmented pill ── */
+.algo-segment {
+  display: flex;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 2px;
+  padding: 2px;
+  gap: 2px;
+  flex-shrink: 0;
+  overflow: visible;
 }
 
-.algo-tab-btn:hover {
-  color: #374151;
-}
-
-.algo-tab-btn.active {
-  color: #374151;
-  border-bottom-color: #e94560;
-  font-weight: 600;
-}
-
-.algo-tab-title {
-  flex: 1;
+.algo-seg-wrap {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #4b5563;
-  pointer-events: none;
+}
+
+.algo-seg-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.9rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, box-shadow 0.15s;
   white-space: nowrap;
-  overflow: visible;
-  padding: 0 0.5rem;
-  position: relative;
 }
 
-.algo-name {
-  font-weight: 700;
-  color: #374151;
+.algo-seg-btn:hover {
+  background: #fff;
+  color: #1a1a2e;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
-/* ── shared star classes used in badge tooltip + navigation ── */
-.rating-stars {
-  font-size: 1.3rem;
-  letter-spacing: -0.05em;
-  color: #f59e0b;
-}
-
-.rating-stars-empty {
-  color: rgba(255, 255, 255, 0.2);
-}
-
-/* ── code badge (left of title) ── */
-.algo-code-badge {
-  pointer-events: auto;
-  font-size: 0.78rem;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: 700;
-  color: #4b5563;
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  padding: 0.1rem 0.35rem;
-  cursor: help;
-  flex-shrink: 0;
-  margin-right: 0.5rem;
-  transition: color 0.15s, background 0.15s, transform 0.15s;
-  user-select: none;
-  line-height: 1.6;
-}
-
-.algo-code-badge:hover {
-  color: #1e40af;
-  background: #e0e7ff;
-  border-color: #a5b4fc;
-  transform: scale(1.05);
-}
-
-.algo-code-tip {
+/* ── Pill tooltips (dark popup) ── */
+.algo-seg-tip {
   display: none;
   position: absolute;
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  width: max-content;
   background: #1a1a2e;
   color: #e2e2f0;
   font-size: 0.78rem;
@@ -243,7 +88,75 @@
   z-index: 2147483647;
 }
 
+.algo-seg-wrap:hover .algo-seg-tip {
+  display: block;
+}
 
+.algo-seg-tip--wide {
+  width: 420px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.algo-seg-tip--proscons {
+  width: 480px;
+}
+
+.algo-seg-tip--code {
+  width: max-content;
+  max-width: min(480px, 90vw);
+}
+
+.algo-seg-tip--learned {
+  width: max-content;
+  max-width: min(360px, calc(100vw - 2rem));
+  right: 0;
+  left: auto;
+  transform: none;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.algo-seg-tip--rating {
+  width: 280px;
+}
+
+/* Explanation text inside tip */
+.algo-tip-text {
+  margin: 0;
+  color: #c8c8e0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* Pros & Cons inside dark tip */
+.algo-tip-proscons {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.algo-tip-proscons .pros-list,
+.algo-tip-proscons .cons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.algo-tip-proscons .pro-item,
+.algo-tip-proscons .con-item {
+  padding: 0.1rem 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.algo-tip-proscons .pro-item::before { content: "✓ "; font-weight: 700; }
+.algo-tip-proscons .con-item::before { content: "✗ "; font-weight: 700; }
+.algo-tip-proscons .pro-item { color: #86efac; }
+.algo-tip-proscons .con-item { color: #fca5a5; }
+
+/* ── Shared tooltip internals ── */
 .algo-code-shortcut {
   display: flex;
   align-items: baseline;
@@ -253,6 +166,7 @@
   margin-bottom: 0.5rem;
   padding-bottom: 0.45rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
 }
 
 .algo-code-shortcut-label {
@@ -272,67 +186,6 @@
   color: #c8c8e0;
 }
 
-.algo-tab-title:has(.algo-code-badge:hover) .algo-code-tip {
-  display: block;
-}
-
-/* ── rating badge (right of title) ── */
-.algo-rating-badge {
-  pointer-events: auto;
-  font-size: 0.92rem;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: 700;
-  color: #4b5563;
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  padding: 0.1rem 0.35rem;
-  cursor: help;
-  flex-shrink: 0;
-  margin-left: 0.5rem;
-  transition: color 0.15s, background 0.15s, transform 0.15s;
-  user-select: none;
-  line-height: 1.6;
-}
-
-.algo-rating-badge:hover {
-  color: #1e40af;
-  background: #e0e7ff;
-  border-color: #a5b4fc;
-  transform: scale(1.05);
-}
-
-.algo-rating-tip {
-  display: none;
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 320px;
-  background: #1a1a2e;
-  color: #e2e2f0;
-  font-size: 0.78rem;
-  font-weight: 400;
-  line-height: 1.45;
-  padding: 0.65rem 0.85rem;
-  border-radius: 6px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  white-space: normal;
-  text-align: left;
-  pointer-events: none;
-  z-index: 2147483647;
-}
-
-
-.algo-rating-tip .rating-stars {
-  display: inline-flex;
-  align-items: center;
-  font-size: 1.1rem;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  margin-left: auto;
-}
-
 .algo-rating-text {
   display: block;
   color: #c8c8e0;
@@ -340,122 +193,300 @@
   line-height: 1.45;
 }
 
-.algo-tab-title:has(.algo-rating-badge:hover) .algo-rating-tip {
-  display: block;
-}
-
-.algo-tab-right {
-  margin-left: auto;
-  display: flex;
-  align-items: stretch;
-}
-
-.algo-tab-yt {
+/* ── Stars ── */
+.rating-stars {
+  font-size: 1.1rem;
+  letter-spacing: -0.04em;
+  color: #f59e0b;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  text-decoration: none;
-  color: #888;
-  border-left: 1px solid #e5e7eb;
-  font-weight: 600;
+  line-height: 1;
+  margin-left: auto;
 }
 
-.algo-tab-yt:hover {
-  color: #585858;
+.rating-stars-empty {
+  color: rgba(255, 255, 255, 0.2);
 }
 
-.algo-tab-yt .yt-icon {
-  width: 18px;
-  height: 18px;
-}
-
-.algo-tab-content {
-  max-height: 0;
-  overflow: hidden;
-  position: absolute;
-  left: 0;
-  right: 0;
-  background: #fafafa;
-  z-index: 10;
-  transition: max-height 0.25s ease, padding 0.25s ease;
-  padding: 0;
-  border-bottom: 2px solid transparent;
-}
-
-.algo-tab-bar:has(.algo-tab-btn:not(.algo-tab-yt):hover) + .algo-tab-content {
-  max-height: 100px;
-  overflow-y: hidden;
-  padding: 0.5rem 0;
-  border-bottom-color: #e5e7eb;
-  animation: enable-scroll 0s 0.25s forwards;
-}
-
-@keyframes enable-scroll {
-  to { overflow-y: auto; }
-}
-
-.algo-tab-text {
-  color: #555;
-  margin: 0;
-  line-height: 1.3;
-  font-size: 0.92rem;
-}
-
-.pros-cons-columns {
+/* ── Center column: name + speed + run ── */
+.algo-center {
   display: flex;
-  gap: 2rem;
-  padding: 0 1rem;
-}
-
-.pros-list,
-.cons-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  flex: 1;
-  min-width: 0;
-}
-
-.pro-item,
-.con-item {
-  padding: 0.15rem 0;
-  line-height: 1.3;
-  font-size: 0.92rem;
-}
-
-.pro-item::before {
-  content: "✓ ";
-  font-weight: 700;
-}
-
-.con-item::before {
-  content: "✗ ";
-  font-weight: 700;
-}
-
-.pro-item {
-  color: #16a34a;
-}
-
-.con-item {
-  color: #dc2626;
-}
-
-.yt-icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-.algo-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: flex-end;
-  margin-bottom: 0.5rem;
+  align-items: end;
   justify-content: center;
+  gap: 1rem;
 }
 
+.algo-speed {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.6rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  color: #374151;
+}
+
+.algo-speed input[type="range"] {
+  width: 70px;
+  accent-color: #1a1a2e;
+  cursor: pointer;
+}
+
+.algo-run-btn {
+  color: #b91c3c;
+  outline: none;
+}
+
+.algo-run-btn:hover:not(:disabled) {
+  background: #fff;
+  color: #b91c3c;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.algo-run-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.algo-pause-btn {
+  color: #6b7280;
+  outline: none;
+}
+
+.algo-pause-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.algo-clear-btn {
+  color: #6b7280;
+  outline: none;
+}
+
+.algo-clear-btn:hover {
+  background: #fff;
+  color: #6b7280;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.algo-speed-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.6rem !important;
+}
+
+.algo-speed-pill input[type="range"] {
+  width: 70px;
+  height: 11px;
+  accent-color: #1a1a2e;
+  cursor: pointer;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  outline: 2px solid #1a1a2e;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.algo-speed-pill input[type="range"]::-webkit-slider-track {
+  background: #1a1a2e;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.algo-speed-pill input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 20%;
+  background: #1a1a2e;
+  cursor: pointer;
+  border: 1px solid #1a1a2e;
+}
+
+.algo-speed-pill input[type="range"]::-moz-range-track {
+  background: #1a1a2e;
+  height: 3px;
+  border-radius: 2px;
+  border: none;
+}
+
+.algo-speed-pill input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #1a1a2e;
+  cursor: pointer;
+  border: 1px solid #1a1a2e;
+}
+
+
+/* ── YouTube pill ── */
+.algo-seg-yt {
+  text-decoration: none;
+}
+
+/* ── Learned pill ── */
+.algo-seg-learned input[type="checkbox"] {
+  display: none;
+}
+
+.algo-seg-learned.learned {
+  background: #fff;
+  color: #15803d;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Action cluster (YouTube + Learned) ── */
+.algo-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  justify-self: end;
+}
+
+.algo-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  height: 30px;
+  padding: 0 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #4b5563;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+  text-decoration: none;
+  font-family: inherit;
+  user-select: none;
+}
+
+.algo-action-btn:hover {
+  background: #e0e7ff;
+  border-color: #a5b4fc;
+  color: #1e40af;
+}
+
+.algo-learned-btn input[type="checkbox"] { display: none; }
+
+.algo-learned-btn.learned {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #14532d;
+}
+
+.algo-learned-btn.learned:hover {
+  background: #bbf7d0;
+  border-color: #4ade80;
+  color: #14532d;
+}
+
+/* ── Info pills group ── */
+.algo-info-burger {
+  display: none;
+}
+
+.algo-info-pills {
+  display: contents; /* renders children as if directly in the flex parent */
+}
+
+/* ── Mobile ── */
+@media (max-width: 700px) {
+  .algo-bar {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .algo-segment {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .algo-seg-btn {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.82rem;
+  }
+
+  .algo-name { display: none; }
+
+  .algo-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .algo-info-burger {
+    display: inline-flex;
+  }
+
+  .algo-info-pills {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 4px;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 1000;
+    min-width: 160px;
+  }
+
+  .algo-info-pills.open {
+    display: flex;
+  }
+
+  .algo-info-pills .algo-seg-wrap {
+    width: 100%;
+  }
+
+  .algo-info-pills .algo-seg-btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .algo-info-pills .algo-seg-tip {
+    top: auto;
+    bottom: calc(100% + 6px);
+    left: 100%;
+    transform: none;
+    max-width: calc(100vw - 3rem);
+  }
+
+  .algo-segment {
+    position: relative;
+  }
+
+  .algo-seg-tip {
+    left: 0;
+    transform: none;
+    max-width: calc(100vw - 3rem);
+  }
+
+  .algo-seg-tip--proscons {
+    width: calc(100vw - 3rem);
+  }
+
+  .algo-seg-tip--wide {
+    width: calc(100vw - 3rem);
+  }
+}
+
+/* ── Inputs ── */
 .input-row {
   display: flex;
   gap: 1rem;
@@ -464,32 +495,163 @@
 }
 
 .input-row label {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  justify-content: flex-start;
   font-size: 0.85rem;
   color: #555;
   font-weight: 500;
+  padding-top: 0.7rem;
+}
+
+.input-row label > input {
+  margin-top: 0.1rem;
+}
+
+.input-row label > span.input-badge {
+  position: absolute;
+  top: 0.1rem;
+  left: 0.5rem;
+  background: #f1f5f9;
+  color: #374151;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.08em 0.6em;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  letter-spacing: 0.01em;
 }
 
 .input-row input[type='text'] {
-  padding: 0.5rem;
+  padding: 0.5rem 1.1rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 2px;
   width: 208px;
+  background: #f8fafc;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
 
 .input-row input[type='number'] {
-  padding: 0.5rem;
+  padding: 0.5rem 1.1rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 2px;
   width: 80px;
+  background: #f8fafc;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
-
 
 .error {
   color: #c00;
   margin: 0.5rem 0;
+}
+
+/* ── Secret ending overlay ── */
+.secret-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #080814;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  animation: secret-fadein 0.4s ease;
+}
+
+@keyframes secret-fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.secret-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.secret-card {
+  position: relative;
+  background: #1a1a2e;
+  border: 2px solid #4ade80;
+  border-radius: 14px;
+  padding: 2.5rem 2.5rem;
+  text-align: center;
+  max-width: 540px;
+  width: calc(100vw - 2rem);
+  color: #e2e2f0;
+  cursor: default;
+  box-shadow: 0 0 60px rgba(74, 222, 128, 0.25);
+  animation: secret-popin 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes secret-popin {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.secret-top-emoji {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.secret-title {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #4ade80;
+  margin: 0 0 0.25rem;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
+}
+
+.secret-chant {
+  font-size: 1rem;
+  color: #86efac;
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+.secret-body {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #c8c8e0;
+  margin: 0 0 0.9rem;
+}
+
+.secret-body strong {
+  color: #e2e2f0;
+}
+
+.secret-love {
+  color: #86efac;
+  font-style: italic;
+}
+
+.secret-close {
+  margin-top: 1.5rem;
+  padding: 0.6rem 2rem;
+  background: #4ade80;
+  color: #1a1a2e;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.secret-close:hover {
+  background: #22c55e;
+  transform: scale(1.04);
 }

@@ -30,7 +30,14 @@ internal static class GraphHelpers
     internal static void DfsHelper(int node, List<List<int>> adj, int[] visited, List<AlgorithmStep> steps, ref int step)
     {
         visited[node] = 1;
-        steps.Add(new AlgorithmStep { StepNumber = step++, Array = (int[])visited.Clone(), Description = $"Visit node {node}", HighlightIndices = [node] });
+        steps.Add(new AlgorithmStep
+        {
+            StepNumber = step++,
+            Array = (int[])visited.Clone(),
+            Description = $"Visit node {node}",
+            HighlightIndices = [node],
+            SortedIndices = Enumerable.Range(0, visited.Length).Where(i => visited[i] == 1).ToArray(),
+        });
         foreach (int nb in adj[node])
             if (visited[nb] == 0)
                 DfsHelper(nb, adj, visited, steps, ref step);

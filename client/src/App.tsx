@@ -1,11 +1,15 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navigation from "./components/Navigation/Navigation";
 import AlgorithmPage from "./pages/AlgorithmPage/AlgorithmPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { LearnedProvider } from "./context/LearnedContext";
+import { warmupServer } from "./api/warmup";
 import "./App.css";
 
 function App() {
+  useEffect(() => { warmupServer(); }, []);
+
   return (
     <LearnedProvider>
       <BrowserRouter>

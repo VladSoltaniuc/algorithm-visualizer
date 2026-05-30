@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
 import VisControls from "../VisControls/VisControls";
 import type { AlgorithmStep } from "../../types";
 import "./TreeVisualizer.css";
@@ -9,6 +9,9 @@ interface Props {
   disabled?: boolean;
   inputValues: number[];
   inputControls?: React.ReactNode;
+  speed: number;
+  isPaused?: boolean;
+  onComplete?: () => void;
 }
 
 /* ── BST helpers ── */
@@ -105,10 +108,13 @@ function layoutFromLevelOrder(arr: (number | null)[]) {
 /* ── Component ── */
 export default function TreeVisualizer({
   steps,
-  onRun,
-  disabled,
+  onRun: _onRun,
+  disabled: _disabled,
   inputValues,
   inputControls,
+  speed,
+  isPaused,
+  onComplete,
 }: Props) {
   const layout = useMemo(() => {
     if (!inputValues.length) return null;
@@ -121,10 +127,11 @@ export default function TreeVisualizer({
   return (
     <VisControls
       steps={steps}
-      onRun={onRun}
-      disabled={disabled}
       hideDescription
       inputControls={inputControls}
+      speed={speed}
+      isPaused={isPaused}
+      onComplete={onComplete}
     >
       {(step: AlgorithmStep) => {
         const isFinal = step.stepNumber === steps[steps.length - 1]?.stepNumber;

@@ -1,11 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import type { AlgorithmStep } from "../types";
 
-export function useStepPlayer(steps: AlgorithmStep[], autoPlay = true) {
+export function useStepPlayer(
+  steps: AlgorithmStep[],
+  speed: number,
+  isPaused = false,
+  onComplete?: () => void,
+  autoPlay = true,
+) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1000);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   const step = steps[currentStep] ?? null;
 
@@ -15,19 +22,20 @@ export function useStepPlayer(steps: AlgorithmStep[], autoPlay = true) {
   }, [steps, autoPlay]);
 
   useEffect(() => {
-    if (!isPlaying) {
+    if (!isPlaying || isPaused) {
       if (timerRef.current) clearTimeout(timerRef.current);
       return;
     }
     if (currentStep >= steps.length - 1) {
       setIsPlaying(false);
+      onCompleteRef.current?.();
       return;
     }
     timerRef.current = setTimeout(() => setCurrentStep((s) => s + 1), speed);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [isPlaying, currentStep, steps.length, speed]);
+  }, [isPlaying, currentStep, steps.length, speed, isPaused]);
 
-  return { step, currentStep, setCurrentStep, isPlaying, setIsPlaying, speed, setSpeed, total: steps.length };
+  return { step, currentStep, setCurrentStep, isPlaying, setIsPlaying, total: steps.length };
 }

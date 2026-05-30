@@ -12,7 +12,7 @@ internal static class BacktrackingHelpers
             {
                 StepNumber = step++,
                 Array = (int[])arr.Clone(),
-                Description = $"Permutation: [{string.Join(", ", arr)}]",
+                Description = $"Found [{string.Join(", ", arr)}]",
                 SortedIndices = Enumerable.Range(0, arr.Length).ToArray(),
             });
             return;
@@ -24,11 +24,26 @@ internal static class BacktrackingHelpers
             {
                 StepNumber = step++,
                 Array = (int[])arr.Clone(),
-                Description = $"Swap index {start} and {i}",
+                Description = start == i
+                    ? $"Keep {arr[start]} at position {start}"
+                    : $"Place {arr[start]} at position {start}",
                 HighlightIndices = [start, i],
+                BacktrackPath = [start],
             });
             PermuteHelper(arr, start + 1, steps, ref step);
-            (arr[start], arr[i]) = (arr[i], arr[start]);
+            if (start != i)
+            {
+                (arr[start], arr[i]) = (arr[i], arr[start]);
+                steps.Add(new AlgorithmStep
+                {
+                    StepNumber = step++,
+                    Array = (int[])arr.Clone(),
+                    Description = $"Backtrack: restore position {start}",
+                    HighlightIndices = [start, i],
+                    BacktrackPath = [start],
+                    Notes = ["backtrack"],
+                });
+            }
         }
     }
 

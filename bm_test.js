@@ -31,7 +31,7 @@ const tests = [
 
   // ── good-suffix-rule-dominant cases ──────────────────────────────────────
   {
-    // ANPANMAN in ANPANMANAP — good-suffix gives bigger shifts than bad-char
+    // ANPANMAN in ANPANMANAP - good-suffix gives bigger shifts than bad-char
     name: 'GS: ANPANMAN pattern (Wikipedia example)',
     text: 'ANPANMANAP',
     pattern: 'ANPANMAN',
@@ -40,14 +40,14 @@ const tests = [
   },
   {
     // All-same chars: good-suffix is always dominant
-    name: 'GS: repeated chars — good-suffix dominates',
+    name: 'GS: repeated chars - good-suffix dominates',
     text: 'AAAAAAAAAA',
     pattern: 'AAA',
     expectMatches: [0,1,2,3,4,5,6,7],
     expectRule: 'good-suffix',
   },
   {
-    name: 'GS: partial suffix match — good-suffix kicks in',
+    name: 'GS: partial suffix match - good-suffix kicks in',
     text: 'ABCABABCAB',
     pattern: 'ABCAB',
     expectMatches: [0, 5],
