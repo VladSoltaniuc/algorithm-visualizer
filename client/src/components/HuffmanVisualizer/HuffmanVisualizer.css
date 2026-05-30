@@ -31,7 +31,7 @@
   background: #f1f5f9;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
-  gap: 2px;
+  gap: 6px;
   transition: background 0.2s, border-color 0.2s;
 }
 
@@ -45,12 +45,16 @@
   font-size: 0.95rem;
   font-weight: 700;
   color: #1a1a2e;
-  line-height: 1.2;
+  line-height: 1;
+  min-height: 1.1rem;
+  display: flex;
+  align-items: center;
   max-width: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
+  padding-bottom: 0.15rem;
 }
 
 .huff-node-weight {
