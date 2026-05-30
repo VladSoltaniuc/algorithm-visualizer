@@ -13,7 +13,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Navigate to="/array/bubble-sort" replace />}
+            element={<Navigate to="/sort/bubble-sort" replace />}
           />
           <Route path="/:category/:slug" element={<AlgorithmPage />} />
           <Route path="/404" element={<NotFoundPage />} />

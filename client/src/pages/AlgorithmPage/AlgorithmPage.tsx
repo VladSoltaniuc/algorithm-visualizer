@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useLearned } from "../../context/LearnedContext";
 import { allConfigs } from "../../config/algorithms";
-import { arrayApi } from "../../api/arrayApi";
-import { stringApi } from "../../api/stringApi";
+import { sortApi } from "../../api/sortApi";
+import { findApi } from "../../api/findApi";
+import { patternApi } from "../../api/patternApi";
+import { miscApi } from "../../api/miscApi";
 import { graphApi } from "../../api/graphApi";
 import { dpApi } from "../../api/dpApi";
 import { backtrackingApi } from "../../api/backtrackingApi";
-import { nrTheoryApi } from "../../api/nrTheoryApi";
 import { treeApi } from "../../api/treeApi";
 import ArrayVisualizer from "../../components/ArrayVisualizer/ArrayVisualizer";
 import StringVisualizer from "../../components/StringVisualizer/StringVisualizer";
@@ -17,7 +18,10 @@ import BacktrackingVisualizer from "../../components/BacktrackingVisualizer/Back
 import NrTheoryVisualizer from "../../components/NrTheoryVisualizer/NrTheoryVisualizer";
 import TreeVisualizer from "../../components/TreeVisualizer/TreeVisualizer";
 import { algorithmRatings } from "../../config/ratings";
-import { algorithmPseudocode, algorithmShortcuts } from "../../config/CodeSnippets";
+import {
+  algorithmPseudocode,
+  algorithmShortcuts,
+} from "../../config/CodeSnippets";
 import type { AlgorithmStep } from "../../types";
 import "./AlgorithmPage.css";
 
@@ -25,15 +29,13 @@ const apiMap: Record<
   string,
   Record<string, (...args: unknown[]) => Promise<AlgorithmStep[]>>
 > = {
-  array: arrayApi as Record<
-    string,
-    (...args: unknown[]) => Promise<AlgorithmStep[]>
-  >,
-  string: stringApi,
+  sort: sortApi,
+  find: findApi,
+  pattern: patternApi,
+  misc: miscApi,
   graph: graphApi,
   dp: dpApi,
   backtracking: backtrackingApi,
-  "number-theory": nrTheoryApi,
   tree: treeApi,
 };
 
@@ -87,7 +89,7 @@ export default function AlgorithmPage() {
     setTreeInputValues([]);
   }, [category, slug]);
 
-  if (!category || !slug) return <Navigate to="/array/bubble-sort" replace />;
+  if (!category || !slug) return <Navigate to="/sort/bubble-sort" replace />;
   if (!configs) return <Navigate to="/404" replace />;
   if (!config) return <Navigate to="/404" replace />;
 
@@ -103,7 +105,9 @@ export default function AlgorithmPage() {
           return;
         }
         if (slug === "combination-sum" && numbers.some((n) => n <= 0)) {
-          setError("This implementation expects an all-positive array. Please enter only positive integers.");
+          setError(
+            "This implementation expects an all-positive array. Please enter only positive integers.",
+          );
           return;
         }
         parsedInput = numbers;
@@ -189,7 +193,10 @@ export default function AlgorithmPage() {
           /* ignore */
         }
       }
-      if (category === "tree" && config.inputType !== "text") {
+      if (
+        (category === "tree" || (category === "misc" && slug === "huffman")) &&
+        config.inputType !== "text"
+      ) {
         const nums = input.split(",").map((n) => Number.parseInt(n.trim(), 10));
         if (!nums.some(Number.isNaN)) setTreeInputValues(nums);
       }
@@ -284,10 +291,20 @@ export default function AlgorithmPage() {
             </button>
             {mobileTabOpen && (
               <div className="algo-tab-mobile-dropdown">
-                <button onClick={() => { setActiveTab("what"); setMobileTabOpen(false); }}>
+                <button
+                  onClick={() => {
+                    setActiveTab("what");
+                    setMobileTabOpen(false);
+                  }}
+                >
                   Explanation
                 </button>
-                <button onClick={() => { setActiveTab("proscons"); setMobileTabOpen(false); }}>
+                <button
+                  onClick={() => {
+                    setActiveTab("proscons");
+                    setMobileTabOpen(false);
+                  }}
+                >
                   Pros &amp; Cons
                 </button>
               </div>
@@ -296,15 +313,19 @@ export default function AlgorithmPage() {
           <span className="algo-tab-title">
             {algorithmPseudocode[slug] && (
               <>
-                <span className="algo-code-badge">{"</>"}</span>
+                <span className="algo-code-badge">{"</Code>"}</span>
                 <span className="algo-code-tip">
                   {algorithmShortcuts[slug] && (
                     <span className="algo-code-shortcut">
-                      <span className="algo-code-shortcut-label">Memory shortcut:</span>
-                      {" "}{algorithmShortcuts[slug]}
+                      <span className="algo-code-shortcut-label">
+                        Memory shortcut:
+                      </span>{" "}
+                      {algorithmShortcuts[slug]}
                     </span>
                   )}
-                  <pre className="algo-code-pre">{algorithmPseudocode[slug]}</pre>
+                  <pre className="algo-code-pre">
+                    {algorithmPseudocode[slug]}
+                  </pre>
                 </span>
               </>
             )}
@@ -312,18 +333,24 @@ export default function AlgorithmPage() {
             {algorithmRatings[slug] && (
               <>
                 <span className="algo-rating-badge">
-                  {algorithmRatings[slug].stars}/5
+                  Rating {algorithmRatings[slug].stars}/5
                 </span>
                 <span className="algo-rating-tip">
                   <span className="algo-code-shortcut">
-                    <span className="algo-code-shortcut-label">Usability Rating:</span>
+                    <span className="algo-code-shortcut-label">
+                      Usability :
+                    </span>
                     {ratingLabels[algorithmRatings[slug].stars]}
                     <span className="rating-stars">
                       {"★".repeat(algorithmRatings[slug].stars)}
-                      <span className="rating-stars-empty">{"★".repeat(5 - algorithmRatings[slug].stars)}</span>
+                      <span className="rating-stars-empty">
+                        {"★".repeat(5 - algorithmRatings[slug].stars)}
+                      </span>
                     </span>
                   </span>
-                  <span className="algo-rating-text">{algorithmRatings[slug].tooltip}</span>
+                  <span className="algo-rating-text">
+                    {algorithmRatings[slug].tooltip}
+                  </span>
                 </span>
               </>
             )}
@@ -368,12 +395,16 @@ export default function AlgorithmPage() {
             <div className="pros-cons-columns">
               <ul className="pros-list">
                 {config.pros.map((pro, i) => (
-                  <li key={i} className="pro-item">{pro}</li>
+                  <li key={i} className="pro-item">
+                    {pro}
+                  </li>
                 ))}
               </ul>
               <ul className="cons-list">
                 {config.cons.map((con, i) => (
-                  <li key={i} className="con-item">{con}</li>
+                  <li key={i} className="con-item">
+                    {con}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -383,7 +414,7 @@ export default function AlgorithmPage() {
 
       {error && <p className="error">{error}</p>}
 
-      {category === "string" && (
+      {category === "pattern" && (
         <StringVisualizer
           steps={steps}
           onRun={handleRun}
@@ -419,7 +450,7 @@ export default function AlgorithmPage() {
           inputControls={inputControls}
         />
       )}
-      {category === "number-theory" && (
+      {category === "misc" && slug === "bit-manipulation" && (
         <NrTheoryVisualizer
           steps={steps}
           onRun={handleRun}
@@ -428,7 +459,23 @@ export default function AlgorithmPage() {
           inputControls={inputControls}
         />
       )}
-      {category === "array" && (
+      {category === "misc" && slug === "reversal" && (
+        <StringVisualizer
+          steps={steps}
+          onRun={handleRun}
+          disabled={loading || spamPrevention}
+          inputControls={inputControls}
+        />
+      )}
+      {category === "misc" && slug === "huffman" && (
+        <ArrayVisualizer
+          steps={steps}
+          onRun={handleRun}
+          disabled={loading || spamPrevention}
+          inputControls={inputControls}
+        />
+      )}
+      {(category === "sort" || category === "find") && (
         <ArrayVisualizer
           steps={steps}
           onRun={handleRun}

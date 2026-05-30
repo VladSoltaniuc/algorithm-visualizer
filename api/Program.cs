@@ -2,17 +2,16 @@ using api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// TODO: What does this line do?
 builder.Services.AddControllers();
 
-// TODO: Why singleton? Why not Transient or Scoped?
-builder.Services.AddSingleton<ArrayService>();
-builder.Services.AddSingleton<StringService>();
+builder.Services.AddSingleton<SortService>();
+builder.Services.AddSingleton<FindService>();
+builder.Services.AddSingleton<PatternService>();
 builder.Services.AddSingleton<TreeService>();
 builder.Services.AddSingleton<GraphService>();
 builder.Services.AddSingleton<DynamicProgService>();
 builder.Services.AddSingleton<BacktrackingService>();
-builder.Services.AddSingleton<NrTheoryService>();
+builder.Services.AddSingleton<MiscService>();
 
 var app = builder.Build();
 

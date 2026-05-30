@@ -1,8 +1,8 @@
-import type { AlgorithmConfig } from '../types';
+﻿import type { AlgorithmConfig } from '../types';
 
 export const arrayConfig: AlgorithmConfig[] = [
   {
-    name: 'Bubble Sort', slug: 'bubble-sort', endpoint: 'bubble-sort', category: 'array', defaultInput: '5,3,8,1,2',
+    name: 'Bubble Sort', slug: 'bubble-sort', endpoint: 'bubble-sort', category: 'sort', defaultInput: '5,3,8,1,2',
     description: "Imagine your friend lined up their DVD collection in a shelf, but the titles are all out of order. You start from the left, look at two DVDs sitting next to each other, and if the right one should come before the left one, you swap them. You keep walking the shelf doing this swap after swap, pass after pass, until no more swaps are needed - the shelf is sorted. The heaviest out-of-place DVDs slowly \"bubble up\" to their correct spot, which is how it got its name.",
     usecase: 'Educational purposes, tiny datasets, or arrays that are already nearly sorted - where its simplicity and best-case performance shine.',
     pros: [
@@ -19,7 +19,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=xli_FI7CuzA',
   },
   {
-    name: 'Quick Sort', slug: 'quick-sort', endpoint: 'quick-sort', category: 'array', defaultInput: '5,3,8,1,2,7,4',
+    name: 'Quick Sort', slug: 'quick-sort', endpoint: 'quick-sort', category: 'sort', defaultInput: '5,3,8,1,2,7,4',
     description: "Imagine you're organizing a pile of receipts on your desk. You grab one receipt at random - that's your pivot. You then go through the rest of the pile putting everything cheaper than the pivot on the left and everything more expensive on the right. Now you have two smaller piles. You repeat the same process on each pile, picking a new pivot each time, until every pile is just one receipt. The Lomuto scheme always picks the last receipt in the current pile as the pivot, then walks through from left to right moving cheaper ones to the front as it goes.",
     usecase: 'General-purpose sorting for large datasets. The default sort in many standard libraries due to excellent real-world performance.',
     pros: [
@@ -36,7 +36,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=MZaf_9IZCrc',
   },
   {
-    name: 'Merge Sort', slug: 'merge-sort', endpoint: 'merge-sort', category: 'array', defaultInput: '5,3,8,1,2,7,4',
+    name: 'Merge Sort', slug: 'merge-sort', endpoint: 'merge-sort', category: 'sort', defaultInput: '5,3,8,1,2,7,4',
     description: "Imagine you and a friend are sorting a huge pile of numbered cards. You split the pile in half and each take one. You both keep splitting your halves again and again until everyone is holding just one card - one card is always sorted. Now you start merging back: you and your friend hold your piles face up and compare the top cards one by one, always placing the smaller one into the final sorted pile first. You keep merging piles this way until all the cards are back in one fully sorted stack.",
     usecase: 'When you need a guaranteed O(n log n) sort, a stable sort, or are sorting linked lists and external data (files too large for memory).',
     pros: [
@@ -52,7 +52,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=4VqmGXwpLqc',
   },
   {
-    name: 'Binary Search', slug: 'binary-search', endpoint: 'binary-search', category: 'array', needsTarget: true, targetLabel: 'Search target', defaultInput: '1,3,5,7,9,11,13', defaultTarget: 7,
+    name: 'Binary Search', slug: 'binary-search', endpoint: 'binary-search', category: 'find', needsTarget: true, targetLabel: 'Search target', defaultInput: '1,3,5,7,9,11,13', defaultTarget: 7,
     description: "Imagine you're looking for a friend's number in an old phone book. You wouldn't start from page 1 - you'd flip to the middle. If your friend's name comes before the middle page, you tear the book in half and only keep the left half. If it comes after, you keep the right half. You keep flipping to the middle of whatever is left, throwing away the half that can't contain the name, until you find it. Binary Search does exactly this - but with a sorted list of numbers.",
     usecase: 'Searching sorted data - database indexes, dictionary lookups, finding boundaries (lower/upper bounds), and any search-in-sorted-range problems.',
     pros: [
@@ -67,7 +67,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=MFhxShGxHWc',
   },
   {
-    name: 'Insertion Sort', slug: 'insertion-sort', endpoint: 'insertion-sort', category: 'array', defaultInput: '5,3,8,1,2',
+    name: 'Insertion Sort', slug: 'insertion-sort', endpoint: 'insertion-sort', category: 'sort', defaultInput: '5,3,8,1,2',
     description: "Imagine you're being dealt playing cards one at a time. Each time you receive a new card, you slide it into the correct position among the cards already in your hand - shifting the others to make room. You're not sorting your whole hand at once, you're just finding where the new card belongs and inserting it. By the time all cards are dealt, your hand is already fully sorted.",
     usecase: 'Small arrays (under ~20 elements), nearly sorted data, or as the base case inside hybrid sorts like Timsort and Introsort.',
     pros: [
@@ -84,7 +84,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=JU767SDMDvA',
   },
   {
-    name: 'Selection Sort', slug: 'selection-sort', endpoint: 'selection-sort', category: 'array', defaultInput: '5,3,8,1,2',
+    name: 'Selection Sort', slug: 'selection-sort', endpoint: 'selection-sort', category: 'sort', defaultInput: '5,3,8,1,2',
     description: "Imagine you have a row of numbered boxes all mixed up and you want to sort them from smallest to biggest. You scan the entire row to find the smallest box, then drag it to the very beginning. Now you ignore that first box and scan the rest again for the next smallest, dragging it to position two. You keep doing this - each time scanning what's left and pulling the smallest to the front - until the whole row is sorted.",
     usecase: 'When the number of swaps must be minimized (e.g., writing to flash memory is expensive), or for educational purposes.',
     pros: [
@@ -100,7 +100,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=g-PGLbMth_g',
   },
   {
-    name: 'Two Pointers', slug: 'two-pointers', endpoint: 'two-pointers', category: 'array', needsTarget: true, targetLabel: 'Target sum', defaultInput: '1,2,3,4,5,6,7,8', defaultTarget: 9,
+    name: 'Two Pointers', slug: 'two-pointers', endpoint: 'two-pointers', category: 'find', needsTarget: true, targetLabel: 'Target sum', defaultInput: '1,2,3,4,5,6,7,8', defaultTarget: 9,
     description: "Imagine a sorted row of price tags and you're trying to find two items that together cost exactly $9. Instead of checking every possible pair, you place one finger on the cheapest item on the far left and another on the most expensive on the far right. If the two prices add up to too much, move the right finger one step left. If they add up to too little, move the left finger one step right. You keep closing in from both ends until you find the pair that adds up to exactly $9 - or run out of options.",
     usecase: 'Pair-sum problems, removing duplicates in sorted arrays, merging sorted arrays, and partitioning problems.',
     pros: [
@@ -115,7 +115,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://youtu.be/-gjxg6Pln50?t=215',
   },
   {
-    name: 'Sliding Window', slug: 'sliding-window', endpoint: 'sliding-window', category: 'array', needsWindowSize: true, defaultInput: '2,1,5,1,3,2', defaultWindowSize: 3,
+    name: 'Sliding Window', slug: 'sliding-window', endpoint: 'sliding-window', category: 'find', needsWindowSize: true, defaultInput: '2,1,5,1,3,2', defaultWindowSize: 3,
     description: "Imagine you're looking out of a train window that shows exactly 3 houses at a time as the train moves. You want to find the stretch of 3 houses with the highest total value. As the train moves one house forward, the window drops the house at the back and picks up a new one at the front. You keep track of the total value in your current window at all times, updating it as you slide, until you've seen every possible group of 3.",
     usecase: 'Finding maximum/minimum sum subarrays, longest substrings with constraints, and any problem involving contiguous chunks of a sequence.',
     pros: [
@@ -130,7 +130,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=dOonV4byDEg',
   },
   {
-    name: "Kadane's Algorithm", slug: 'kadane', endpoint: 'kadane', category: 'array', defaultInput: '-2,1,-3,4,-1,2,1,-5,4',
+    name: "Kadane's Algorithm", slug: 'kadane', endpoint: 'kadane', category: 'find', defaultInput: '-2,1,-3,4,-1,2,1,-5,4',
     description: "Imagine you're walking a trail and each step either gains or loses you altitude. You want to find the stretch of the trail where you gained the most altitude overall. As you walk, you keep a running total of your current gain. The moment your running total drops below zero, you know this stretch is dragging you down - so you reset and start fresh from the next step. You always remember the highest total you've ever seen, and that's your answer at the end.",
     usecase: 'Maximum subarray sum problems, stock buy/sell profit, and anywhere you need the best contiguous stretch in a sequence.',
     pros: [
@@ -148,7 +148,7 @@ export const arrayConfig: AlgorithmConfig[] = [
 
 export const stringConfig: AlgorithmConfig[] = [
   {
-    name: 'KMP', slug: 'kmp', endpoint: 'kmp', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'ABABDABACDABABCABAB', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'ABABCABAB',
+    name: 'KMP', slug: 'kmp', endpoint: 'kmp', category: 'pattern', inputType: 'text', inputLabel: 'Text', defaultInput: 'ABABDABACDABABCABAB', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'ABABCABAB',
     description: 'Imagine you\'re searching for the word "ABABCABAB" hidden inside a long sentence, reading left to right. Most search methods would back up and start over every time they hit a mismatch. KMP never backs up. Instead, before searching, it studies the pattern itself and figures out: if a mismatch happens mid-pattern, how much of what I already matched can I reuse? For example if you matched "ABAB" before hitting a mismatch, KMP knows "AB" at the end of what you matched also appears at the start of the pattern - so it jumps back just enough to reuse that overlap, instead of starting from scratch.',
     usecase: 'Text editors (find/replace), DNA sequence matching, intrusion detection systems scanning network packets for known signatures.',
     pros: [
@@ -164,7 +164,7 @@ export const stringConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=V5-7GzOfADQ',
   },
   {
-    name: 'Boyer-Moore', slug: 'boyer-moore', endpoint: 'boyer-moore', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'HERE IS A SIMPLE EXAMPLE', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'EXAMPLE',
+    name: 'Boyer-Moore', slug: 'boyer-moore', endpoint: 'boyer-moore', category: 'pattern', inputType: 'text', inputLabel: 'Text', defaultInput: 'HERE IS A SIMPLE EXAMPLE', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'EXAMPLE',
     description: 'Imagine you\'re scanning a page looking for the word "EXAMPLE". Instead of reading left to right like most people, Boyer-Moore holds the pattern up against the text and reads it backwards - from right to left. The moment it spots a mismatch, it checks: does this mismatched character even appear anywhere in the pattern? If not, the entire pattern can be skipped past that character in one jump. This is what makes it fast - it skips large chunks of text instead of checking every single character. This algorithm is a bit harder, check out the tutorial and learn about the bad-character and good-suffix rules that make those jumps possible. The whole ideea is to apply both rules and see the which one saves you the most steps (which one can jump further ahead).',
     usecase: 'Text search in editors (Ctrl+F), grep implementations, and any single-pattern search on large texts - especially with large alphabets.',
     pros: [
@@ -180,7 +180,7 @@ export const stringConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=4Xyhb72LCX4',
   },
   {
-    name: 'Rabin-Karp', slug: 'rabin-karp', endpoint: 'rabin-karp', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'GEEKS FOR GEEKS', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'GEEK',
+    name: 'Rabin-Karp', slug: 'rabin-karp', endpoint: 'rabin-karp', category: 'pattern', inputType: 'text', inputLabel: 'Text', defaultInput: 'GEEKS FOR GEEKS', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'GEEK',
     description: 'Imagine you\'re looking for the word "GEEK" in a long text. Instead of comparing letters one by one each time, Rabin-Karp converts "GEEK" into a number - called a hash. It then slides a same-sized window across the text and converts each window into a number too. If the numbers don\'t match, it moves on instantly without comparing any letters. If the numbers do match, only then does it actually check the letters to confirm. The clever part is that each new window\'s number is calculated by slightly adjusting the previous one, making it very fast.',
     usecase: 'Multi-pattern search (searching for many patterns at once), plagiarism detection, and fingerprinting-based substring matching.',
     pros: [
@@ -196,7 +196,7 @@ export const stringConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=qQ8vS2btsxI',
   },
   {
-    name: 'LPS (Manacher)', slug: 'longest-palindrome', endpoint: 'longest-palindrome', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'babad',
+    name: 'LPS (Manacher)', slug: 'longest-palindrome', endpoint: 'longest-palindrome', category: 'pattern', inputType: 'text', inputLabel: 'Text', defaultInput: 'babad',
     description: 'Using mirroring to avoid calculating values that can be inferred. Imagine a word that reads the same forwards and backwards - like "racecar". That\'s a palindrome. Now imagine you want to find the longest such stretch hiding inside a bigger string like "babad". Checking every possible stretch one by one would take forever. Manacher\'s algorithm is smarter - it keeps track of the biggest palindrome it has found so far and uses it as a mirror. Any new stretch that falls inside that mirror has a twin on the other side whose length is already known, so it can be copied instantly instead of rechecked. Only when a stretch reaches or goes beyond the mirror\'s edge does it need to explore new territory.',
     usecase: 'Finding the longest palindromic substring, DNA sequence analysis (biological palindromes), and text processing tasks requiring palindrome detection.',
     pros: [
@@ -211,7 +211,7 @@ export const stringConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=1ir1eryUr80',
   },
   {
-    name: 'Anagram Detection', slug: 'anagram-detection', endpoint: 'anagram-detection', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'cbaebabacd', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'abc',
+    name: 'Anagram Detection', slug: 'anagram-detection', endpoint: 'anagram-detection', category: 'pattern', inputType: 'text', inputLabel: 'Text', defaultInput: 'cbaebabacd', needsPattern: true, patternLabel: 'Pattern', defaultPattern: 'abc',
     description: 'Short answer, Sliding Window + Hashmaps. Long answer, imagine you\'re looking for all hidden rearrangements of the word "abc" inside the text "cbaebabacd". An anagram is just a reshuffling of the same letters - "bca", "cab", and "abc" are all anagrams of each other. Anagram Detection slides a window the same size as the pattern across the text, and at each position checks whether the window contains exactly the same letters in any order. Instead of rearranging and comparing every time, it keeps a running count of letters in the current window and updates it with each step - dropping the leftmost letter and picking up the new right one.',
     usecase: 'Word games, spell checking, genomic analysis (finding rearranged DNA subsequences), and text analysis tools.',
     pros: [
@@ -226,7 +226,7 @@ export const stringConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=IRN1VcA8CGc',
   },
   {
-    name: 'String Reversal', slug: 'reversal', endpoint: 'reversal', category: 'string', inputType: 'text', inputLabel: 'Text', defaultInput: 'hello',
+    name: 'String Reversal', slug: 'reversal', endpoint: 'reversal', category: 'misc', inputType: 'text', inputLabel: 'Text', defaultInput: 'hello',
     description: 'Imagine a row of lettered tiles spelling "hello". You place one finger on the first tile and another on the last. You swap them, then move both fingers one step inward and swap again. You keep swapping and closing in until your two fingers meet in the middle - at which point the whole word is reversed. That\'s it. No extra tiles needed, everything happens in place.',
     usecase: 'Palindrome checks, reversing words in a sentence, and as a building block inside other string algorithms.',
     pros: [
@@ -393,7 +393,7 @@ export const treeConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=bkxqA8Rfv04',
   },
   {
-    name: 'Huffman Coding', slug: 'huffman', endpoint: 'huffman', category: 'tree', inputType: 'text', inputLabel: 'Text', defaultInput: 'huffman coding example',
+    name: 'Huffman Coding', slug: 'huffman', endpoint: 'huffman', category: 'misc', inputType: 'text', inputLabel: 'Text', defaultInput: 'huffman coding example',
     description: 'Imagine you\'re sending a long message and want to shrink it as much as possible. Letters that appear often should take up less space, and rare letters can afford to take up more. Huffman Coding counts how often each letter appears, then builds a tree where the most frequent letters end up closest to the top and the rarest sink to the bottom. Each left branch means "0" and each right branch means "1", so every letter gets its own unique binary code based on its path from the top. The result is a compressed version of the text where common letters are represented by just a few bits.',
     usecase: 'File compression (ZIP, GZIP internals), JPEG/MP3 compression as a final encoding stage, and data transmission over bandwidth-limited channels.',
     pros: [
@@ -692,7 +692,7 @@ export const backtrackingConfig: AlgorithmConfig[] = [
 
 export const nrTheoryConfig: AlgorithmConfig[] = [
   {
-    name: 'Bit Manipulation', slug: 'bit-manipulation', endpoint: 'bit-manipulation', category: 'number-theory', inputType: 'number', inputLabel: 'n', defaultInput: '42',
+    name: 'Bit Manipulation', slug: 'bit-manipulation', endpoint: 'bit-manipulation', category: 'misc', inputType: 'number', inputLabel: 'n', defaultInput: '42',
     description: 'This isn\'t a single algorithm - it\'s a collection of low-level techniques that operate directly on the binary representation of numbers. Every number in a computer is stored as a sequence of 1s and 0s called bits. For example, 42 is stored as 101010 in binary. Each technique shown here is an independent trick: counting set bits by repeatedly checking the lowest bit, detecting powers of 2 with a single AND, cancelling a value with XOR, and flipping all bits with NOT. These are patterns you reach for in specific situations, not steps in one unified procedure.',
     usecase: 'Low-level systems programming, embedded systems, permission flags, hash functions, competitive programming tricks, and performance-critical code.',
     pros: [
@@ -709,12 +709,22 @@ export const nrTheoryConfig: AlgorithmConfig[] = [
   },
 ];
 
+export const sortConfig = arrayConfig.filter(a => a.category === 'sort');
+export const findConfig = arrayConfig.filter(a => a.category === 'find');
+export const patternConfig = stringConfig.filter(a => a.category === 'pattern');
+export const miscConfig = [
+  ...stringConfig.filter(a => a.category === 'misc'),
+  ...treeConfig.filter(a => a.category === 'misc'),
+  ...nrTheoryConfig,
+];
+
 export const allConfigs: Record<string, AlgorithmConfig[]> = {
-  array: arrayConfig,
-  string: stringConfig,
-  tree: treeConfig,
+  sort: sortConfig,
+  find: findConfig,
+  pattern: patternConfig,
+  tree: treeConfig.filter(a => a.category === 'tree'),
   graph: graphConfig,
   dp: dpConfig,
   backtracking: backtrackingConfig,
-  'number-theory': nrTheoryConfig,
+  misc: miscConfig,
 };

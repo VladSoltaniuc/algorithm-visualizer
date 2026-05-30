@@ -1,4 +1,5 @@
-﻿using api.Models;
+﻿using api.Helpers;
+using api.Models;
 
 namespace api.Services;
 
@@ -53,7 +54,7 @@ public class DynamicProgService
 
     // 2. 0/1 Knapsack
     // Time: O(n Â· W)
-    // Space: O(n Â· W) â€” full 2-D table for matrix visualisation
+    // Space: O(n Â· W) full 2-D table for matrix visualisation
     public List<AlgorithmStep> Knapsack(int[] weights, int[] values, int capacity)
     {
         if (weights.Length == 0)
@@ -67,18 +68,6 @@ public class DynamicProgService
             rowLabels[i] = $"#{i - 1}(w={weights[i - 1]},v={values[i - 1]})";
         var colLabels = Enumerable.Range(0, capacity + 1).Select(w => w.ToString()).ToArray();
 
-        int[][] Snap()
-        {
-            var m = new int[n + 1][];
-            for (int r = 0; r <= n; r++)
-            {
-                m[r] = new int[capacity + 1];
-                for (int c = 0; c <= capacity; c++)
-                    m[r][c] = dp[r, c];
-            }
-            return m;
-        }
-
         var steps = new List<AlgorithmStep>();
         int stepNum = 0;
 
@@ -88,8 +77,8 @@ public class DynamicProgService
                 StepNumber = stepNum++,
                 Array = [],
                 Description =
-                    $"0/1 Knapsack â€” {n} items, capacity {capacity}. Row 0 = 0 (no items selected).",
-                DpMatrix = Snap(),
+                    $"0/1 Knapsack {n} items, capacity {capacity}. Row 0 = 0 (no items selected).",
+                DpMatrix = DynamicProgHelpers.SnapshotMatrix(dp, n + 1, capacity + 1),
                 RowLabels = rowLabels,
                 ColLabels = colLabels,
                 HighlightRow = 0,
@@ -115,7 +104,7 @@ public class DynamicProgService
                         $"Item {i - 1} (w={wi}, v={vi}): best value at capacity {capacity} = {rowAns}"
                         + (improved ? $" â†‘ (was {dp[i - 1, capacity]})" : " (unchanged)")
                         + ".",
-                    DpMatrix = Snap(),
+                    DpMatrix = DynamicProgHelpers.SnapshotMatrix(dp, n + 1, capacity + 1),
                     RowLabels = rowLabels,
                     ColLabels = colLabels,
                     HighlightRow = i,
@@ -151,7 +140,7 @@ public class DynamicProgService
                 StepNumber = stepNum,
                 Array = [],
                 Description = $"Max value = {dp[n, capacity]}.{selStr}",
-                DpMatrix = Snap(),
+                DpMatrix = DynamicProgHelpers.SnapshotMatrix(dp, n + 1, capacity + 1),
                 RowLabels = rowLabels,
                 ColLabels = colLabels,
                 BacktrackPath = bt.ToArray(),
@@ -197,8 +186,8 @@ public class DynamicProgService
                 StepNumber = step++,
                 Array = new int[n + 1],
                 Description =
-                    $"LCS of \"{text1}\" and \"{text2}\" â€” initialise ({m + 1})x({n + 1}) matrix with zeros",
-                DpMatrix = SnapshotMatrix(),
+                    $"LCS of \"{text1}\" and \"{text2}\" initialise ({m + 1})x({n + 1}) matrix with zeros",
+                DpMatrix = DynamicProgHelpers.SnapshotMatrix(dp, m + 1, n + 1),
                 RowHeaders = rowHeaders,
                 ColHeaders = colHeaders,
             }
@@ -221,7 +210,7 @@ public class DynamicProgService
                     {
                         StepNumber = step++,
                         Description = desc,
-                        DpMatrix = SnapshotMatrix(),
+                        DpMatrix = DynamicProgHelpers.SnapshotMatrix(dp, m + 1, n + 1),
                         RowHeaders = rowHeaders,
                         ColHeaders = colHeaders,
                         HighlightRow = i,
@@ -263,7 +252,7 @@ public class DynamicProgService
                 Array = finalRow,
                 Description = $"LCS = \"{new string(lcs.ToArray())}\" (length {lcs.Count})",
                 SortedIndices = Enumerable.Range(0, n + 1).ToArray(),
-                DpMatrix = SnapshotMatrix(),
+                DpMatrix = DynamicProgHelpers.SnapshotMatrix(dp, m + 1, n + 1),
                 RowHeaders = rowHeaders,
                 ColHeaders = colHeaders,
                 BacktrackPath = backtrackCells.ToArray(),
@@ -273,7 +262,7 @@ public class DynamicProgService
     }
 
     // Time: O(n^2)
-    // Space: O(n^2) â€” comparison matrix for visualisation
+    // Space: O(n^2) comparison matrix for visualisation
     public List<AlgorithmStep> Lis(int[] arr)
     {
         if (arr.Length == 0)
@@ -315,10 +304,10 @@ public class DynamicProgService
                 StepNumber = stepNum++,
                 Array = [],
                 Description =
-                    $"LIS of [{string.Join(", ", arr)}] â€” each row i shows: "
+                    $"LIS of [{string.Join(", ", arr)}] each row i shows: "
                     + "candidates dp[j]+1 (green when arr[j] < arr[i]), "
                     + "0 (invalid), diagonal = dp[i].",
-                DpMatrix = Snap(),
+                DpMatrix = DynamicProgHelpers.SnapshotJaggedMatrix(matrix),
                 RowLabels = lbls,
                 ColLabels = lbls,
             }
@@ -347,17 +336,17 @@ public class DynamicProgService
             matrix[i][i] = dp[i];
 
             string note =
-                i == 0 ? "No predecessors â€” dp[0] = 1."
+                i == 0 ? "No predecessors dp[0] = 1."
                 : pred[i] >= 0
                     ? $"Best predecessor: arr[{pred[i]}]={arr[pred[i]]} â†’ dp[{i}] = {dp[i]}."
-                : $"No valid predecessors â€” dp[{i}] = 1.";
+                : $"No valid predecessors dp[{i}] = 1.";
             steps.Add(
                 new AlgorithmStep
                 {
                     StepNumber = stepNum++,
                     Array = (int[])dp.Clone(),
                     Description = $"arr[{i}] = {arr[i]}: dp[{i}] = {dp[i]}. {note}",
-                    DpMatrix = Snap(),
+                    DpMatrix = DynamicProgHelpers.SnapshotJaggedMatrix(matrix),
                     RowLabels = lbls,
                     ColLabels = lbls,
                     HighlightRow = i,
@@ -396,7 +385,7 @@ public class DynamicProgService
                 StepNumber = stepNum,
                 Array = (int[])dp.Clone(),
                 Description = $"LIS length = {maxLis}. Sequence: [{lisStr}].",
-                DpMatrix = Snap(),
+                DpMatrix = DynamicProgHelpers.SnapshotJaggedMatrix(matrix),
                 RowLabels = lbls,
                 ColLabels = lbls,
                 SortedIndices = Enumerable.Range(0, n).ToArray(),
@@ -459,7 +448,7 @@ public class DynamicProgService
                 Notes = MakeNotes(0),
                 Labels = MakeCoinLabels(0),
                 Description =
-                    $"dp[0] = 0 â€” zero coins needed for amount 0. "
+                    $"dp[0] = 0 zero coins needed for amount 0. "
                     + "All other cells start as âˆž (unreachable so far).",
                 SortedIndices = [0],
                 PatternOffset = -1,
@@ -488,8 +477,7 @@ public class DynamicProgService
                             Array = (int[])dp.Clone(),
                             Notes = MakeNotes(i),
                             Labels = MakeCoinLabels(i - 1),
-                            Description =
-                                $"Coin {coin}: dp[{lookupIdx}] = âˆž (unreachable) â€” skip.",
+                            Description = $"Coin {coin}: dp[{lookupIdx}] = âˆž (unreachable) skip.",
                             HighlightIndices = [i],
                             PatternOffset = lookupIdx,
                             SortedIndices = finishedSoFar,
@@ -538,7 +526,7 @@ public class DynamicProgService
                     Labels = MakeCoinLabels(i),
                     Description =
                         dp[i] >= inf
-                            ? $"dp[{i}] = âˆž â€” amount {i} cannot be formed."
+                            ? $"dp[{i}] = âˆž amount {i} cannot be formed."
                             : $"dp[{i}] = {dp[i]}. Best coin: +{coinUsed[i]}.",
                     PatternOffset = -1,
                     SortedIndices = Enumerable.Range(0, i + 1).ToArray(),
@@ -573,7 +561,7 @@ public class DynamicProgService
                 Labels = MakeCoinLabels(amount),
                 Description =
                     dp[amount] >= inf
-                        ? $"No solution â€” {amount} cannot be formed from [{string.Join(", ", coins)}]."
+                        ? $"No solution {amount} cannot be formed from [{string.Join(", ", coins)}]."
                         : $"Answer: {dp[amount]} coin(s) to make {amount}.{coinsUsedStr}",
                 SortedIndices = Enumerable.Range(0, amount + 1).ToArray(),
                 HighlightIndices = tracePath,

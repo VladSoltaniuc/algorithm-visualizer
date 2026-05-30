@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
-  arrayConfig,
-  stringConfig,
+  sortConfig,
+  findConfig,
+  patternConfig,
+  miscConfig,
   treeConfig,
   graphConfig,
   dpConfig,
   backtrackingConfig,
-  nrTheoryConfig,
 } from "../../config/algorithms";
 import { useLearned } from "../../context/LearnedContext";
 import { algorithmRatings } from "../../config/ratings";
@@ -30,13 +31,14 @@ interface Tab {
 
 function from(slugs: string[]) {
   const all = [
-    ...arrayConfig,
-    ...stringConfig,
+    ...sortConfig,
+    ...findConfig,
+    ...patternConfig,
+    ...miscConfig,
     ...treeConfig,
     ...graphConfig,
     ...dpConfig,
     ...backtrackingConfig,
-    ...nrTheoryConfig,
   ];
   return slugs
     .map((slug) => {
