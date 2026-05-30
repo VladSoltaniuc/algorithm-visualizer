@@ -2,13 +2,12 @@
   padding: 1.5rem 1rem;
   background: #f8f9fa;
   border-radius: 8px;
-  overflow-x: auto;
+  overflow: visible;
 }
 
 .dp-header {
   display: flex;
   gap: 2px;
-  justify-content: center;
   margin-bottom: 4px;
 }
 
@@ -23,7 +22,7 @@
 .dp-row {
   display: flex;
   gap: 2px;
-  justify-content: center;
+  overflow: visible;
 }
 
 .dp-cell {
@@ -56,6 +55,12 @@
 
 /* ── Coin Change ──────────────────────────────────────── */
 
+/* Red: cell that can never be reached (no valid coin combo) */
+.dp-cell.impossible {
+  background: #e94560;
+  color: #fff;
+}
+
 /* Blue: reference cell (dp[i − coin]) currently being looked up */
 .dp-cell.lookup {
   background: #4da6ff;
@@ -76,42 +81,39 @@
   overflow-x: visible;
 }
 
-.cc-table-scroll {
-  overflow-x: auto;
-  padding-bottom: 4px;
+.dp-matrix-center {
+  display: flex;
+  justify-content: center;
 }
 
-/* Small label above the coin-used row */
-.cc-row-title {
-  font-size: 0.65rem;
-  color: #888;
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 2px;
-  letter-spacing: 0.03em;
+.dp-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
 }
 
-/* Coin-used row - slightly shorter cells */
-.cc-coin-row {
-  margin-bottom: 0;
+.dp-matrix-row {
+  display: flex;
+  flex-direction: column;
 }
 
-.cc-coin-cell {
-  height: 26px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  background: #dee2e6;
-  color: #555;
-}
-
-.cc-coin-cell.done {
-  background: #54e8c0;
-  color: #1a5c4a;
-}
-
-.cc-coin-cell.path {
-  background: #fcd570;
-  color: #7a5c00;
+/* Red notification badge on yellow winner cells */
+.cc-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 10;
+  background: #e94560;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 999px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(233, 69, 96, 0.5);
 }
 
 

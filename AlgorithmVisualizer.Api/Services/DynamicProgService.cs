@@ -431,8 +431,7 @@ public class DynamicProgService
             Enumerable
                 .Range(0, amount + 1)
                 .Select(j =>
-                    j > upTo ? "?"
-                    : dp[j] >= inf ? "âˆž"
+                    j > upTo || dp[j] >= inf ? "?"
                     : dp[j].ToString()
                 )
                 .ToArray();
@@ -564,7 +563,6 @@ public class DynamicProgService
                 usedList.Add(coinUsed[cur]);
                 cur -= coinUsed[cur];
             }
-            pathIndices.Add(0);
             tracePath = pathIndices.ToArray();
             coinsUsedStr = $" Coins: {string.Join(" + ", usedList)} = {amount}";
         }

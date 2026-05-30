@@ -228,7 +228,7 @@
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  width: 320px;
+  width: max-content;
   background: #1a1a2e;
   color: #e2e2f0;
   font-size: 0.78rem;

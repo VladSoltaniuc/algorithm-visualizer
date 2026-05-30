@@ -390,27 +390,58 @@ while (s <= n-m) {
 }`,
 
   "rabin-karp":
-`int hPat = Hash(pattern), hWin = Hash(text[..m]);
-for (int i = 0; i <= n-m; i++) {
-  if (hWin == hPat && text[i..(i+m)] == pattern)
-    matches.Add(i);
-  if (i < n-m) hWin = Rehash(hWin, text[i], text[i+m]);
-}`,
+`def rabin_karp(text, pattern, b=256, mod=101):
+    n, m = len(text), len(pattern)
+    if m > n:
+        return []
+    pattern_hash = 0
+    window_hash = 0
+    h = 1
+    for i in range(m - 1):
+        h = (h * b) % mod
+    for i in range(m):
+        pattern_hash = (b * pattern_hash + ord(pattern[i])) % mod
+        window_hash = (b * window_hash + ord(text[i])) % mod
+    results = []
+    for i in range(n - m + 1):
+        if pattern_hash == window_hash:
+            if text[i:i+m] == pattern:
+                results.append(i)
+        if i < n - m:
+            window_hash = (b * (window_hash - ord(text[i]) * h) + ord(text[i + m])) % mod
+            if window_hash < 0:
+                window_hash += mod
+    return results`,
 
   "longest-palindrome":
-`string res = "";
-for (int i = 0; i < n; i++)
-  foreach (var (l0,r0) in new[]{(i,i),(i,i+1)}) {
-    int l = l0, r = r0;
-    while (l>=0 && r<n && s[l]==s[r]) { l--; r++; }
-    if (r-l-1 > res.Length) res = s[(l+1)..r];
-  }`,
+`string t = "^#" + string.Join("#", s.ToCharArray()) + "#$";
+int n = t.Length;
+int[] p = new int[n];
+int c = 0, r = 0;
+
+for (int i = 1; i < n - 1; i++) {
+  int mirror = 2 * c - i;
+  if (i < r) p[i] = Math.Min(r - i, p[mirror]);
+  while (t[i + p[i] + 1] == t[i - p[i] - 1]) p[i]++;
+  if (i + p[i] > r) { c = i; r = i + p[i]; }
+}
+
+int maxLen = 0, centerIdx = 0;
+for (int i = 1; i < n - 1; i++)
+  if (p[i] > maxLen) { maxLen = p[i]; centerIdx = i; }
+
+int start = (centerIdx - maxLen) / 2;
+return s.Substring(start, maxLen);`,
 
   "anagram-detection":
-`int[] count = new int[26];
-foreach (char c in s1) count[c-'a']++;
-foreach (char c in s2) count[c-'a']--;
-return count.All(x => x == 0);`,
+`int[] pCount = new int[256], wCount = new int[256];
+foreach (char c in pattern) pCount[c]++;
+for (int i = 0; i < text.Length; i++) {
+  wCount[text[i]]++;
+  if (i >= pattern.Length) wCount[text[i - pattern.Length]]--;
+  if (i >= pattern.Length - 1 && pCount.SequenceEqual(wCount))
+    result.Add(i - pattern.Length + 1);
+}`,
 
   "reversal":
 `char[] arr = s.ToCharArray();

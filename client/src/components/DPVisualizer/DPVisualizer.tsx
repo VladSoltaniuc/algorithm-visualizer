@@ -114,59 +114,55 @@ export default function DPVisualizer({
         // patternOffset = lookup cell (dp[i - coin]); highlighted in blue.
         // On the final step sortedIndices covers all cells and highlightIndices
         // contains the backtrack path.
+        const COLS = 7;
+
         if (step.labels && step.labels.length > 0) {
           const labels = step.labels;
-          // During "try coin" steps hl has exactly one element (the current amount).
-          // On the final step hl contains the backtrack path.
           const isAllDone = (step.sortedIndices?.length ?? 0) === arr.length;
           const activeIdx = isAllDone || hl.size !== 1 ? -1 : [...hl][0];
           const lookupIdx = isAllDone ? -1 : (step.patternOffset ?? -1);
           const pathSet = new Set<number>(isAllDone ? [...hl] : []);
 
+          const chunks: number[][] = [];
+          for (let i = 0; i < arr.length; i += COLS)
+            chunks.push(arr.slice(i, i + COLS).map((_, j) => i + j));
+
           return (
             <div className="dp-vis cc-vis">
-              {/* Scrollable table area */}
-              <div className="cc-table-scroll">
-                {/* Index header */}
-                <div className="dp-header">
-                  {arr.map((_, i) => (
-                    <span key={i} className="dp-idx">
-                      {i}
-                    </span>
-                  ))}
-                </div>
-
-                {/* dp values row */}
-                <div className="dp-row">
-                  {arr.map((_, i) => {
-                    let cls = "dp-cell";
-                    if (!isAllDone && i === activeIdx) cls += " active";
-                    else if (!isAllDone && lookupIdx >= 0 && i === lookupIdx)
-                      cls += " lookup";
-                    else if (isAllDone && pathSet.has(i)) cls += " path";
-                    else if (done.has(i)) cls += " done";
-                    return (
-                      <div key={i} className={cls}>
-                        {notes?.[i] ?? String(arr[i])}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Coin-used row */}
-                <div className="cc-row-title">coin used:</div>
-                <div className="dp-row cc-coin-row">
-                  {labels.map((lbl, i) => {
-                    let cls = "dp-cell cc-coin-cell";
-                    if (isAllDone && pathSet.has(i)) cls += " path";
-                    else if (done.has(i) && lbl !== "") cls += " done";
-                    return (
-                      <div key={i} className={cls}>
-                        {lbl}
-                      </div>
-                    );
-                  })}
-                </div>
+              <div className="dp-matrix-center">
+              <div className="dp-matrix">
+                {chunks.map((chunk, rowIdx) => (
+                  <div key={rowIdx} className="dp-matrix-row">
+                    <div className="dp-header">
+                      {chunk.map((i) => (
+                        <span key={i} className="dp-idx">{i}</span>
+                      ))}
+                    </div>
+                    <div className="dp-row">
+                      {chunk.map((i) => {
+                        let cls = "dp-cell";
+                        const isImpossible = labels[i] === "✗";
+                        if (!isAllDone && i === activeIdx) cls += " active";
+                        else if (!isAllDone && lookupIdx >= 0 && i === lookupIdx) cls += " lookup";
+                        else if (isAllDone && i > 0 && pathSet.has(i)) cls += " path";
+                        else if (isImpossible) cls += " impossible";
+                        else if (done.has(i)) cls += " done";
+                        const badgeNum = isAllDone && i > 0 && pathSet.has(i) && labels[i]?.startsWith("+")
+                          ? labels[i].slice(1)
+                          : null;
+                        return (
+                          <div key={i} className={cls} style={{ position: "relative" }}>
+                            {notes?.[i] ?? String(arr[i])}
+                            {badgeNum && (
+                              <span className="cc-badge">+{badgeNum}</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
               </div>
               <div className={`step-info${isFinalStep ? " final" : ""}`}>
                 {step.description}
@@ -175,26 +171,36 @@ export default function DPVisualizer({
           );
         }
 
+        const chunks: number[][] = [];
+        for (let i = 0; i < arr.length; i += COLS)
+          chunks.push(arr.slice(i, i + COLS).map((_, j) => i + j));
+
         return (
           <div className="dp-vis">
-            <div className="dp-header">
-              {arr.map((_, i) => (
-                <span key={i} className="dp-idx">
-                  {i}
-                </span>
+            <div className="dp-matrix-center">
+            <div className="dp-matrix">
+              {chunks.map((chunk, rowIdx) => (
+                <div key={rowIdx} className="dp-matrix-row">
+                  <div className="dp-header">
+                    {chunk.map((i) => (
+                      <span key={i} className="dp-idx">{i}</span>
+                    ))}
+                  </div>
+                  <div className="dp-row">
+                    {chunk.map((i) => {
+                      let cls = "dp-cell";
+                      if (done.has(i)) cls += " done";
+                      else if (hl.has(i)) cls += " active";
+                      return (
+                        <div key={i} className={cls}>
+                          {notes?.[i] ?? String(arr[i])}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               ))}
             </div>
-            <div className="dp-row">
-              {arr.map((val, i) => {
-                let cls = "dp-cell";
-                if (done.has(i)) cls += " done";
-                else if (hl.has(i)) cls += " active";
-                return (
-                  <div key={i} className={cls}>
-                    {notes?.[i] ?? String(val)}
-                  </div>
-                );
-              })}
             </div>
             <div className={`step-info${isFinalStep ? " final" : ""}`}>
               {step.description}
