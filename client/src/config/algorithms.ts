@@ -52,7 +52,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=4VqmGXwpLqc',
   },
   {
-    name: 'Binary Search', slug: 'binary-search', endpoint: 'binary-search', category: 'find', needsTarget: true, targetLabel: 'Search target', defaultInput: '1,3,5,7,9,11,13', defaultTarget: 7,
+    name: 'Binary Search', slug: 'binary-search', endpoint: 'binary-search', category: 'find', needsTarget: true, targetLabel: 'Target', defaultInput: '1,3,5,7,9,11,13', defaultTarget: 7,
     description: "Imagine you're looking for a friend's number in an old phone book. You wouldn't start from page 1, you'd flip to the middle. If your friend's name comes before the middle page, you tear the book in half and only keep the left half. If it comes after, you keep the right half. You keep flipping to the middle of whatever is left, throwing away the half that can't contain the name, until you find it. Binary Search does exactly this, but with a sorted list of numbers.",
     usecase: 'Searching sorted data, database indexes, dictionary lookups, finding boundaries (lower/upper bounds), and any search-in-sorted-range problems.',
     pros: [
@@ -100,7 +100,7 @@ export const arrayConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=g-PGLbMth_g',
   },
   {
-    name: 'Two Pointers', slug: 'two-pointers', endpoint: 'two-pointers', category: 'find', needsTarget: true, targetLabel: 'Target sum', defaultInput: '1,2,3,4,5,6,7,8', defaultTarget: 9,
+    name: 'Two Pointers', slug: 'two-pointers', endpoint: 'two-pointers', category: 'find', needsTarget: true, targetLabel: 'Sum', defaultInput: '1,2,3,4,5,6,7,8', defaultTarget: 9,
     description: "Imagine a sorted row of price tags and you're trying to find two items that together cost exactly $9. Instead of checking every possible pair, you place one finger on the cheapest item on the far left and another on the most expensive on the far right. If the two prices add up to too much, move the right finger one step left. If they add up to too little, move the left finger one step right. You keep closing in from both ends until you find the pair that adds up to exactly $9, or run out of options.",
     usecase: 'Pair-sum problems, removing duplicates in sorted arrays, merging sorted arrays, and partitioning problems.',
     pros: [
@@ -304,7 +304,7 @@ export const treeConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=6ZnyEApgFYg',
   },
   {
-    name: 'BST Insert / Search', slug: 'bst-insert-search', endpoint: 'bst-insert-search', category: 'tree', inputLabel: 'BST values', defaultInput: '5,3,7,1,4,6,8', needsTarget: true, targetLabel: 'Search for', defaultTarget: 4,
+    name: 'BST Insert / Search', slug: 'bst-insert-search', endpoint: 'bst-insert-search', category: 'tree', inputLabel: 'BST values', defaultInput: '5,3,7,1,4,6,8', needsTarget: true, targetLabel: 'Target', defaultTarget: 4,
     description: 'Imagine a filing cabinet where every folder is numbered. Smaller numbers go in the left drawer, bigger numbers go in the right drawer, and this rule applies inside every drawer too. To insert a new number, you start at the top and keep going left if your number is smaller or right if it\'s bigger, until you find an empty spot. Searching works the same way, at every step you either find your number, go left, or go right. You never have to check every folder, just follow the rule.',
     usecase: 'Dictionaries, symbol tables, database indexes, and any key-value store where ordered data needs fast lookup.',
     pros: [
@@ -334,7 +334,7 @@ export const treeConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=_O-yUiJHbNY',
   },
   {
-    name: 'Lowest Common Ancestor', slug: 'lca', endpoint: 'lca', category: 'tree', inputLabel: 'BST values', defaultInput: '5,3,7,1,4,6,8', needsTarget: true, targetLabel: 'Node A', defaultTarget: 1, needsPattern: true, patternLabel: 'Node B', defaultPattern: '4',
+    name: 'Lowest Common Ancestor', slug: 'lca', endpoint: 'lca', category: 'tree', inputLabel: 'BST values', defaultInput: '5,3,7,1,4,6,8', needsTarget: true, targetLabel: 'NodeA', defaultTarget: 1, needsPattern: true, patternLabel: 'Node B', defaultPattern: '4',
     description: 'Imagine two cousins in a family tree and you want to find the closest relative they share. Because this is a BST, every person on the left has a smaller number and every person on the right has a larger one. Starting from the top, if both cousins are smaller than the current person, go left. If both are larger, go right. The moment they split to opposite sides, or the moment you land on one of them directly, that\'s the lowest common ancestor.',
     usecase: 'Version control (finding the merge base), organizational hierarchies, phylogenetic trees, and network routing (finding the common gateway).',
     pros: [
@@ -412,7 +412,7 @@ export const treeConfig: AlgorithmConfig[] = [
 
 export const graphConfig: AlgorithmConfig[] = [
   {
-    name: 'BFS', slug: 'bfs', endpoint: 'bfs', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to;...)', defaultInput: '6;0,1;0,2;1,3;2,3;3,4;4,5', needsTarget: true, targetLabel: 'Start node', defaultTarget: 0,
+    name: 'BFS', slug: 'bfs', endpoint: 'bfs', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to;...)', defaultInput: '6;0,1;0,2;1,3;2,3;3,4;4,5', needsTarget: true, targetLabel: 'Start', defaultTarget: 0,
     description: 'Imagine you\'re standing in the middle of a city and want to explore every street, starting from your current corner. BFS explores the city floor by floor, first every street directly connected to you, then every street connected to those, then the next ring out, and so on. It uses a waiting line: every time you visit a corner, you add all its unvisited neighbors to the back of the line. You always visit the person at the front of the line next, which guarantees you explore everything close to you before venturing further away.',
     usecase: 'Shortest path in unweighted graphs, social network friend suggestions (degrees of separation), web crawling, and level-wise graph analysis.',
     pros: [
@@ -428,7 +428,7 @@ export const graphConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=oDqjPvD54Ss',
   },
   {
-    name: 'DFS', slug: 'dfs', endpoint: 'dfs', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to;...)', defaultInput: '6;0,1;0,2;1,3;2,3;3,4;4,5', needsTarget: true, targetLabel: 'Start node', defaultTarget: 0,
+    name: 'DFS', slug: 'dfs', endpoint: 'dfs', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to;...)', defaultInput: '6;0,1;0,2;1,3;2,3;3,4;4,5', needsTarget: true, targetLabel: 'Start', defaultTarget: 0,
     description: 'Using the same city, DFS explores very differently. Instead of fanning out in all directions, it picks one street and follows it as far as it possibly can, turning down every new road it finds, until it hits a dead end. Only then does it backtrack to the last junction and try a different road. Think of it as exploring a maze by always hugging the left wall: you go deep into one path completely before trying another.',
     usecase: 'Topological sorting, cycle detection, maze solving, connected components, and strongly connected components (Tarjan/Kosaraju).',
     pros: [
@@ -445,7 +445,7 @@ export const graphConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=Urx87-NMm6c',
   },
   {
-    name: "Dijkstra's Shortest Path", slug: 'dijkstra', endpoint: 'dijkstra', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to,weight;...)', defaultInput: '7;0,1,3;0,2,2;1,2,2;1,3,1;2,3,3;1,4,4;4,5,1;3,5,2;2,5,6;2,6,5;6,5,2', needsTarget: true, targetLabel: 'Start node', defaultTarget: 0,
+    name: "Dijkstra's Shortest Path", slug: 'dijkstra', endpoint: 'dijkstra', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to,weight;...)', defaultInput: '7;0,1,3;0,2,2;1,2,2;1,3,1;2,3,3;1,4,4;4,5,1;3,5,2;2,5,6;2,6,5;6,5,2', needsTarget: true, targetLabel: 'Start', defaultTarget: 0,
     description: 'Imagine you\'re a GPS trying to find the fastest route from your home to every other location in a city. Each road has a travel time. Dijkstra\'s algorithm starts at your home and always visits the closest unvisited location next, the one with the smallest total travel time from home. When it visits a location, it checks whether going through it offers a faster route to any of its neighbors, and updates the estimate if so. It keeps doing this, always picking the cheapest unvisited stop, until it has found the shortest path to everywhere.',
     usecase: 'GPS navigation, network routing (OSPF protocol), game pathfinding (A* is an extension of Dijkstra), and any weighted shortest path problem.',
     pros: [
@@ -511,7 +511,7 @@ export const graphConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=JZBQLXgSGfs',
   },
   {
-    name: "Prim's MST", slug: 'prim', endpoint: 'prim', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to,weight;...)', defaultInput: '4;0,1,10;0,2,6;0,3,5;1,3,15;2,3,4', needsTarget: true, targetLabel: 'Start node', defaultTarget: 0,
+    name: "Prim's MST", slug: 'prim', endpoint: 'prim', category: 'graph', inputType: 'graph', inputLabel: 'Graph (nodes;from,to,weight;...)', defaultInput: '4;0,1,10;0,2,6;0,3,5;1,3,15;2,3,4', needsTarget: true, targetLabel: 'Start', defaultTarget: 0,
     description: 'Prim\'s algorithm solves the exact same problem as Kruskal\'s, building the cheapest road network to connect all cities, but it grows the network differently. Instead of sorting all roads upfront, it starts at one city and at each step looks at all roads leading out of the already-connected network. It always picks the cheapest one that reaches a new city not yet in the network, adds that city, and repeats. It grows outward like a spreading tree, one cheapest branch at a time, until every city is connected.',
     usecase: 'Same as Kruskal\'s, network design, cable laying, circuit design, but preferred when the graph is dense (many edges).',
     pros: [
