@@ -13,6 +13,8 @@
   z-index: 1000;
 }
 
+.nav-brand-short { display: none; }
+
 .nav-brand {
   font-size: 1.15rem;
   font-weight: 700;
@@ -340,6 +342,9 @@
 
 /* ── Responsive: switch to burger below 700px ── */
 @media (max-width: 700px) {
+  .nav-brand-full { display: none; }
+  .nav-brand-short { display: inline; }
+
   .nav-tabs {
     display: none;
   }

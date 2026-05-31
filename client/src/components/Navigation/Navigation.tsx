@@ -129,7 +129,7 @@ export default function Navigation() {
   const pathParts = pathname.split("/").filter(Boolean);
   const categoryFromPath = pathParts[0] ?? null;
   const slugFromPath = pathParts[1] ?? null;
-  const currentAlgo = slugFromPath
+  const currentAlgoConfig = slugFromPath
     ? ([
         ...sortConfig,
         ...findConfig,
@@ -139,7 +139,11 @@ export default function Navigation() {
         ...graphConfig,
         ...dpConfig,
         ...backtrackingConfig,
-      ].find((a) => a.slug === slugFromPath)?.name ?? null)
+      ].find((a) => a.slug === slugFromPath) ?? null)
+    : null;
+  const currentAlgo = currentAlgoConfig?.name ?? null;
+  const currentAlgoShort = currentAlgoConfig
+    ? (currentAlgoConfig.shortName ?? currentAlgoConfig.name)
     : null;
   const currentAlgoLearned =
     categoryFromPath && slugFromPath
@@ -199,7 +203,8 @@ export default function Navigation() {
       <div
         className={`nav-brand${currentAlgoLearned ? " nav-brand--learned" : ""}`}
       >
-        {currentAlgo ?? "Algorithm Visualizer"}
+        <span className="nav-brand-full">{currentAlgo ?? "Algorithm Visualizer"}</span>
+        <span className="nav-brand-short">{currentAlgoShort ?? "Algorithm Visualizer"}</span>
       </div>
       <div className="nav-tabs">
         {tabs.map((tab) => (

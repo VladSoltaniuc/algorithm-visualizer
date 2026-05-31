@@ -196,7 +196,7 @@ export const stringConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=qQ8vS2btsxI',
   },
   {
-    name: 'Longest Palindrome (Manacher)', slug: 'longest-palindrome', endpoint: 'longest-palindrome', category: 'pattern', inputType: 'text', inputLabel: 'Text', defaultInput: 'babad',
+    name: 'Longest Palindrome (Manacher)', shortName: 'Longest Palindrome', slug: 'longest-palindrome', endpoint: 'longest-palindrome', category: 'pattern', inputType: 'text', inputLabel: 'Text', defaultInput: 'babad',
     description: 'Using mirroring to avoid calculating values that can be inferred. Imagine a word that reads the same forwards and backwards, like "racecar". That\'s a palindrome. Now imagine you want to find the longest such stretch hiding inside a bigger string like "babad". Checking every possible stretch one by one would take forever. Manacher\'s algorithm is smarter, it keeps track of the biggest palindrome it has found so far and uses it as a mirror. Any new stretch that falls inside that mirror has a twin on the other side whose length is already known, so it can be copied instantly instead of rechecked. Only when a stretch reaches or goes beyond the mirror\'s edge does it need to explore new territory.',
     usecase: 'Finding the longest palindromic substring, DNA sequence analysis (biological palindromes), and text processing tasks requiring palindrome detection.',
     pros: [
@@ -562,7 +562,7 @@ export const dpConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=8LusJS5-AGo',
   },
   {
-    name: 'Longest Common Subsequence', slug: 'lcs', endpoint: 'lcs', category: 'dp', inputType: 'text', inputLabel: 'Text 1', defaultInput: 'ABCBDAB', needsPattern: true, patternLabel: 'Text 2', defaultPattern: 'BDCAB',
+    name: 'Longest Common Subsequence', shortName: 'Longest Comm Subseq', slug: 'lcs', endpoint: 'lcs', category: 'dp', inputType: 'text', inputLabel: 'Text 1', defaultInput: 'ABCBDAB', needsPattern: true, patternLabel: 'Text 2', defaultPattern: 'BDCAB',
     description: 'Imagine two words, "ABCBDAB" and "BDCAB", and you want to find the longest sequence of letters that appears in both, in the same order, but not necessarily side by side. For example "BCAB" appears in both if you skip around. LCS builds a grid comparing every letter of one word against every letter of the other. When two letters match, it extends the best subsequence found so far. When they don\'t, it borrows the best answer from either ignoring the current letter of word one or word two, whichever is longer.',
     usecase: 'Diff tools (git diff, file comparison), DNA sequence alignment, version control merge strategies, and plagiarism detection.',
     pros: [
@@ -578,7 +578,7 @@ export const dpConfig: AlgorithmConfig[] = [
     ytTutorial: 'https://www.youtube.com/watch?v=Ua0GhsJSlWM',
   },
   {
-    name: 'Longest Increasing Subsequence', slug: 'lis', endpoint: 'lis', category: 'dp', inputLabel: 'Array', defaultInput: '10,22,9,33,21,50,41,60',
+    name: 'Longest Increasing Subsequence', shortName: 'Longest Incr Subseq', slug: 'lis', endpoint: 'lis', category: 'dp', inputLabel: 'Array', defaultInput: '10,22,9,33,21,50,41,60',
     description: 'Imagine a row of numbers: 10, 22, 9, 33, 21, 50, 41, 60. You want to find the longest chain of numbers that are strictly going up, but they don\'t have to be next to each other, you can skip numbers as long as the ones you pick keep climbing. For example 10, 22, 33, 50, 60 is one valid chain. The algorithm goes through each number and asks: what\'s the longest increasing chain that ends at this number? It looks back at all previous numbers smaller than the current one and builds on the best chain among them.',
     usecase: 'Patience sorting, longest chain problems, stock price analysis, and any problem involving finding monotonically increasing sequences.',
     pros: [

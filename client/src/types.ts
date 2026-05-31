@@ -53,6 +53,7 @@ export interface AlgorithmConfig {
   needsPattern?: boolean;
   patternLabel?: string;
   defaultPattern?: string;
+  shortName?: string;
   ytTutorial?: string;
   directed?: boolean;
 }

@@ -400,7 +400,7 @@ export default function AlgorithmPage() {
   ).length;
   const learnedTooltip =
     learnedCount == 36
-      ? "(⌐■_■)   (▀̿Ĺ̯▀̿ ̿) I'm proud of you, came here a young Padawan and now you are a Jedi master! Use your knowledge wisely and spread it to yarning souls. May the algorithms be with you my friend "
+      ? "(⌐■_■)      (▀̿Ĺ̯▀̿ ̿)   I'm proud of you, came here a young Padawan and now you are a Jedi master! Use your knowledge wisely and spread it to yarning souls. May the algorithms be with you my friend!"
       : learnedCount == 35
         ? "(╯°□°）╯︵ ┻━┻ Do you know what happends when you press this? Seriosuly, I GOT NO IDEA!!"
         : learnedCount == 34
@@ -492,7 +492,13 @@ export default function AlgorithmPage() {
               <span className="algo-seg-wrap">
                 <button
                   className="algo-seg-btn"
-                  onClick={() => { if (!infoOpen) return; setInfoOpen(false); setMobileTip(<p className="algo-tip-text">{config.description}</p>); }}
+                  onClick={() => {
+                    if (!infoOpen) return;
+                    setInfoOpen(false);
+                    setMobileTip(
+                      <p className="algo-tip-text">{config.description}</p>,
+                    );
+                  }}
                 >
                   Explanation
                 </button>
@@ -505,7 +511,15 @@ export default function AlgorithmPage() {
                 <span className="algo-seg-wrap">
                   <button
                     className="algo-seg-btn"
-                    onClick={() => { if (!infoOpen) return; setInfoOpen(false); setMobileTip(<pre className="algo-code-pre">{algorithmPseudocode[slug]}</pre>); }}
+                    onClick={() => {
+                      if (!infoOpen) return;
+                      setInfoOpen(false);
+                      setMobileTip(
+                        <pre className="algo-code-pre">
+                          {algorithmPseudocode[slug]}
+                        </pre>,
+                      );
+                    }}
                   >
                     &lt;/Code&gt;
                   </button>
@@ -520,16 +534,28 @@ export default function AlgorithmPage() {
               <span className="algo-seg-wrap">
                 <button
                   className="algo-seg-btn"
-                  onClick={() => { if (!infoOpen) return; setInfoOpen(false); setMobileTip(
-                    <div className="algo-tip-proscons">
-                      <ul className="pros-list">
-                        {config.pros.map((pro, i) => <li key={i} className="pro-item">{pro}</li>)}
-                      </ul>
-                      <ul className="cons-list">
-                        {config.cons.map((con, i) => <li key={i} className="con-item">{con}</li>)}
-                      </ul>
-                    </div>
-                  ); }}
+                  onClick={() => {
+                    if (!infoOpen) return;
+                    setInfoOpen(false);
+                    setMobileTip(
+                      <div className="algo-tip-proscons">
+                        <ul className="pros-list">
+                          {config.pros.map((pro, i) => (
+                            <li key={i} className="pro-item">
+                              {pro}
+                            </li>
+                          ))}
+                        </ul>
+                        <ul className="cons-list">
+                          {config.cons.map((con, i) => (
+                            <li key={i} className="con-item">
+                              {con}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>,
+                    );
+                  }}
                 >
                   Pros &amp; Cons
                 </button>
@@ -557,19 +583,29 @@ export default function AlgorithmPage() {
                 <span className="algo-seg-wrap">
                   <button
                     className="algo-seg-btn"
-                    onClick={() => { if (!infoOpen) return; setInfoOpen(false); setMobileTip(
-                      <>
-                        <span className="algo-code-shortcut">
-                          <span className="algo-code-shortcut-label">Usability:</span>
-                          {ratingLabels[algorithmRatings[slug].stars]}
-                          <span className="rating-stars">
-                            {"★".repeat(algorithmRatings[slug].stars)}
-                            <span className="rating-stars-empty">{"★".repeat(5 - algorithmRatings[slug].stars)}</span>
+                    onClick={() => {
+                      if (!infoOpen) return;
+                      setInfoOpen(false);
+                      setMobileTip(
+                        <>
+                          <span className="algo-code-shortcut">
+                            <span className="algo-code-shortcut-label">
+                              Usability:
+                            </span>
+                            {ratingLabels[algorithmRatings[slug].stars]}
+                            <span className="rating-stars">
+                              {"★".repeat(algorithmRatings[slug].stars)}
+                              <span className="rating-stars-empty">
+                                {"★".repeat(5 - algorithmRatings[slug].stars)}
+                              </span>
+                            </span>
                           </span>
-                        </span>
-                        <span className="algo-rating-text">{algorithmRatings[slug].tooltip}</span>
-                      </>
-                    ); }}
+                          <span className="algo-rating-text">
+                            {algorithmRatings[slug].tooltip}
+                          </span>
+                        </>,
+                      );
+                    }}
                   >
                     Rating
                   </button>
@@ -627,11 +663,12 @@ export default function AlgorithmPage() {
                 <span className="algo-learned-full">Marked as learned</span>
                 <span className="algo-learned-short">Mark</span>
               </label>
-              {learnedTooltip && !isLearned(learnedKey) && (
-                <span className="algo-seg-tip algo-seg-tip--learned">
-                  <p className="algo-tip-text">{learnedTooltip}</p>
-                </span>
-              )}
+              {learnedTooltip &&
+                (!isLearned(learnedKey) || learnedCount === 36) && (
+                  <span className="algo-seg-tip algo-seg-tip--learned">
+                    <p className="algo-tip-text">{learnedTooltip}</p>
+                  </span>
+                )}
             </span>
 
             <label className="algo-seg-btn algo-speed-pill">
