@@ -260,7 +260,7 @@ export default function Navigation() {
           {tabs.map((tab) => (
             <div key={tab.label} className="nav-mobile-group">
               <button
-                className={`nav-mobile-category${openCategory === tab.label ? " open" : ""}`}
+                className={`nav-mobile-category${openCategory === tab.label ? " open" : ""}${tab.items.every((item) => isLearned(item.path.slice(1))) ? " all-learned" : ""}`}
                 onClick={() =>
                   setOpenCategory((c) => (c === tab.label ? null : tab.label))
                 }

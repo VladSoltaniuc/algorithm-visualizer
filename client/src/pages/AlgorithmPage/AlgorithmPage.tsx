@@ -71,6 +71,8 @@ export default function AlgorithmPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
+  const [mobileTip, setMobileTip] = useState<React.ReactNode>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
   const [showSecret, setShowSecret] = useState(false);
   const secretCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -176,6 +178,16 @@ export default function AlgorithmPage() {
     setGraphData(null);
     setTreeInputValues([]);
   }, [category, slug]);
+
+  useEffect(() => {
+    if (!infoOpen) return;
+    const close = (e: MouseEvent) => {
+      if (infoRef.current && !infoRef.current.contains(e.target as Node))
+        setInfoOpen(false);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [infoOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -467,7 +479,7 @@ export default function AlgorithmPage() {
     <div className="algorithm-page">
       <div className="algo-tabs">
         <div className="algo-bar">
-          <div className="algo-segment">
+          <div className="algo-segment" ref={infoRef}>
             <button
               className={`algo-seg-btn algo-info-burger${infoOpen ? " open" : ""}`}
               onClick={() => setInfoOpen((o) => !o)}
@@ -478,7 +490,12 @@ export default function AlgorithmPage() {
 
             <div className={`algo-info-pills${infoOpen ? " open" : ""}`}>
               <span className="algo-seg-wrap">
-                <button className="algo-seg-btn">Explanation</button>
+                <button
+                  className="algo-seg-btn"
+                  onClick={() => { if (!infoOpen) return; setInfoOpen(false); setMobileTip(<p className="algo-tip-text">{config.description}</p>); }}
+                >
+                  Explanation
+                </button>
                 <span className="algo-seg-tip algo-seg-tip--wide">
                   <p className="algo-tip-text">{config.description}</p>
                 </span>
@@ -486,7 +503,12 @@ export default function AlgorithmPage() {
 
               {algorithmPseudocode[slug] && (
                 <span className="algo-seg-wrap">
-                  <button className="algo-seg-btn">&lt;/Code&gt;</button>
+                  <button
+                    className="algo-seg-btn"
+                    onClick={() => { if (!infoOpen) return; setInfoOpen(false); setMobileTip(<pre className="algo-code-pre">{algorithmPseudocode[slug]}</pre>); }}
+                  >
+                    &lt;/Code&gt;
+                  </button>
                   <span className="algo-seg-tip algo-seg-tip--code">
                     <pre className="algo-code-pre">
                       {algorithmPseudocode[slug]}
@@ -496,7 +518,21 @@ export default function AlgorithmPage() {
               )}
 
               <span className="algo-seg-wrap">
-                <button className="algo-seg-btn">Pros &amp; Cons</button>
+                <button
+                  className="algo-seg-btn"
+                  onClick={() => { if (!infoOpen) return; setInfoOpen(false); setMobileTip(
+                    <div className="algo-tip-proscons">
+                      <ul className="pros-list">
+                        {config.pros.map((pro, i) => <li key={i} className="pro-item">{pro}</li>)}
+                      </ul>
+                      <ul className="cons-list">
+                        {config.cons.map((con, i) => <li key={i} className="con-item">{con}</li>)}
+                      </ul>
+                    </div>
+                  ); }}
+                >
+                  Pros &amp; Cons
+                </button>
                 <span className="algo-seg-tip algo-seg-tip--proscons">
                   <div className="algo-tip-proscons">
                     <ul className="pros-list">
@@ -519,7 +555,24 @@ export default function AlgorithmPage() {
 
               {algorithmRatings[slug] && (
                 <span className="algo-seg-wrap">
-                  <button className="algo-seg-btn">Rating</button>
+                  <button
+                    className="algo-seg-btn"
+                    onClick={() => { if (!infoOpen) return; setInfoOpen(false); setMobileTip(
+                      <>
+                        <span className="algo-code-shortcut">
+                          <span className="algo-code-shortcut-label">Usability:</span>
+                          {ratingLabels[algorithmRatings[slug].stars]}
+                          <span className="rating-stars">
+                            {"★".repeat(algorithmRatings[slug].stars)}
+                            <span className="rating-stars-empty">{"★".repeat(5 - algorithmRatings[slug].stars)}</span>
+                          </span>
+                        </span>
+                        <span className="algo-rating-text">{algorithmRatings[slug].tooltip}</span>
+                      </>
+                    ); }}
+                  >
+                    Rating
+                  </button>
                   <span className="algo-seg-tip algo-seg-tip--rating">
                     <span className="algo-code-shortcut">
                       <span className="algo-code-shortcut-label">
@@ -571,9 +624,8 @@ export default function AlgorithmPage() {
                   checked={isLearned(learnedKey)}
                   onChange={() => toggle(learnedKey)}
                 />
-                {isLearned(learnedKey)
-                  ? "Marked as learned"
-                  : "Marked as learned"}
+                <span className="algo-learned-full">Marked as learned</span>
+                <span className="algo-learned-short">Mark</span>
               </label>
               {learnedTooltip && !isLearned(learnedKey) && (
                 <span className="algo-seg-tip algo-seg-tip--learned">
@@ -754,6 +806,14 @@ export default function AlgorithmPage() {
           isPaused={isPaused}
           onComplete={() => setIsRunning(false)}
         />
+      )}
+
+      {mobileTip && (
+        <div className="mobile-tip-overlay" onClick={() => setMobileTip(null)}>
+          <div className="mobile-tip-box" onClick={(e) => e.stopPropagation()}>
+            {mobileTip}
+          </div>
+        </div>
       )}
 
       {showSecret && (

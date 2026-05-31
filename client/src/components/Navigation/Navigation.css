@@ -278,6 +278,14 @@
   background: #2a2a3e;
 }
 
+.nav-mobile-category.all-learned {
+  color: #4ade80;
+}
+
+.nav-mobile-category.all-learned.open {
+  color: #4ade80;
+}
+
 .nav-mobile-arrow {
   font-size: 0.7rem;
   opacity: 0.6;

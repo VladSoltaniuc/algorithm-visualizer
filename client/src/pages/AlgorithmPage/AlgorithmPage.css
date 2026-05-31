@@ -333,6 +333,10 @@
   text-decoration: none;
 }
 
+.algo-learned-short {
+  display: none;
+}
+
 /* ── Learned pill ── */
 .algo-seg-learned input[type="checkbox"] {
   display: none;
@@ -413,6 +417,7 @@
   .algo-segment {
     flex: 1;
     min-width: 0;
+    position: relative;
   }
 
   .algo-seg-btn {
@@ -460,29 +465,50 @@
   }
 
   .algo-info-pills .algo-seg-tip {
-    top: auto;
-    bottom: calc(100% + 6px);
-    left: 100%;
-    transform: none;
-    max-width: calc(100vw - 3rem);
+    position: fixed;
+    top: 50%;
+    left: 1rem;
+    right: 1rem;
+    bottom: auto;
+    width: auto;
+    max-width: none;
+    max-height: 65vh;
+    overflow-y: auto;
+    transform: translateY(-50%);
+    z-index: 2147483647;
   }
 
-  .algo-segment {
-    position: relative;
+  /* width variants are irrelevant when fixed+stretched — reset them */
+  .algo-info-pills .algo-seg-tip--wide,
+  .algo-info-pills .algo-seg-tip--proscons,
+  .algo-info-pills .algo-seg-tip--code,
+  .algo-info-pills .algo-seg-tip--rating {
+    width: auto;
   }
 
-  .algo-seg-tip {
-    left: 0;
-    transform: none;
-    max-width: calc(100vw - 3rem);
+  /* YouTube and Learned tooltips hidden on mobile */
+  .algo-seg-tip--wide,
+  .algo-seg-tip--learned { display: none !important; }
+
+  /* Learned: short label */
+  .algo-learned-full { display: none; }
+  .algo-learned-short { display: inline; }
+
+  /* Slight separation between speed slider and action buttons */
+  .algo-run-btn {
+    margin-left: 0.4rem;
+    font-size: 1.15rem;
+    padding: 0.45rem 1rem;
+    color: #b91c3c;
   }
 
-  .algo-seg-tip--proscons {
-    width: calc(100vw - 3rem);
+  .algo-pause-btn {
+    font-size: 1.15rem;
+    padding: 0.45rem 1rem;
   }
 
-  .algo-seg-tip--wide {
-    width: calc(100vw - 3rem);
+  .algo-clear-btn {
+    padding: 0.45rem 1rem;
   }
 }
 
@@ -550,6 +576,41 @@
 .error {
   color: #c00;
   margin: 0.5rem 0;
+}
+
+/* ── Mobile tip overlay ── */
+.mobile-tip-overlay {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .mobile-tip-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .mobile-tip-box {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    right: 1rem;
+    transform: translateY(-50%);
+    background: #1a1a2e;
+    color: #e2e2f0;
+    font-size: 0.78rem;
+    font-weight: 400;
+    line-height: 1.45;
+    padding: 0.65rem 0.85rem;
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    max-height: 70vh;
+    overflow-y: auto;
+    text-align: left;
+    white-space: normal;
+  }
 }
 
 /* ── Secret ending overlay ── */
