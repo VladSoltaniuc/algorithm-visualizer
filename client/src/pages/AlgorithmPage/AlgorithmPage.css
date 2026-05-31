@@ -418,6 +418,7 @@
     flex: 1;
     min-width: 0;
     position: relative;
+    gap: 0;
   }
 
   .algo-seg-btn {
@@ -434,6 +435,7 @@
 
   .algo-info-burger {
     display: inline-flex;
+    margin-right: 2px;
   }
 
   .algo-info-pills {
@@ -462,6 +464,9 @@
   .algo-info-pills .algo-seg-btn {
     width: 100%;
     justify-content: flex-start;
+    font-size: 0.82rem;
+    min-height: 25px;
+    padding: 0 1rem;
   }
 
   .algo-info-pills .algo-seg-tip {
@@ -494,21 +499,27 @@
   .algo-learned-full { display: none; }
   .algo-learned-short { display: inline; }
 
-  /* Slight separation between speed slider and action buttons */
+  /* 3 action buttons — fill remaining space equally */
+  .algo-run-btn,
+  .algo-pause-btn,
+  .algo-clear-btn {
+    flex: 1;
+    justify-content: center;
+    margin-left: 0;
+  }
+
   .algo-run-btn {
     margin-left: 0.4rem;
-    font-size: 1.15rem;
-    padding: 0.45rem 1rem;
+    font-size: 1.4rem;
     color: #b91c3c;
   }
 
   .algo-pause-btn {
     font-size: 1.15rem;
-    padding: 0.45rem 1rem;
   }
 
-  .algo-clear-btn {
-    padding: 0.45rem 1rem;
+  .algo-speed-pill {
+    margin-left: 6px;
   }
 }
 
